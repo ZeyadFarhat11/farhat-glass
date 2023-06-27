@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>رشدي فرحات للزجاج والسيكوريت</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+      integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <a href="/">فاتورة</a>
+      <a href="/calc.html">حساب وزن زجاج</a>
+      <a href="/new-job.html">عمل جديد</a>
+    </header>
+    <div class="container">
+      <input type="text" placeholder="اسم العميل" class="client-name" />
+      <div class="header">
+        <span>الصنف</span>
+        <span>الكمية</span>
+        <span>السعر</span>
+        <span>الاجمالي</span>
+      </div>
+      <div class="row">
+        <span>
+          <input type="text" placeholder="الصنف" name="title" list="titles" />
+        </span>
+        <span><input type="text" placeholder="الكمية" name="qty" /></span>
+        <span><input type="text" placeholder="السعر" name="price" /></span>
+        <span><input type="text" placeholder="الاجمالي" name="total" /></span>
+        <button type="button" class="delete">-</button>
+      </div>
+    </div>
+    <button type="button" class="add">+</button>
+    <button class="btn get-invoice">طلب فاتورة</button>
+
+    <datalist id="titles">
+      <option value="زجاج سيكوريت 01مم شفاف"></option>
+      <option value="طقم باب سيكوريت"></option>
+      <option value="ماكينة باب سيكوريت"></option>
+      <option value="مقبض باب سيكوريت"></option>
+      <option value="حرف الومونيوم F"></option>
+      <option value="حرف الومونيوم U"></option>
+      <option value="مصنعية"></option>
+      <option value="اكسسوارات"></option>
+      <option value="مساطر وزوايا مستورد"></option>
+      <option value="رسم زجاج"></option>
+      <option value="رمل زجاج"></option>
+    </datalist>
+
+    <script src="/js/script.js"></script>
+  </body>
+</html>
