@@ -12,5 +12,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 app.use("/api/v1/invoice", require("./routers/invoiceRouter"));
+app.use("/api/v1/client", require("./routers/clientRouter"));
 
 module.exports = app;

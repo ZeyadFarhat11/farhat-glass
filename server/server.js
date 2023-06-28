@@ -1,9 +1,5 @@
 require("dotenv").config();
 
-String.prototype.reverse = function () {
-  return this.split("").reverse().join("");
-};
-
 const mongoose = require("mongoose");
 const app = require("./app");
 

@@ -125,7 +125,7 @@ exports.createInvoice = catchAsync(async (req, res) => {
     res.status(400).json({ message: "rows are required" });
     return;
   }
-  const browser = await puppeteer.launch({ headless: "new" });
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   await page.setViewport({ width: 600, height: 773 });
   await page.goto("http://localhost:8000/template-invoice.html");
