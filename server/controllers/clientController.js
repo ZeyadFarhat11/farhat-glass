@@ -13,38 +13,28 @@ exports.createClient = catchAsync(async (req, res) => {
 });
 
 exports.makeTransaction = catchAsync(async (req, res) => {
-  const { name, amount, date, operation, title } = req.body;
-  if (!name) {
-    res.status(400).json({ message: "Client name is required" });
-    return;
-  } else if (!amount || typeof amount !== "number") {
-    res.status(400).json({ message: "Amount is invalid" });
-    return;
-  }
-  const clientDocument = await Client.findOne({ name });
+  const { client, amount, date, operation, title } = req.body;
+
+  let clientDocument = await Client.findOne({ name: client });
   if (!clientDocument) {
-    res.status(400).json({ message: "Client name is invalid" });
-    return;
+    clientDocument = await Client.create({ name: client });
   }
 
   const transactionDate = date ? new Date(date) : Date.now();
+  const transaction = {
+    type: operation,
+    date: transactionDate,
+    amount,
+  };
   if (operation === "pay") {
-    const transactionTitle = title || "دفع" + ` ${amount} ` + "جنيه";
+    const defaultTitle = "دفع" + ` ${amount} ` + "جنيه";
+    transaction.description = title || defaultTitle;
     clientDocument.debt -= amount;
-    const transaction = {
-      title: transactionTitle,
-      date: transactionDate,
-      amount,
-    };
     clientDocument.transactions.push(transaction);
   } else if (operation === "purchase") {
-    const transactionTitle = title || "شراء" + ` ${amount} ` + "جنيه";
+    const defaultTitle = "شراء" + ` ${amount} ` + "جنيه";
+    transaction.description = title || defaultTitle;
     clientDocument.debt += amount;
-    const transaction = {
-      title: transactionTitle,
-      date: transactionDate,
-      amount,
-    };
     clientDocument.transactions.push(transaction);
   }
   await clientDocument.save();

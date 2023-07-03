@@ -3,21 +3,23 @@ const { Schema } = mongoose;
 
 const invoiceSchema = new Schema(
   {
-    filename: {
-      type: String,
-      require: [true, "filename is required"],
-    },
-    filepath: {
-      type: String,
-      require: [true, "filename is required"],
-    },
     client: {
-      // type: { type: Schema.Types.ObjectId, ref: "Client" },
-      type: String,
+      type: mongoose.Types.ObjectId,
+      // required: [true, "client is required"],
+      ref: "Client",
     },
-    invoice_date: {
+    invoiceDate: {
       type: Date,
       required: [true, "invoice date is required"],
+    },
+    rows: {
+      type: Array,
+      required: [true, "Invoice rows is required"],
+      minlength: 1,
+    },
+    invoiceTotal: {
+      type: Number,
+      required: [true, "Invoice total is required"],
     },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }

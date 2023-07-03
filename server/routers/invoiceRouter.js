@@ -1,9 +1,17 @@
 const { Router } = require("express");
 const invoiceController = require("../controllers/invoiceController");
-
+const invoiceValidator = require("../validators/invoiceValidator");
 const router = Router();
 
-router.post("/", invoiceController.createInvoice);
-router.get("/:path", invoiceController.getInvoice);
+router.post(
+  "/",
+  invoiceValidator.validateCreateInvoice,
+  invoiceController.createInvoice
+);
+router.get(
+  "/:id",
+  invoiceValidator.validateGetInvoice,
+  invoiceController.getInvoice
+);
 
 module.exports = router;

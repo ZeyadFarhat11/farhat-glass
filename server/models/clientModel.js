@@ -1,6 +1,29 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const transactionSchema = new Schema(
+  {
+    type: {
+      type: String,
+      required: [true, "transaction type is required"],
+      enum: ["pay", "purchase"],
+    },
+    date: {
+      type: Date,
+      default: Date.now,
+    },
+    amount: {
+      type: Number,
+      required: [true, "Transaction amount is required"],
+    },
+    description: {
+      type: String,
+      default: "",
+    },
+  },
+  { _id: false }
+);
+
 const clientSchema = new Schema(
   {
     name: {
@@ -14,25 +37,8 @@ const clientSchema = new Schema(
       default: 0,
     },
     transactions: {
-      type: [
-        {
-          _id: false,
-          title: {
-            type: String,
-            required: [true, "transaction title is required"],
-            minlength: [3, "Minimum 3 characters"],
-            maxlength: [500, "Maximum 500 characters"],
-          },
-          date: {
-            type: Date,
-            default: Date.now,
-          },
-          amount: {
-            type: Number,
-            required: [true, "Transaction amount is required"],
-          },
-        },
-      ],
+      type: [transactionSchema],
+      default: [],
     },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }

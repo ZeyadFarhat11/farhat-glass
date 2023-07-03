@@ -70,7 +70,7 @@
 
       .footer {
         text-align: center;
-        padding-top: 20px;
+        padding: 20px 0;
         font-weight: 500;
       }
 
@@ -87,12 +87,13 @@
       }
       .invoice-id {
         position: absolute;
-        top: 150px;
+        top: 200px;
         left: 50px;
         color: #ccc;
         font-weight: bold;
-        width: 170px;
+        width: 180px;
         text-align: center;
+        font-size: 11px;
       }
     </style>
   </head>
@@ -116,8 +117,8 @@
       </svg>
 
       <svg
-        width="145"
-        height="118"
+        width="200"
+        height="163"
         viewBox="0 0 145 118"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -143,11 +144,11 @@
     <div class="info">
       <div class="client">
         <span>العميل : </span>
-        <span>زياد فرحات</span>
+        <span></span>
       </div>
       <div class="date">
         <span>التاريخ : </span>
-        <span>2023-18-6</span>
+        <span></span>
       </div>
     </div>
 
@@ -169,53 +170,5 @@
     <p class="footer">
       السنانية : الشيخ سديد - بجوار الهندي للأسمنت ت : ٠١٠٠٨٩١٧٨١٩
     </p>
-
-    <script>
-      const tableBody = document.querySelector(".table .body");
-
-      function insertRows(rows) {
-        rows.forEach((row, idx) => {
-          const lastId =
-            +document.querySelector(".table .row:last-child span:first-child")
-              ?.innerHTML || 0;
-          const rowHTML = `<div class="row">
-            <span>${lastId + 1}</span>
-            <span>${row[0]}</span>
-            <span>${row[1]}</span>
-            <span>${row[2]}</span>
-            <span>${row[3]}</span>
-          </div>`;
-          tableBody.insertAdjacentHTML("beforeend", rowHTML);
-        });
-      }
-      function fillRows() {
-        const rowsLength = document.querySelectorAll(".table .row").length;
-        if (rowsLength >= 13) return;
-        const emptyRowHTML = `<div class="row empty">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>`;
-        for (let i = rowsLength; i < 13; i++) {
-          tableBody.insertAdjacentHTML("beforeend", emptyRowHTML);
-        }
-      }
-      function setClient(clientName) {
-        document.querySelector(".info .client span:last-child").innerHTML =
-          clientName;
-      }
-      function setDate(date) {
-        document.querySelector(".info .date span:last-child").innerHTML = date;
-      }
-      function setInvoiceTotal(total) {
-        document.querySelector(".table .invoice-total .value").innerHTML =
-          total;
-      }
-      function setInvoiceID(id) {
-        document.querySelector(".invoice-id").innerHTML = id;
-      }
-    </script>
   </body>
 </html>
