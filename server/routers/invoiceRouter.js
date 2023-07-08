@@ -14,5 +14,10 @@ router.get(
   invoiceValidator.validateGetInvoice,
   invoiceController.getInvoice
 );
+router.delete(
+  "/:id",
+  invoiceValidator.validateDeleteInvoice,
+  invoiceController.deleteInvoice
+);
 
 module.exports = router;

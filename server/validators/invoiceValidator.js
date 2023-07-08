@@ -1,8 +1,8 @@
 const { body, param } = require("express-validator");
 const checkValidationErrors = require("../middleware/checkValidationErrors");
-const Client = require("../models/clientModel");
-const { default: mongoose } = require("mongoose");
-const Invoice = require("../models/invoiceModel");
+// const Client = require("../models/clientModel");
+// const mongoose = require("mongoose");
+// const Invoice = require("../models/invoiceModel");
 const db = require("../DB/db");
 
 exports.validateCreateInvoice = [
@@ -28,6 +28,15 @@ exports.validateGetInvoice = [
       client: { name: clientDocument?.name, _id: clientDocument._id },
     };
     // req.invoice = await invoiceDocument.populate("client", { name: 1 });
+  }),
+  checkValidationErrors,
+];
+
+exports.validateDeleteInvoice = [
+  param("id").custom(async (id, { req }) => {
+    const doc = await db.invoices.findOnePro({ _id: id });
+    if (!doc) throw new Error("معرف فاتورة غير صحيح");
+    req.invoice = doc;
   }),
   checkValidationErrors,
 ];

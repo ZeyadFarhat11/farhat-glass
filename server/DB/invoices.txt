@@ -1,1 +1,0 @@
-{"client":"pVmak6RGRTPRfW1F","invoiceDate":1688786922745,"rows":[["زجاج","80*80","550","1500"],["اكسسوار","","","5300"],["زجاج","80*80","550","1500"]],"invoiceTotal":8300,"createdAt":1688786922740,"updatedAt":1688786922740,"_id":"Wkm7JltXU6vGhSHq"}

@@ -1,8 +1,8 @@
 const path = require("path");
 const catchAsync = require("../utils/catchAsync");
-const Invoice = require("../models/invoiceModel");
+// const Invoice = require("../models/invoiceModel");
 const InvoiceHTML = require("../utils/Invoice");
-const Client = require("../models/clientModel");
+// const Client = require("../models/clientModel");
 const db = require("../DB/db");
 
 const calcInvoiceTotal = (rows) =>
@@ -58,7 +58,7 @@ exports.createInvoice = catchAsync(async (req, res) => {
     description: { invoice: invoiceDocument._id },
   };
 
-  const [, clientDocumentUpdated] = await db.clients.updatePro(
+  await db.clients.updatePro(
     { _id: clientDocument._id },
     {
       $push: { transactions: transaction },
@@ -77,7 +77,10 @@ exports.createInvoice = catchAsync(async (req, res) => {
   //   rows,
   // });
 
-  res.status(200).json(invoiceDocument);
+  res.status(200).json({
+    ...invoiceDocument,
+    url: `http://localhost:8000/api/v1/invoice/${invoiceDocument._id}`,
+  });
 });
 
 exports.getInvoice = (req, res) => {
@@ -95,3 +98,20 @@ exports.getAllInvoices = async (req, res) => {
   const docs = await db.invoices.findPro({});
   res.json(docs);
 };
+
+exports.deleteInvoice = catchAsync(async (req, res) => {
+  const invoiceDocument = req.invoice;
+  let clientDocument = await db.clients.findOnePro({
+    _id: invoiceDocument.client,
+  });
+  clientDocument.transactions = clientDocument.transactions.filter(
+    (t) => t.description.invoice !== invoiceDocument._id
+  );
+  clientDocument.debt -= invoiceDocument.invoiceTotal;
+  await db.clients.updatePro(
+    { _id: invoiceDocument.client },
+    { ...clientDocument, updatedAt: Date.now() }
+  );
+  await db.invoices.deletePro({ _id: req.params.id });
+  res.sendStatus(200);
+});

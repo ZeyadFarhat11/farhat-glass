@@ -1,5 +1,5 @@
 const db = require("../DB/db");
-const Client = require("../models/clientModel");
+// const Client = require("../models/clientModel");
 const catchAsync = require("../utils/catchAsync");
 
 exports.makeTransaction = catchAsync(async (req, res) => {
