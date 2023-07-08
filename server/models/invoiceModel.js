@@ -5,7 +5,6 @@ const invoiceSchema = new Schema(
   {
     client: {
       type: mongoose.Types.ObjectId,
-      // required: [true, "client is required"],
       ref: "Client",
     },
     invoiceDate: {

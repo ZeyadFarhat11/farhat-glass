@@ -61,13 +61,13 @@ class InvoiceHTML {
     return this;
   }
 
-  fromInvoiceDocument({ rows, id, client, invoiceDate, invoiceTotal }) {
+  fromInvoiceDocument({ rows, _id, client, invoiceDate, invoiceTotal }) {
     console.log(client);
     this.setRows(rows)
       .fillRows()
       .setClient(client.name)
       .setDate(this.convertDate(invoiceDate))
-      .setInvoiceID(id)
+      .setInvoiceID(_id)
       .setInvoiceTotal(invoiceTotal);
     return this;
   }

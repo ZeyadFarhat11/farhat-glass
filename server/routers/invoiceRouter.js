@@ -8,6 +8,7 @@ router.post(
   invoiceValidator.validateCreateInvoice,
   invoiceController.createInvoice
 );
+router.get("/", invoiceController.getAllInvoices);
 router.get(
   "/:id",
   invoiceValidator.validateGetInvoice,

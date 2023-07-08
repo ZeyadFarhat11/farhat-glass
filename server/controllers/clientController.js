@@ -1,16 +1,6 @@
+const db = require("../DB/db");
 const Client = require("../models/clientModel");
 const catchAsync = require("../utils/catchAsync");
-
-exports.createClient = catchAsync(async (req, res) => {
-  const { name, debt, transactions } = req.body;
-  if (!name) {
-    res.status(400).json({ message: "Client name is required" });
-    return;
-  }
-  const clientDocument = await Client.create({ name, debt, transactions });
-
-  res.status(200).json(clientDocument);
-});
 
 exports.makeTransaction = catchAsync(async (req, res) => {
   const { client, amount, date, operation, title } = req.body;
@@ -41,12 +31,48 @@ exports.makeTransaction = catchAsync(async (req, res) => {
   res.status(200).json(clientDocument);
 });
 
-exports.getClient = catchAsync(async (req, res) => {
-  const { name } = req.params;
-  const clientDocument = await Client.findOne({ name });
-  if (!clientDocument) {
-    res.status(400).json({ message: "Client name is invalid" });
-    return;
-  }
+exports.createClient = catchAsync(async (req, res) => {
+  const { name } = req.body;
+  const currentTime = Date.now();
+  const clientDocument = await db.clients.insertPro({
+    name,
+    debt: 0,
+    transaction: [],
+    createdAt: currentTime,
+    updatedAt: currentTime,
+  });
+
   res.status(200).json(clientDocument);
+});
+
+exports.getClient = catchAsync(async (req, res) => {
+  // res.cookie("cookie", "cookieValue", { maxAge: 5000000, httpOnly: true });
+  res.status(200).json(req.client);
+});
+
+exports.updateClient = catchAsync(async (req, res) => {
+  const { client } = req;
+  db.clients.update(
+    { _id: client._id },
+    { name: req.body.name || client.name, updatedAt: Date.now() },
+    { returnUpdatedDocs: true },
+    (err, _, doc) => {
+      if (err) {
+        console.log(err);
+        return res.status(400).send(err.message);
+      }
+
+      res.status(200).json(doc);
+    }
+  );
+});
+exports.deleteClient = catchAsync(async (req, res) => {
+  // await req.client.deleteOne();
+  await db.clients.deletePro({ _id: req.client._id });
+  res.sendStatus(200);
+});
+exports.getAllClients = catchAsync(async (req, res) => {
+  // const clients = await Client.find({}).select("-transactions -__v");
+  const clients = await db.clients.findPro({});
+  res.status(200).json(clients);
 });

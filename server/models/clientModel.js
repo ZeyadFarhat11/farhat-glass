@@ -44,6 +44,15 @@ const clientSchema = new Schema(
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
+clientSchema.methods.updateDocument = function (requestBody) {
+  delete requestBody.transactions;
+  delete requestBody.debt;
+  delete requestBody._id;
+  for (let key in requestBody) {
+    this[key] = requestBody[key];
+  }
+};
+
 const Client = mongoose.model("Client", clientSchema);
 
 module.exports = Client;
