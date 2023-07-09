@@ -26,7 +26,6 @@ exports.validateGetInvoice = [
         _id: invoiceDocument.client,
       });
     }
-    console.log(clientDocument);
     req.invoice = {
       ...invoiceDocument,
       client: clientDocument

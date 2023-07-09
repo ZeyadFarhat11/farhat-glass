@@ -1,23 +1,2 @@
-{"invoiceDate":1688904351365,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688904356640,"updatedAt":1688904356640,"_id":"0kYyaSRYoQwg6LS9"}
-{"invoiceDate":1688904521377,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688904522724,"updatedAt":1688904522724,"_id":"AFsShQxh4yHxykXZ"}
-{"invoiceDate":1688903907002,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688904190883,"updatedAt":1688904190883,"_id":"FWn8anAmNwtDy2HP"}
-{"invoiceDate":1688903907002,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688904047135,"updatedAt":1688904047135,"_id":"GOl27rLId84FpaNV"}
-{"invoiceDate":1688903907002,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688904002525,"updatedAt":1688904002525,"_id":"GeGzC383ssOb2ihc"}
-{"invoiceDate":1688903907002,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688903974300,"updatedAt":1688903974300,"_id":"PzG43IM65Vf8aBxw"}
-{"invoiceDate":1688903907002,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688904080479,"updatedAt":1688904080479,"_id":"Ur5f2SufKNyGsTrF"}
-{"client":"yXUXAhLQfu0gR6f9","invoiceDate":1688903163154,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688903178329,"updatedAt":1688903178329,"_id":"VwRx56XpY17OZWLl"}
-{"invoiceDate":1688903907002,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688904218478,"updatedAt":1688904218478,"_id":"aawaaIBcV9uAAo8T"}
-{"client":"pVmak6RGRTPRfW1F","invoiceDate":1688889872672,"rows":[["زجاج","80*80","550","1500"],["اكسسوار","","","5300"],["زجاج","80*80","550","1500"]],"invoiceTotal":8300,"createdAt":1688889872666,"updatedAt":1688889872666,"_id":"gHyqem60JlnClYY8"}
+{"client":"5aIcYRNdrdiv2oKz","invoiceDate":1688940948961,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"],["مصنعية","","",450]],"invoiceTotal":9070,"createdAt":1688940980381,"updatedAt":1688940980381,"_id":"4h6VMUqYU1bkWGIT"}
 {"client":"JcA6XNsHSuBc0VQs","invoiceDate":1688644563749,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"],["مصنعية","","",600]],"invoiceTotal":9220,"createdAt":1688903786692,"updatedAt":1688903786692,"_id":"rwM1deYzRcbShhPb"}
-{"invoiceDate":1688903907002,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"]],"invoiceTotal":8620,"createdAt":1688903908568,"updatedAt":1688903908568,"_id":"ye6Yw1PNh7VBg25f"}
-{"$$deleted":true,"_id":"0kYyaSRYoQwg6LS9"}
-{"$$deleted":true,"_id":"AFsShQxh4yHxykXZ"}
-{"$$deleted":true,"_id":"FWn8anAmNwtDy2HP"}
-{"$$deleted":true,"_id":"ye6Yw1PNh7VBg25f"}
-{"$$deleted":true,"_id":"GOl27rLId84FpaNV"}
-{"$$deleted":true,"_id":"PzG43IM65Vf8aBxw"}
-{"$$deleted":true,"_id":"GeGzC383ssOb2ihc"}
-{"$$deleted":true,"_id":"Ur5f2SufKNyGsTrF"}
-{"$$deleted":true,"_id":"VwRx56XpY17OZWLl"}
-{"$$deleted":true,"_id":"aawaaIBcV9uAAo8T"}
-{"$$deleted":true,"_id":"gHyqem60JlnClYY8"}

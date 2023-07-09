@@ -1,1 +1,3 @@
+{"name":"test","debt":5000,"transactions":[{"type":"purchase","date":1688941897309,"amount":5000,"description":"الدين المبدئي"}],"createdAt":1688941897309,"updatedAt":1688941897309,"_id":"3QCKyv2gl9m3J7X5"}
+{"name":"محمود عرابي","debt":9070,"transactions":[{"type":"purchase","date":1688940948961,"amount":9070,"description":{"invoice":"4h6VMUqYU1bkWGIT"}}],"createdAt":1688940980378,"updatedAt":1688940980383,"_id":"5aIcYRNdrdiv2oKz"}
 {"name":"زياد فرحات","debt":9220,"transactions":[{"type":"purchase","date":1688644563749,"amount":9220,"description":{"invoice":"rwM1deYzRcbShhPb"}}],"createdAt":1688897630882,"updatedAt":1688903786695,"_id":"JcA6XNsHSuBc0VQs"}

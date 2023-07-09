@@ -32,12 +32,21 @@ exports.makeTransaction = catchAsync(async (req, res) => {
 });
 
 exports.createClient = catchAsync(async (req, res) => {
-  const { name } = req.body;
+  const { name, debt } = req.body;
   const currentTime = Date.now();
   const clientDocument = await db.clients.insertPro({
     name,
-    debt: 0,
-    transactions: [],
+    debt: +debt || 0,
+    transactions: [
+      debt
+        ? {
+            type: "purchase",
+            date: Date.now(),
+            amount: +debt,
+            description: "الدين المبدئي",
+          }
+        : undefined,
+    ],
     createdAt: currentTime,
     updatedAt: currentTime,
   });
@@ -80,4 +89,10 @@ exports.getAllClients = catchAsync(async (req, res) => {
     .json(
       clients.map((c) => ({ ...c, transactionsCount: c.transactions.length }))
     );
+});
+
+exports.getClientNames = catchAsync(async (req, res) => {
+  const clients = await db.clients.findPro({});
+  const names = clients.map((client) => client.name);
+  res.json(names);
 });

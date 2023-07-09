@@ -19,6 +19,7 @@ router.delete(
   clientController.deleteClient
 );
 router.get("/", clientController.getAllClients);
+router.get("/names", clientController.getClientNames);
 router.get(
   "/:id",
   clientValidator.validateGetClient,

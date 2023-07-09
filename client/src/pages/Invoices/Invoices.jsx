@@ -152,6 +152,7 @@ function CreateInvoice({}) {
   const [invoiceTotal, setInvoiceTotal] = useState();
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState(initialRows);
+  const [clientNames, setClientNames] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -173,16 +174,28 @@ function CreateInvoice({}) {
       setLoading(false);
     }
   };
-  // console.log(rows);
+  const loadClientNames = async () => {
+    try {
+      const response = await api.get("/clients/names");
+      setClientNames(response.data);
+    } catch (err) {
+      console.log(err);
+      // handleError(err)
+    }
+  };
+  useEffect(() => {
+    loadClientNames();
+  }, []);
   return (
     <form onSubmit={handleSubmit}>
-      <h3>معلومات الفاتورة</h3>
+      <h4 className="mb-3">معلومات الفاتورة</h4>
       <div className="control">
         <Input
           type="text"
           onChange={(e) => setClient(e.target.value)}
           defaultValue={client}
           placeholder="اسم العميل"
+          list="client-names"
         />
       </div>
       <div className="control">
@@ -197,13 +210,20 @@ function CreateInvoice({}) {
       <div className="control">
         <DatePicker onChange={(date) => setInvoiceDate(date.$d.getTime())} />
       </div>
-      <h3>محتوي الفاتورة</h3>
+      <h4 className="mb-3">محتوي الفاتورة</h4>
       {rows.map((row) => (
         <InvoiceRow key={row.id} {...row} setRows={setRows} rows={rows} />
       ))}
       <Button loading={loading} type="primary" htmlType="submit">
         انشاء فاتورة
       </Button>
+      <datalist id="client-names">
+        {clientNames.map((name, i) => (
+          <option value={name} key={i}>
+            {name}
+          </option>
+        ))}
+      </datalist>
     </form>
   );
 }

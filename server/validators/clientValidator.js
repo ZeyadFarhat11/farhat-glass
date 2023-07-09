@@ -31,6 +31,7 @@ exports.validateCreateClient = [
       // const clientDocumentCheck = await Client.findOne({ name });
       if (clientDocumentCheck) throw new Error("اسم عميل مكرر");
     }),
+  body("debt").optional().isNumeric(),
   checkValidationErrors,
 ];
 

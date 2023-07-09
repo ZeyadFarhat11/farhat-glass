@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Invoice</title>
+    <title>فاتورة</title>
     <link href="fonts/Almarai-Bold.ttf" rel="stylesheet" type="text/css" />
     <link href="fonts/Almarai-Light.ttf" rel="stylesheet" type="text/css" />
     <link href="fonts/Almarai-Regular.ttf" rel="stylesheet" type="text/css" />
@@ -51,8 +51,9 @@
       }
       .table span {
         border-left: var(--border);
-        padding: 7px 0;
+        padding: 10px 0;
         text-align: center;
+        line-height: 1;
       }
       .table span:last-child {
         border: none;
@@ -72,6 +73,7 @@
         text-align: center;
         padding: 20px 0;
         font-weight: 500;
+        font-size: 20px;
       }
 
       .invoice-total {
@@ -170,5 +172,8 @@
     <p class="footer">
       السنانية : الشيخ سديد - بجوار الهندي للأسمنت ت : ٠١٠٠٨٩١٧٨١٩
     </p>
+    <script>
+      document.body.style.height = window.innerWidth * 1.41;
+    </script>
   </body>
 </html>

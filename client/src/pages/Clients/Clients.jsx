@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./clients.scss";
-import { Table, Space, Button, Input } from "antd";
+import { Table, Space, Button, Input, InputNumber } from "antd";
 import api from "../../utils/api";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
@@ -84,12 +84,13 @@ export default function Clients() {
 
 function CreateClient({ loading, setLoading, loadClients }) {
   const [name, setName] = useState("");
+  const [debt, setDebt] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
     setLoading(true);
     try {
-      const response = await api.post("/clients", { name });
+      await api.post("/clients", { name, debt: debt || 0 });
       toast.success("تم انشاء العميل بنجاح");
       loadClients();
     } catch (err) {
@@ -102,14 +103,24 @@ function CreateClient({ loading, setLoading, loadClients }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Input
-        placeholder="اسم العميل"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        type="text"
-        className="client-name"
-      />
-      <Button type="primary" loading={loading}>
+      <div className="control">
+        <Input
+          placeholder="اسم العميل"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          type="text"
+          className="client-name"
+        />
+      </div>
+      <div className="control">
+        <InputNumber
+          placeholder="الدين"
+          value={debt}
+          onChange={(debt) => setDebt(debt)}
+        />
+      </div>
+      {/* <button className="main-btn"></button> */}
+      <Button type="primary" loading={loading} htmlType="submit">
         انشاء
       </Button>
     </form>

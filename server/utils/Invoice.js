@@ -62,13 +62,13 @@ class InvoiceHTML {
   }
 
   fromInvoiceDocument({ rows, _id, client, invoiceDate, invoiceTotal }) {
-    console.log(client);
     this.setRows(rows)
       .fillRows()
       .setClient(client?.name || "")
       .setDate(this.convertDate(invoiceDate))
       .setInvoiceID(_id)
-      .setInvoiceTotal(invoiceTotal);
+      .setInvoiceTotal(invoiceTotal)
+      .setTitle(`فاتورة ${client?.name || ""}`);
     return this;
   }
   convertDate(d) {
@@ -78,6 +78,10 @@ class InvoiceHTML {
   }
   getHTML() {
     return this.document.documentElement.outerHTML;
+  }
+  setTitle(title) {
+    this.document.title = title;
+    return this;
   }
 }
 

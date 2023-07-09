@@ -1,5 +1,11 @@
 import axios from "axios";
 
-const api = axios.create({ baseURL: "http://localhost:8000/api/v1" });
+const productionUrl = `${window.location.origin}/api/v1`;
+const developmentUrl = "http://localhost:8000/api/v1";
+
+const api = axios.create({
+  baseURL: import.meta.env.DEV ? developmentUrl : productionUrl,
+});
+window.api = api;
 
 export default api;
