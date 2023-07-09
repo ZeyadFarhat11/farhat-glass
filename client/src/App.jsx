@@ -1,21 +1,22 @@
-import axios from "axios";
-
+import { Routes, Route } from "react-router-dom";
+import Clients from "./pages/Clients/Clients";
+import { ToastContainer } from "react-toastify";
+import Header from "./components/Header/Header";
+import Invoices from "./pages/Invoices/Invoices";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
+import "./assets/style.scss";
+import Home from "./pages/Home/Home";
 function App() {
-  const sendRequest = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8000/api/v1/clients/64a2e1b257b1ef89586a1d6d",
-        { withCredentials: true }
-      );
-      // const json = await response.json();
-      console.log(response.data);
-    } catch (e) {
-      alert("error");
-    }
-  };
   return (
     <>
-      <button onClick={sendRequest}>send request</button>
+      <ToastContainer autoClose={3000} />
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/clients" element={<Clients />} />
+        <Route path="/invoices" element={<Invoices />} />
+      </Routes>
     </>
   );
 }

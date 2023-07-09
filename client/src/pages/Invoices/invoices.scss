@@ -1,0 +1,39 @@
+#invoices {
+  .title {
+    text-align: center;
+    padding: 30px 0;
+  }
+  .actions {
+    a,
+    button {
+      all: unset;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  }
+  .row-control {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+    > * {
+      width: 100%;
+    }
+  }
+  .row-actions {
+    display: flex;
+    justify-content: space-evenly;
+    // gap: 20px;
+    button {
+      all: unset;
+      font-size: 22px;
+      cursor: pointer;
+      &.delete {
+        color: var(--bs-danger);
+      }
+      &.add {
+        color: var(--bs-primary);
+      }
+    }
+  }
+}

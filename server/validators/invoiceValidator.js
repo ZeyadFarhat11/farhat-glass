@@ -8,7 +8,7 @@ const db = require("../DB/db");
 exports.validateCreateInvoice = [
   body("rows").isArray({ min: 1 }),
   body("client").optional().isString(),
-  body("date").optional().isDate(),
+  body("date").optional().isNumeric().bail().isLength({ min: 12 }),
   body("invoiceTotal").optional().isNumeric(),
   checkValidationErrors,
 ];
@@ -20,12 +20,18 @@ exports.validateGetInvoice = [
 
     if (!invoiceDocument) throw new Error("معرف فاتورة خاطئ");
 
-    let clientDocument = await db.clients.findOnePro({
-      _id: invoiceDocument.client,
-    });
+    let clientDocument;
+    if (invoiceDocument.client) {
+      clientDocument = await db.clients.findOnePro({
+        _id: invoiceDocument.client,
+      });
+    }
+    console.log(clientDocument);
     req.invoice = {
       ...invoiceDocument,
-      client: { name: clientDocument?.name, _id: clientDocument._id },
+      client: clientDocument
+        ? { name: clientDocument?.name, _id: clientDocument._id }
+        : undefined,
     };
     // req.invoice = await invoiceDocument.populate("client", { name: 1 });
   }),

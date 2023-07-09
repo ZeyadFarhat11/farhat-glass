@@ -1,0 +1,26 @@
+.main-btn {
+  all: unset;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 4px 15px;
+  transition: 0.2s;
+  margin: 20px 0;
+  font-size: 14px;
+  &:hover,
+  &.active {
+    border-color: #4096ff;
+    color: #4096ff;
+  }
+}
+
+form {
+  .control {
+    width: 400px;
+    max-width: 100%;
+    margin-bottom: 20px;
+    > div,
+    > input {
+      width: 100%;
+    }
+  }
+}

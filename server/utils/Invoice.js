@@ -65,7 +65,7 @@ class InvoiceHTML {
     console.log(client);
     this.setRows(rows)
       .fillRows()
-      .setClient(client.name)
+      .setClient(client?.name || "")
       .setDate(this.convertDate(invoiceDate))
       .setInvoiceID(_id)
       .setInvoiceTotal(invoiceTotal);

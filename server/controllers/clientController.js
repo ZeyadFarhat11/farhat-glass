@@ -37,7 +37,7 @@ exports.createClient = catchAsync(async (req, res) => {
   const clientDocument = await db.clients.insertPro({
     name,
     debt: 0,
-    transaction: [],
+    transactions: [],
     createdAt: currentTime,
     updatedAt: currentTime,
   });
@@ -74,5 +74,10 @@ exports.deleteClient = catchAsync(async (req, res) => {
 exports.getAllClients = catchAsync(async (req, res) => {
   // const clients = await Client.find({}).select("-transactions -__v");
   const clients = await db.clients.findPro({});
-  res.status(200).json(clients);
+  // console.log(clients);
+  res
+    .status(200)
+    .json(
+      clients.map((c) => ({ ...c, transactionsCount: c.transactions.length }))
+    );
 });

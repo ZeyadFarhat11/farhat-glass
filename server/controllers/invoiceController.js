@@ -8,26 +8,12 @@ const db = require("../DB/db");
 const calcInvoiceTotal = (rows) =>
   rows.map((row) => +row.at(-1)).reduce((a, b) => a + b, 0);
 
-const makeInvoiceTransactionDescription = (rows) => {
-  let description = "";
-  rows.forEach((row, i) => {
-    description += `الصنف: ${row[0]}\n`;
-    description += `الكمية: ${row[1]}\n`;
-    description += `السعر: ${row[2]}\n`;
-    description += `الاجمالي: ${row[3]}\n`;
-    if (i !== rows.length - 1) {
-      description += "-".repeat(20) + "\n";
-    }
-  });
-  return description;
-};
-
 exports.createInvoice = catchAsync(async (req, res) => {
   let { rows, date, invoiceTotal, client } = req.body;
 
   let clientDocument = await db.clients.findOnePro({ name: client });
   let currentTime = Date.now();
-  if (!clientDocument)
+  if (!clientDocument && client)
     clientDocument = await db.clients.insertPro({
       name: client,
       debt: 0,
@@ -35,15 +21,15 @@ exports.createInvoice = catchAsync(async (req, res) => {
       createdAt: currentTime,
       updatedAt: currentTime,
     });
-  console.log(clientDocument);
   // let clientDocument = await Client.findOne({ name: client });
   // if (!clientDocument) clientDocument = await Client.create({ name: client });
 
   const invoiceDateMS = date || Date.now();
   invoiceTotal = invoiceTotal || calcInvoiceTotal(rows);
+  currentTime = Date.now();
 
   const invoiceDocument = await db.invoices.insertPro({
-    client: clientDocument._id,
+    client: clientDocument?._id,
     invoiceDate: invoiceDateMS,
     rows,
     invoiceTotal,
@@ -58,14 +44,19 @@ exports.createInvoice = catchAsync(async (req, res) => {
     description: { invoice: invoiceDocument._id },
   };
 
-  await db.clients.updatePro(
-    { _id: clientDocument._id },
-    {
-      $push: { transactions: transaction },
-      $set: { debt: clientDocument.debt + invoiceTotal, updatedAt: Date.now() },
-    },
-    { returnUpdatedDocs: true }
-  );
+  if (clientDocument) {
+    await db.clients.updatePro(
+      { _id: clientDocument._id },
+      {
+        $push: { transactions: transaction },
+        $set: {
+          debt: clientDocument.debt + invoiceTotal,
+          updatedAt: Date.now(),
+        },
+      },
+      { returnUpdatedDocs: true }
+    );
+  }
   // clientDocument.transactions.push(transaction);
   // clientDocument.debt += invoiceTotal;
   // await clientDocument.save();
@@ -77,9 +68,12 @@ exports.createInvoice = catchAsync(async (req, res) => {
   //   rows,
   // });
 
+  const invoiceUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}/${
+    invoiceDocument._id
+  }`;
   res.status(200).json({
     ...invoiceDocument,
-    url: `http://localhost:8000/api/v1/invoice/${invoiceDocument._id}`,
+    url: invoiceUrl,
   });
 });
 
@@ -94,24 +88,37 @@ exports.getInvoice = (req, res) => {
   res.status(200).send(html);
 };
 
-exports.getAllInvoices = async (req, res) => {
-  const docs = await db.invoices.findPro({});
+exports.getAllInvoices = catchAsync(async (req, res) => {
+  let docs = await db.invoices.findPro({});
+  for (let i = 0; i < docs.length; i++) {
+    const clientDocument = await db.clients.findOnePro({ _id: docs[i].client });
+    docs[i] = {
+      ...docs[i],
+      client: clientDocument
+        ? { _id: clientDocument._id, name: clientDocument.name }
+        : undefined,
+      rowsCount: docs[i].rows.length,
+    };
+  }
+  docs = docs.filter((e) => e);
   res.json(docs);
-};
+});
 
 exports.deleteInvoice = catchAsync(async (req, res) => {
   const invoiceDocument = req.invoice;
   let clientDocument = await db.clients.findOnePro({
     _id: invoiceDocument.client,
   });
-  clientDocument.transactions = clientDocument.transactions.filter(
-    (t) => t.description.invoice !== invoiceDocument._id
-  );
-  clientDocument.debt -= invoiceDocument.invoiceTotal;
-  await db.clients.updatePro(
-    { _id: invoiceDocument.client },
-    { ...clientDocument, updatedAt: Date.now() }
-  );
+  if (clientDocument) {
+    clientDocument.transactions = clientDocument.transactions.filter(
+      (t) => t.description.invoice !== invoiceDocument._id
+    );
+    clientDocument.debt -= invoiceDocument.invoiceTotal;
+    await db.clients.updatePro(
+      { _id: invoiceDocument.client },
+      { ...clientDocument, updatedAt: Date.now() }
+    );
+  }
   await db.invoices.deletePro({ _id: req.params.id });
   res.sendStatus(200);
 });
