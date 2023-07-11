@@ -1,3 +1,1 @@
-{"client":"emWNZjgQi2h3IvtN","invoiceDate":1689065591155,"rows":[["زجاج سيكوريت 10مل ابيض","220x90",820,2000],["مساطر وزوايا","50",25,1250]],"invoiceTotal":3250,"createdAt":1689065626799,"updatedAt":1689065626799,"_id":"bfv1VW1QYFuxfb9P"}
-{"$$deleted":true,"_id":"bfv1VW1QYFuxfb9P"}
 {"client":"emWNZjgQi2h3IvtN","invoiceDate":1689065980202,"rows":[["زجاج سيكوريت 10مل ابيض","5 متر²",850,2000],["طقم باب سيكوريت","1",2500,2500],["حرف الومونيوم","٥ متر",300,1500],["مصنعية","","",500]],"invoiceTotal":6500,"createdAt":1689066192447,"updatedAt":1689066192447,"_id":"5DEBceD6qaxxvQgd"}

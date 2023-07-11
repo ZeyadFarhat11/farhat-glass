@@ -21,6 +21,13 @@ const openInvoiceWindow = (url) => {
   anchor.remove();
 };
 
+const generateRandomNumber = () => {
+  const min = 1;
+  const max = 1000000000;
+  const randomNumber = Math.floor(Math.random() * (max - min + 1) + min);
+  return randomNumber;
+};
+
 const columns = [
   {
     title: "العميل",
@@ -143,7 +150,7 @@ const initialRows = [
     price: "",
     total: "",
     qty: "",
-    id: crypto.randomUUID(),
+    id: generateRandomNumber(),
   },
 ];
 
@@ -270,7 +277,7 @@ function InvoiceRow({ title, price, qty, total, id, setRows, rows }) {
       price: "",
       qty: "",
       total: "",
-      id: crypto.randomUUID(),
+      id: generateRandomNumber(),
     };
     rows.splice(currentRowIndex + 1, 0, newRow);
     setRows([...rows]);
