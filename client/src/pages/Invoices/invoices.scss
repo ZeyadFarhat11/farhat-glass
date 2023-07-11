@@ -1,3 +1,4 @@
+@import "../../assets/components.scss";
 #invoices {
   .title {
     text-align: center;
@@ -16,8 +17,19 @@
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     gap: 10px;
     margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
     > * {
       width: 100%;
+    }
+    @include tablet {
+      input {
+        font-size: 12px;
+      }
+      [name="title"] {
+        grid-column: span 4;
+      }
+      grid-template-columns: 1fr 1fr 1fr 1fr;
     }
   }
   .row-actions {

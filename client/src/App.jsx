@@ -10,7 +10,7 @@ import Home from "./pages/Home/Home";
 function App() {
   return (
     <>
-      <ToastContainer autoClose={3000} />
+      <ToastContainer autoClose={3000} position="top-left" />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />

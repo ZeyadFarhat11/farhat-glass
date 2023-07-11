@@ -76,7 +76,7 @@ exports.updateClient = catchAsync(async (req, res) => {
   );
 });
 exports.deleteClient = catchAsync(async (req, res) => {
-  // await req.client.deleteOne();
+  await db.invoices.deletePro({ client: req.client._id }, { multi: true });
   await db.clients.deletePro({ _id: req.client._id });
   res.sendStatus(200);
 });

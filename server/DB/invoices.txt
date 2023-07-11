@@ -1,2 +1,7 @@
-{"client":"5aIcYRNdrdiv2oKz","invoiceDate":1688940948961,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"],["مصنعية","","",450]],"invoiceTotal":9070,"createdAt":1688940980381,"updatedAt":1688940980381,"_id":"4h6VMUqYU1bkWGIT"}
-{"client":"JcA6XNsHSuBc0VQs","invoiceDate":1688644563749,"rows":[["زجاج سيكوريت","220*90",850,5200],["اكسسوار","","","3420"],["مصنعية","","",600]],"invoiceTotal":9220,"createdAt":1688903786692,"updatedAt":1688903786692,"_id":"rwM1deYzRcbShhPb"}
+{"client":"5aIcYRNdrdiv2oKz","invoiceDate":1689065209621,"rows":[["زجاج سيكوريت 10مل ابيض","90x220",850,1500]],"invoiceTotal":1500,"createdAt":1689065229577,"updatedAt":1689065229577,"_id":"KI4zED7xON3rPUUa"}
+{"$$deleted":true,"_id":"KI4zED7xON3rPUUa"}
+{"client":"Xr92Z8yyiTpxLS32","invoiceDate":1689065348443,"rows":[["زجاج سيكوريت 10مل ابيض","20*20",850,2000]],"invoiceTotal":2000,"createdAt":1689065365045,"updatedAt":1689065365045,"_id":"qssbYuGzd91FsCBe"}
+{"$$deleted":true,"_id":"qssbYuGzd91FsCBe"}
+{"client":"baNe4ObI36MxyOiD","invoiceDate":1689065498740,"rows":[["زجاج سيكوريت 10مل ابيض","asd",4520,4204]],"invoiceTotal":4204,"createdAt":1689065507315,"updatedAt":1689065507315,"_id":"AmROTKo4GBR1me43"}
+{"$$deleted":true,"_id":"AmROTKo4GBR1me43"}
+{"client":"emWNZjgQi2h3IvtN","invoiceDate":1689065591155,"rows":[["زجاج سيكوريت 10مل ابيض","220x90",820,2000],["مساطر وزوايا","50",25,1250]],"invoiceTotal":3250,"createdAt":1689065626799,"updatedAt":1689065626799,"_id":"bfv1VW1QYFuxfb9P"}

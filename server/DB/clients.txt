@@ -1,3 +1,9 @@
-{"name":"test","debt":5000,"transactions":[{"type":"purchase","date":1688941897309,"amount":5000,"description":"الدين المبدئي"}],"createdAt":1688941897309,"updatedAt":1688941897309,"_id":"3QCKyv2gl9m3J7X5"}
-{"name":"محمود عرابي","debt":9070,"transactions":[{"type":"purchase","date":1688940948961,"amount":9070,"description":{"invoice":"4h6VMUqYU1bkWGIT"}}],"createdAt":1688940980378,"updatedAt":1688940980383,"_id":"5aIcYRNdrdiv2oKz"}
-{"name":"زياد فرحات","debt":9220,"transactions":[{"type":"purchase","date":1688644563749,"amount":9220,"description":{"invoice":"rwM1deYzRcbShhPb"}}],"createdAt":1688897630882,"updatedAt":1688903786695,"_id":"JcA6XNsHSuBc0VQs"}
+{"name":"zeyad","debt":0,"transactions":[],"createdAt":1689065365043,"updatedAt":1689065365043,"_id":"Xr92Z8yyiTpxLS32"}
+{"name":"zeyad","debt":2000,"transactions":[{"type":"purchase","date":1689065348443,"amount":2000,"description":{"invoice":"qssbYuGzd91FsCBe"}}],"createdAt":1689065365043,"updatedAt":1689065365046,"_id":"Xr92Z8yyiTpxLS32"}
+{"$$deleted":true,"_id":"Xr92Z8yyiTpxLS32"}
+{"name":"asd","debt":0,"transactions":[],"createdAt":1689065507314,"updatedAt":1689065507314,"_id":"baNe4ObI36MxyOiD"}
+{"name":"asd","debt":4204,"transactions":[{"type":"purchase","date":1689065498740,"amount":4204,"description":{"invoice":"AmROTKo4GBR1me43"}}],"createdAt":1689065507314,"updatedAt":1689065507316,"_id":"baNe4ObI36MxyOiD"}
+{"name":"asd","debt":0,"transactions":[],"createdAt":1689065507314,"updatedAt":1689065567740,"_id":"baNe4ObI36MxyOiD"}
+{"$$deleted":true,"_id":"baNe4ObI36MxyOiD"}
+{"name":"زياد فرحات","debt":0,"transactions":[],"createdAt":1689065626797,"updatedAt":1689065626797,"_id":"emWNZjgQi2h3IvtN"}
+{"name":"زياد فرحات","debt":3250,"transactions":[{"type":"purchase","date":1689065591155,"amount":3250,"description":{"invoice":"bfv1VW1QYFuxfb9P"}}],"createdAt":1689065626797,"updatedAt":1689065626799,"_id":"emWNZjgQi2h3IvtN"}

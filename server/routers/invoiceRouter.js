@@ -9,6 +9,7 @@ router.post(
   invoiceController.createInvoice
 );
 router.get("/", invoiceController.getAllInvoices);
+router.get("/suggestions", invoiceController.getInvoiceRowTitleSuggestions);
 router.get(
   "/:id",
   invoiceValidator.validateGetInvoice,
@@ -19,5 +20,4 @@ router.delete(
   invoiceValidator.validateDeleteInvoice,
   invoiceController.deleteInvoice
 );
-
 module.exports = router;

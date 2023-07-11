@@ -11,7 +11,15 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import "./invoices.scss";
-import { cls } from "../../utils";
+
+const openInvoiceWindow = (url) => {
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.target = "_blank";
+  document.body.append(anchor);
+  anchor.click();
+  anchor.remove();
+};
 
 const columns = [
   {
@@ -109,12 +117,12 @@ export default function Invoices() {
   return (
     <main id="invoices">
       <div className="container">
-        <button
+        <Button
           onClick={() => setCreateInvoiceActive((p) => !p)}
-          className={cls("main-btn", createInvoiceActive ? "active" : "")}
+          className="my-3"
         >
           انشاء فاتورة
-        </button>
+        </Button>
         {createInvoiceActive && <CreateInvoice />}
         <h2 className="title">الفـــــواتير</h2>
         <Table
@@ -131,18 +139,11 @@ export default function Invoices() {
 
 const initialRows = [
   {
-    title: "زجاج سيكوريت",
-    price: 850,
-    total: 5200,
-    qty: "220*90",
-    id: Math.floor(Math.random() * 1000000) + 1,
-  },
-  {
-    title: "اكسسوار",
+    title: "",
     price: "",
-    total: "3420",
+    total: "",
     qty: "",
-    id: Math.floor(Math.random() * 1000000) + 1,
+    id: crypto.randomUUID(),
   },
 ];
 
@@ -153,6 +154,7 @@ function CreateInvoice({}) {
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState(initialRows);
   const [clientNames, setClientNames] = useState([]);
+  const [rowTitleSuggestions, setRowTitleSuggestions] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -165,8 +167,8 @@ function CreateInvoice({}) {
         invoiceTotal: invoiceTotal || undefined,
         client: client || undefined,
       });
-      // toast.success("تم انشاء الفاتورة بنجاح");
-      window.location = response.data.url;
+      toast.success("تم انشاء الفاتورة بنجاح");
+      openInvoiceWindow(response.data.url);
     } catch (err) {
       console.log(err);
       // handleError(err)
@@ -183,8 +185,19 @@ function CreateInvoice({}) {
       // handleError(err)
     }
   };
+
+  const loadRowTitleSuggestions = async () => {
+    try {
+      const response = await api.get("/invoices/suggestions");
+      setRowTitleSuggestions(response.data);
+    } catch (err) {
+      console.log(err);
+      // handleError(err)
+    }
+  };
   useEffect(() => {
     loadClientNames();
+    loadRowTitleSuggestions();
   }, []);
   return (
     <form onSubmit={handleSubmit}>
@@ -212,7 +225,7 @@ function CreateInvoice({}) {
       </div>
       <h4 className="mb-3">محتوي الفاتورة</h4>
       {rows.map((row) => (
-        <InvoiceRow key={row.id} {...row} setRows={setRows} rows={rows} />
+        <InvoiceRow key={row.id} {...row} {...{ rows, setRows }} />
       ))}
       <Button loading={loading} type="primary" htmlType="submit">
         انشاء فاتورة
@@ -221,6 +234,13 @@ function CreateInvoice({}) {
         {clientNames.map((name, i) => (
           <option value={name} key={i}>
             {name}
+          </option>
+        ))}
+      </datalist>
+      <datalist id="title-suggestions">
+        {rowTitleSuggestions.map((s, i) => (
+          <option key={i} value={s}>
+            {s}
           </option>
         ))}
       </datalist>
@@ -250,7 +270,7 @@ function InvoiceRow({ title, price, qty, total, id, setRows, rows }) {
       price: "",
       qty: "",
       total: "",
-      id: Math.floor(Math.random() * 1000000) + 1,
+      id: crypto.randomUUID(),
     };
     rows.splice(currentRowIndex + 1, 0, newRow);
     setRows([...rows]);
@@ -263,6 +283,7 @@ function InvoiceRow({ title, price, qty, total, id, setRows, rows }) {
         name="title"
         defaultValue={title}
         onChange={(e) => handleChange("title", e.target.value)}
+        list="title-suggestions"
       />
       <Input
         type="text"

@@ -122,3 +122,17 @@ exports.deleteInvoice = catchAsync(async (req, res) => {
   await db.invoices.deletePro({ _id: req.params.id });
   res.sendStatus(200);
 });
+
+exports.getInvoiceRowTitleSuggestions = (_, res) => {
+  res.json([
+    "زجاج سيكوريت 10مل ابيض",
+    "اكسسوار",
+    "مصنعية",
+    "مسطرة مستورد",
+    "طقم باب سيكوريت",
+    "ماكينة باب سيكوريت",
+    "مقبض باب سيكوريت",
+    "مساطر وزوايا",
+    "حرف الومونيوم",
+  ]);
+};
