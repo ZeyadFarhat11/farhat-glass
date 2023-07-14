@@ -1,1 +1,0 @@
-{"name":"زياد فرحات","debt":6500,"transactions":[{"type":"purchase","date":1689065980202,"amount":6500,"description":{"invoice":"5DEBceD6qaxxvQgd"}}],"createdAt":1689065626797,"updatedAt":1689066192470,"_id":"emWNZjgQi2h3IvtN"}
