@@ -1,0 +1,22 @@
+#home {
+  background-color: #f1f1f1;
+  height: calc(100vh - 50px);
+  .box-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding-top: 30px;
+  }
+  .box {
+    // width: 300px;
+    background-color: #fff;
+    padding: 10px;
+    // height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    .label {
+    }
+    .value {
+    }
+  }
+}
