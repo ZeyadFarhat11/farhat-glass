@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../../utils/api";
 import { Table, Space, Input, InputNumber, Button, DatePicker } from "antd";
+import { Calculator } from "react-mac-calculator";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -85,6 +86,7 @@ export default function Invoices() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [createInvoiceActive, setCreateInvoiceActive] = useState(false);
+  const [calcActive, setCalcActive] = useState(false);
 
   async function loadInvoices() {
     try {
@@ -130,7 +132,11 @@ export default function Invoices() {
         >
           انشاء فاتورة
         </Button>
-        {createInvoiceActive && <CreateInvoice />}
+        <Button onClick={() => setCalcActive((p) => !p)} className="my-3 me-2">
+          الالة الحاسبة
+        </Button>
+        {calcActive && <Calculator />}
+        <CreateInvoice active={createInvoiceActive} />
         <h2 className="title">الفـــــواتير</h2>
         <Table
           columns={columns}
@@ -154,7 +160,7 @@ const initialRows = [
   },
 ];
 
-function CreateInvoice({}) {
+function CreateInvoice({ active }) {
   const [client, setClient] = useState("");
   const [invoiceDate, setInvoiceDate] = useState(Date.now());
   const [invoiceTotal, setInvoiceTotal] = useState();
@@ -207,7 +213,10 @@ function CreateInvoice({}) {
     loadRowTitleSuggestions();
   }, []);
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: active ? "block" : "none" }}
+    >
       <h4 className="mb-3">معلومات الفاتورة</h4>
       <div className="control">
         <Input

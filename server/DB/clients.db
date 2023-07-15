@@ -1,3 +1,0 @@
-{"name":"قرية الصيادلة","debt":13825,"transactions":[null,{"type":"purchase","date":1689362827338,"amount":13825,"description":{"invoice":"Xjm1h2pJQHEGBVB8"}}],"createdAt":1689362821335,"updatedAt":1689363139617,"_id":"Ep6PGYe8Fo5UjAfF"}
-{"name":"محمد أبو المجد","debt":220000,"transactions":[{"type":"purchase","date":1689362756925,"amount":220000,"description":"الدين المبدئي"}],"createdAt":1689362756925,"updatedAt":1689362756925,"_id":"eTAY5b0p6lAaDLrT"}
-{"name":"عمر الاسواني","debt":11800,"transactions":[null,{"type":"purchase","date":1689337160344,"amount":11800,"description":{"invoice":"kQNX3jwT7j2XwyTC"}}],"createdAt":1689337155229,"updatedAt":1689337305774,"_id":"pTj6AiaxXhUY9hDZ"}
