@@ -3,11 +3,11 @@ const path = require("node:path");
 const Datastore = require("nedb");
 const db = {
   clients: new Datastore({
-    filename: path.join(__dirname, "clients.txt"),
+    filename: path.join(__dirname, "clients.db"),
     autoload: true,
   }),
   invoices: new Datastore({
-    filename: path.join(__dirname, "invoices.txt"),
+    filename: path.join(__dirname, "invoices.db"),
     autoload: true,
   }),
 };
