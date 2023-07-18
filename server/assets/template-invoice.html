@@ -40,21 +40,29 @@
       .table .row:last-child {
         border-bottom: none;
       }
-      .table .row.empty {
-        height: 41px;
+      .table .row.empty span {
+        padding: 17px 0;
       }
       .table .row,
       .table .head {
         display: grid;
-        grid-template-columns: 40px 3fr 1fr 1fr 1.5fr;
+        grid-template-columns: 40px 4fr 1fr 1fr 1fr;
         /* border: 1px solid var(--border-color); */
       }
       .table span {
         border-left: var(--border);
-        padding: 10px 0;
+        padding: 6px 0;
         text-align: center;
-	font-size: 12px;
+        font-size: 16px;
         line-height: 1.5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      @media print {
+        .table span {
+          font-size: 13px;
+        }
       }
       .table span:last-child {
         border: none;
@@ -67,7 +75,7 @@
         gap: 10px;
         font-weight: 600;
         font-size: 20px;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
       }
 
       .footer {
@@ -96,9 +104,15 @@
         font-weight: bold;
         width: 180px;
         text-align: center;
-	display: none;
+        display: none;
         font-size: 11px;
         display: none;
+      }
+      .title {
+        text-align: center;
+        font-weight: bold;
+        font-size: 25px;
+        padding-bottom: 25px;
       }
     </style>
   </head>
@@ -156,6 +170,7 @@
         <span></span>
       </div>
     </div>
+    <p class="title"></p>
 
     <!-- Table  -->
     <div class="table">

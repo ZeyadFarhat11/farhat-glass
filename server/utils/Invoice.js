@@ -61,14 +61,15 @@ class InvoiceHTML {
     return this;
   }
 
-  fromInvoiceDocument({ rows, _id, client, invoiceDate, invoiceTotal }) {
+  fromInvoiceDocument({ rows, _id, client, invoiceDate, total, title }) {
     this.setRows(rows)
       .fillRows()
       .setClient(client?.name || "")
       .setDate(this.convertDate(invoiceDate))
       .setInvoiceID(_id)
-      .setInvoiceTotal(invoiceTotal)
-      .setTitle(`فاتورة ${client?.name || ""}`);
+      .setInvoiceTotal(total)
+      .setDocumentTitle(`فاتورة ${client?.name || ""}`)
+      .setInvoiceTitle(title);
     return this;
   }
   convertDate(d) {
@@ -79,8 +80,12 @@ class InvoiceHTML {
   getHTML() {
     return this.document.documentElement.outerHTML;
   }
-  setTitle(title) {
+  setDocumentTitle(title) {
     this.document.title = title;
+    return this;
+  }
+  setInvoiceTitle(title) {
+    this.document.querySelector(".title").innerHTML = title;
     return this;
   }
 }
