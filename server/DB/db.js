@@ -31,5 +31,7 @@ db.clients.deletePro = promisify("remove");
 db.invoices.deletePro = promisify("remove");
 db.clients.updatePro = promisify("update");
 db.invoices.updatePro = promisify("update");
+db.clients.countPro = promisify("count");
+db.invoices.countPro = promisify("count");
 
 module.exports = db;

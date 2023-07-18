@@ -34,22 +34,21 @@ exports.makeTransaction = catchAsync(async (req, res) => {
 exports.createClient = catchAsync(async (req, res) => {
   const { name, debt } = req.body;
   const currentTime = Date.now();
-  const clientDocument = await db.clients.insertPro({
+  const clientObject = {
     name,
     debt: +debt || 0,
-    transactions: [
-      debt
-        ? {
-            type: "purchase",
-            date: Date.now(),
-            amount: +debt,
-            description: "الدين المبدئي",
-          }
-        : undefined,
-    ],
+    transactions: [],
     createdAt: currentTime,
     updatedAt: currentTime,
-  });
+  };
+  if (debt)
+    clientObject.transactions.push({
+      type: "purchase",
+      date: Date.now(),
+      amount: +debt,
+      description: "الدين المبدئي",
+    });
+  const clientDocument = await db.clients.insertPro(clientObject);
 
   res.status(200).json(clientDocument);
 });

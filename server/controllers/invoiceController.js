@@ -9,7 +9,7 @@ const calcInvoiceTotal = (rows) =>
   rows.map((row) => +row.at(-1)).reduce((a, b) => a + b, 0);
 
 exports.createInvoice = catchAsync(async (req, res) => {
-  let { rows, date, invoiceTotal, client } = req.body;
+  let { rows, date, total, client, title } = req.body;
 
   let clientDocument = await db.clients.findOnePro({ name: client });
   let currentTime = Date.now();
@@ -25,14 +25,15 @@ exports.createInvoice = catchAsync(async (req, res) => {
   // if (!clientDocument) clientDocument = await Client.create({ name: client });
 
   const invoiceDateMS = date || Date.now();
-  invoiceTotal = invoiceTotal || calcInvoiceTotal(rows);
+  total = total || calcInvoiceTotal(rows);
   currentTime = Date.now();
 
   const invoiceDocument = await db.invoices.insertPro({
     client: clientDocument?._id,
     invoiceDate: invoiceDateMS,
     rows,
-    invoiceTotal,
+    total,
+    title,
     createdAt: currentTime,
     updatedAt: currentTime,
   });
@@ -40,7 +41,7 @@ exports.createInvoice = catchAsync(async (req, res) => {
   const transaction = {
     type: "purchase",
     date: invoiceDateMS,
-    amount: invoiceTotal,
+    amount: total,
     description: { invoice: invoiceDocument._id },
   };
 
@@ -50,7 +51,7 @@ exports.createInvoice = catchAsync(async (req, res) => {
       {
         $push: { transactions: transaction },
         $set: {
-          debt: clientDocument.debt + invoiceTotal,
+          debt: clientDocument.debt || 0 + +total,
           updatedAt: Date.now(),
         },
       },
@@ -58,13 +59,13 @@ exports.createInvoice = catchAsync(async (req, res) => {
     );
   }
   // clientDocument.transactions.push(transaction);
-  // clientDocument.debt += invoiceTotal;
+  // clientDocument.debt += total;
   // await clientDocument.save();
 
   // const invoiceDocument = await Invoice.create({
   //   client: clientDocument.id,
   //   invoiceDate: invoiceDateMS,
-  //   invoiceTotal,
+  //   total,
   //   rows,
   // });
 
