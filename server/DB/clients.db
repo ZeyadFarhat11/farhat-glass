@@ -1,6 +1,1 @@
-{"name":"م/زياد فرحات","debt":1500,"transactions":[{"type":"purchase","date":1689685786407,"amount":1500,"description":{"invoice":"6W0NbZ7fmtcYmlr8"}}],"createdAt":1689685808224,"updatedAt":1689685808229,"_id":"JUF9Kz991D7oMxqo"}
-{"name":"م/حكوكشة","debt":4000,"transactions":[{"type":"purchase","date":1689685827561,"amount":4000,"description":"الدين المبدئي"}],"createdAt":1689685827561,"updatedAt":1689685827561,"_id":"wybBWsHJN9fYNsnb"}
-{"name":"م/زياد فرحات","debt":null,"transactions":[],"createdAt":1689685808224,"updatedAt":1689690074540,"_id":"JUF9Kz991D7oMxqo"}
-{"$$deleted":true,"_id":"JUF9Kz991D7oMxqo"}
-{"$$deleted":true,"_id":"wybBWsHJN9fYNsnb"}
 {"name":"م/ هادي الشناوي","debt":0,"transactions":[],"createdAt":1689690163644,"updatedAt":1689690163644,"_id":"FWZf3IW6DNDSFCoi"}
