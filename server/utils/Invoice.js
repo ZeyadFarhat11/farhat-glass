@@ -42,9 +42,9 @@ class InvoiceHTML {
       const rowHTML = `<div class="row">
         <span>${lastId + 1}</span>
         <span>${row[0]}</span>
-        <span>${row[1]}</span>
-        <span>${row[2]}</span>
+        <span>${row[1]} ${row[2]}</span>
         <span>${row[3]}</span>
+        <span>${row[4].toLocaleString("en-US")}</span>
       </div>`;
       this.document
         .querySelector(".table .body")
@@ -57,7 +57,8 @@ class InvoiceHTML {
     return this;
   }
   setInvoiceTotal(total) {
-    this.document.querySelector(".invoice-total .value").innerHTML = total;
+    this.document.querySelector(".invoice-total .value").innerHTML =
+      total.toLocaleString("en-US");
     return this;
   }
 

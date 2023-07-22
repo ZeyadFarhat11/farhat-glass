@@ -10,6 +10,7 @@ router.post(
 );
 router.get("/", invoiceController.getAllInvoices);
 router.get("/suggestions", invoiceController.getInvoiceRowTitleSuggestions);
+router.get("/quantity-units", invoiceController.getInvoiceQtyUnits);
 router.get(
   "/:id",
   invoiceValidator.validateGetInvoice,
