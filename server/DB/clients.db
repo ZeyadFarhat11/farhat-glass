@@ -1,1 +1,3 @@
 {"name":"م/ هادي الشناوي","debt":17200,"transactions":[{"type":"purchase","date":1689982433786,"amount":17200,"description":{"invoice":"3n87uxFqs9Ot0Bgb"}}],"createdAt":1689690163644,"updatedAt":1689982443937,"_id":"FWZf3IW6DNDSFCoi"}
+{"name":"م/ هادي الشناوي","debt":null,"transactions":[],"createdAt":1689690163644,"updatedAt":1689992989600,"_id":"FWZf3IW6DNDSFCoi"}
+{"$$deleted":true,"_id":"FWZf3IW6DNDSFCoi"}
