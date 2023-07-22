@@ -8,7 +8,6 @@ const db = require("../DB/db");
 exports.validateCreateInvoice = [
   body("rows").isArray({ min: 1 }),
   body("client").optional().isString(),
-  body("date").optional().isNumeric().bail().isLength({ min: 12 }),
   body("invoiceTotal").optional().isNumeric(),
   checkValidationErrors,
 ];
