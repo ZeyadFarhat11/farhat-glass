@@ -36,6 +36,11 @@ const columns = [
     key: "client",
   },
   {
+    title: "العنوان",
+    dataIndex: "title",
+    key: "title",
+  },
+  {
     title: "تاريخ الفاتورة",
     key: "invoiceDate",
     render: (_, record) =>
@@ -59,6 +64,11 @@ const columns = [
     title: "عدد الاصناف",
     dataIndex: "rowsCount",
     key: "rowsCount",
+  },
+  {
+    title: "الاجمالي",
+    dataIndex: "total",
+    key: "total",
   },
   {
     title: "ادوات",
@@ -136,7 +146,10 @@ export default function Invoices() {
           الالة الحاسبة
         </Button>
         {calcActive && <Calculator />}
-        <CreateInvoice active={createInvoiceActive} />
+        <CreateInvoice
+          active={createInvoiceActive}
+          loadInvoices={loadInvoices}
+        />
         <h2 className="title">الفـــــواتير</h2>
         <Table
           columns={columns}
@@ -160,7 +173,7 @@ const initialRows = [
   },
 ];
 
-function CreateInvoice({ active }) {
+function CreateInvoice({ active, loadInvoices }) {
   const [client, setClient] = useState("");
   const [invoiceDate, setInvoiceDate] = useState(Date.now());
   const [invoiceTotal, setInvoiceTotal] = useState();
@@ -168,6 +181,7 @@ function CreateInvoice({ active }) {
   const [rows, setRows] = useState(initialRows);
   const [clientNames, setClientNames] = useState([]);
   const [rowTitleSuggestions, setRowTitleSuggestions] = useState([]);
+  const [invoiceTitle, setInvoiceTitle] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -177,9 +191,11 @@ function CreateInvoice({ active }) {
       const response = await api.post("/invoices", {
         rows: serializeRows(rows),
         date: invoiceDate || undefined,
-        invoiceTotal: invoiceTotal || undefined,
+        total: invoiceTotal || undefined,
         client: client || undefined,
+        title: invoiceTitle,
       });
+      loadInvoices();
       toast.success("تم انشاء الفاتورة بنجاح");
       openInvoiceWindow(response.data.url);
     } catch (err) {
@@ -225,6 +241,13 @@ function CreateInvoice({ active }) {
           defaultValue={client}
           placeholder="اسم العميل"
           list="client-names"
+        />
+      </div>
+      <div className="control">
+        <Input
+          type="text"
+          onChange={(e) => setInvoiceTitle(e.target.value)}
+          placeholder="عنوان الفاتورة"
         />
       </div>
       <div className="control">
