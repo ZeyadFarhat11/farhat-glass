@@ -1,5 +1,8 @@
 const fs = require("fs");
 const { JSDOM } = require("jsdom");
+const dayjs = require("dayjs");
+require("dayjs/locale/ar");
+
 class InvoiceHTML {
   constructor(templatePath) {
     this.templatePath = templatePath;
@@ -66,7 +69,7 @@ class InvoiceHTML {
     this.setRows(rows)
       .fillRows()
       .setClient(client?.name || "")
-      .setDate(this.convertDate(invoiceDate))
+      .setDate(dayjs(invoiceDate).locale("ar").format("YYYY-MM-DD"))
       .setInvoiceID(_id)
       .setInvoiceTotal(total)
       .setDocumentTitle(`فاتورة ${client?.name || ""}`)
