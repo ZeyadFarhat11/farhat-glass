@@ -1,1 +1,4 @@
-{"name":"م/ زياد فرحات","debt":23000,"transactions":[{"type":"purchase","date":"2023-07-22T12:42:49.665Z","amount":23000,"description":{"invoice":"UClkt2tJ0uT0Y9wW"}}],"createdAt":1690029768698,"updatedAt":1690029926882,"_id":"ed6jnbTirJrLEfcI"}
+{"name":"محمد والي","debt":0,"transactions":[],"createdAt":1690031984049,"updatedAt":1690031984049,"_id":"q11W5d3f0FwVzZIB"}
+{"name":"محمد والي","debt":31538,"transactions":[{"type":"purchase","date":"2023-07-22T13:01:08.132Z","amount":31538,"description":{"invoice":"MMAdQtdakaKyojEo"}}],"createdAt":1690031984049,"updatedAt":1690031984062,"_id":"q11W5d3f0FwVzZIB"}
+{"name":"محمد والي","debt":null,"transactions":[],"createdAt":1690031984049,"updatedAt":1690032193699,"_id":"q11W5d3f0FwVzZIB"}
+{"name":"محمد والي","debt":23020,"transactions":[{"type":"purchase","date":"2023-07-22T13:22:11.994Z","amount":23020,"description":{"invoice":"33PRtjG7T9Uo0ZCe"}}],"createdAt":1690031984049,"updatedAt":1690032252815,"_id":"q11W5d3f0FwVzZIB"}
