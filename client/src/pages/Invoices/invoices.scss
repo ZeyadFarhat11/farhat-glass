@@ -14,13 +14,16 @@
   }
   .row-control {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 0.4fr 1fr 1fr 1fr;
     gap: 10px;
     margin-bottom: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid #ccc;
     > * {
       width: 100%;
+    }
+    .qty-unit {
+      font-size: 12px;
     }
     @include tablet {
       input {

@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../../utils/api";
 import { Table, Space, Input, InputNumber, Button, DatePicker } from "antd";
 import { Calculator } from "react-mac-calculator";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEye,
-  faMinusCircle,
-  faPlusCircle,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./invoices.scss";
+import InvoiceRow from "../../components/InvoiceRow/InvoiceRow";
+import { generateRandomNumber } from "../../utils";
+import dayjs from "dayjs";
+
+window.dayjs = dayjs;
 
 const openInvoiceWindow = (url) => {
   const anchor = document.createElement("a");
@@ -20,13 +20,6 @@ const openInvoiceWindow = (url) => {
   document.body.append(anchor);
   anchor.click();
   anchor.remove();
-};
-
-const generateRandomNumber = () => {
-  const min = 1;
-  const max = 1000000000;
-  const randomNumber = Math.floor(Math.random() * (max - min + 1) + min);
-  return randomNumber;
 };
 
 const columns = [
@@ -43,22 +36,12 @@ const columns = [
   {
     title: "تاريخ الفاتورة",
     key: "invoiceDate",
-    render: (_, record) =>
-      new Date(record.invoiceDate)
-        .toLocaleDateString({
-          language: "ar",
-        })
-        .replace(/\//g, "-"),
+    render: (_, record) => dayjs(record.invoiceDate).format("YYYY-MM-DD"),
   },
   {
     title: "تاريخ الانشاء",
     key: "invoiceDate",
-    render: (_, record) =>
-      new Date(record.createdAt)
-        .toLocaleDateString({
-          language: "ar",
-        })
-        .replace(/\//g, "-"),
+    render: (_, record) => dayjs(record.invoiceDate).format("YYYY-MM-DD"),
   },
   {
     title: "عدد الاصناف",
@@ -84,19 +67,23 @@ const columns = [
         <button onClick={() => record.deleteInvoice(record)}>
           <FontAwesomeIcon icon={faTrash} />
         </button>
+        <button onClick={() => record.editInvoice(record)}>
+          <FontAwesomeIcon icon={faEdit} />
+        </button>
       </Space>
     ),
   },
 ];
 
 const serializeRows = (rows) =>
-  rows.map((row) => [row.title, row.qty, row.price, row.total]);
+  rows.map((row) => [row.title, row.qty, row.qtyUnit, row.price, row.total]);
 
 export default function Invoices() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [createInvoiceActive, setCreateInvoiceActive] = useState(false);
   const [calcActive, setCalcActive] = useState(false);
+  const [editingInvoice, setEditingInvoice] = useState();
 
   async function loadInvoices() {
     try {
@@ -129,6 +116,11 @@ export default function Invoices() {
     }
   };
 
+  const editInvoice = (record) => {
+    console.log(record);
+    setEditingInvoice(record);
+  };
+
   useEffect(() => {
     loadInvoices();
   }, []);
@@ -149,11 +141,17 @@ export default function Invoices() {
         <CreateInvoice
           active={createInvoiceActive}
           loadInvoices={loadInvoices}
+          editingInvoice={editingInvoice}
+          setEditingInvoice={setEditingInvoice}
         />
         <h2 className="title">الفـــــواتير</h2>
         <Table
           columns={columns}
-          dataSource={invoices.map((i) => ({ ...i, deleteInvoice }))}
+          dataSource={invoices.map((i) => ({
+            ...i,
+            deleteInvoice,
+            editInvoice,
+          }))}
           rowKey={(i) => i._id}
           bordered={true}
           pagination={false}
@@ -169,24 +167,35 @@ const initialRows = [
     price: "",
     total: "",
     qty: "",
+    qtyUnit: "",
     id: generateRandomNumber(),
   },
 ];
 
-function CreateInvoice({ active, loadInvoices }) {
+function CreateInvoice({
+  active,
+  loadInvoices,
+  editingInvoice,
+  setEditingInvoice,
+}) {
   const [client, setClient] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState(Date.now());
+  const [invoiceDate, setInvoiceDate] = useState(dayjs());
   const [invoiceTotal, setInvoiceTotal] = useState();
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState(initialRows);
   const [clientNames, setClientNames] = useState([]);
   const [rowTitleSuggestions, setRowTitleSuggestions] = useState([]);
   const [invoiceTitle, setInvoiceTitle] = useState("");
+  const [qtyUnits, setQtyUnits] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
     setLoading(true);
+    if (editingInvoice) {
+      handleEditSubmit();
+      return;
+    }
     try {
       const response = await api.post("/invoices", {
         rows: serializeRows(rows),
@@ -205,6 +214,9 @@ function CreateInvoice({ active, loadInvoices }) {
       setLoading(false);
     }
   };
+
+  const handleEditSubmit = async () => {};
+
   const loadClientNames = async () => {
     try {
       const response = await api.get("/clients/names");
@@ -224,10 +236,92 @@ function CreateInvoice({ active, loadInvoices }) {
       // handleError(err)
     }
   };
+
+  const loadQtyUnits = async () => {
+    try {
+      const response = await api.get("/invoices/quantity-units");
+      setQtyUnits(response.data);
+    } catch (err) {
+      // handleErr(err);
+      console.log(err);
+    }
+  };
+
+  const restoreLastInvoice = () => {
+    if (localStorage.invoice) {
+      const storedInvoice = JSON.parse(localStorage.invoice);
+      setClient(storedInvoice.client || "");
+      setRows(storedInvoice.rows || []);
+    } else {
+      toast.error("لا يوجد فاتورة محفوظة");
+    }
+  };
+
+  const fillData = (record) => {
+    setClient(record.client.name);
+    setRows(
+      record.rows.map((row) => ({
+        title: row[0],
+        qty: row[1],
+        qtyUnit: row[2],
+        price: row[3],
+        total: row[4],
+        id: generateRandomNumber(),
+      }))
+    );
+  };
+
+  const cancelEditing = () => {
+    setEditingInvoice(null);
+    setRows(initialRows);
+    setClient("");
+    setInvoiceTotal("");
+    setInvoiceTitle("");
+    setInvoiceDate(dayjs());
+  };
+
   useEffect(() => {
     loadClientNames();
     loadRowTitleSuggestions();
+    loadQtyUnits();
   }, []);
+
+  let firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    if (editingInvoice) {
+      setClient(editingInvoice.client.name);
+      setRows(
+        editingInvoice.rows.map((row) => ({
+          title: row[0],
+          qty: row[1],
+          qtyUnit: row[2],
+          price: row[3],
+          total: row[4],
+          id: generateRandomNumber(),
+        }))
+      );
+    } else {
+      setClient("");
+      setRows(initialRows);
+    }
+  }, [editingInvoice]);
+
+  // Save Invoice to Local Storage on Change
+  useEffect(() => {
+    if (rows.length === 1 && !rows[0].title) return;
+    localStorage.setItem(
+      "invoice",
+      JSON.stringify({
+        client,
+        rows,
+      })
+    );
+  }, [rows, client, invoiceDate, invoiceTotal]);
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -238,7 +332,7 @@ function CreateInvoice({ active, loadInvoices }) {
         <Input
           type="text"
           onChange={(e) => setClient(e.target.value)}
-          defaultValue={client}
+          value={client}
           placeholder="اسم العميل"
           list="client-names"
         />
@@ -260,15 +354,48 @@ function CreateInvoice({ active, loadInvoices }) {
         />
       </div>
       <div className="control">
-        <DatePicker onChange={(date) => setInvoiceDate(date.$d.getTime())} />
+        <DatePicker
+          onChange={(date) => setInvoiceDate(date)}
+          value={invoiceDate}
+        />
       </div>
       <h4 className="mb-3">محتوي الفاتورة</h4>
       {rows.map((row) => (
-        <InvoiceRow key={row.id} {...row} {...{ rows, setRows }} />
+        <InvoiceRow key={row.id} {...row} {...{ rows, setRows, qtyUnits }} />
       ))}
-      <Button loading={loading} type="primary" htmlType="submit">
-        انشاء فاتورة
-      </Button>
+
+      {editingInvoice ? (
+        <>
+          <Button loading={loading} type="primary" htmlType="submit">
+            حفظ التعديلات
+          </Button>
+          <Button
+            loading={loading}
+            type="default"
+            htmlType="button"
+            className="me-4"
+            onClick={cancelEditing}
+          >
+            الغاء التعديلات
+          </Button>
+        </>
+      ) : (
+        <>
+          <Button loading={loading} type="primary" htmlType="submit">
+            انشاء فاتورة
+          </Button>
+          <Button
+            loading={loading}
+            type="dashed"
+            htmlType="button"
+            onClick={restoreLastInvoice}
+            className="me-4"
+          >
+            استعادة اخر فاتورة
+          </Button>
+        </>
+      )}
+
       <datalist id="client-names">
         {clientNames.map((name, i) => (
           <option value={name} key={i}>
@@ -284,75 +411,5 @@ function CreateInvoice({ active, loadInvoices }) {
         ))}
       </datalist>
     </form>
-  );
-}
-
-function InvoiceRow({ title, price, qty, total, id, setRows, rows }) {
-  const handleChange = (field, value) => {
-    setRows((prevRows) =>
-      prevRows.map((row) => {
-        if (row.id === id) {
-          return { ...row, [field]: value };
-        }
-        return row;
-      })
-    );
-  };
-  const deleteRow = () => {
-    if (rows.length <= 1) return;
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-  };
-  const addRow = () => {
-    const currentRowIndex = rows.findIndex((row) => row.id === id);
-    const newRow = {
-      title: "",
-      price: "",
-      qty: "",
-      total: "",
-      id: generateRandomNumber(),
-    };
-    rows.splice(currentRowIndex + 1, 0, newRow);
-    setRows([...rows]);
-  };
-  return (
-    <div className="row-control">
-      <Input
-        type="text"
-        placeholder="الصنف"
-        name="title"
-        defaultValue={title}
-        onChange={(e) => handleChange("title", e.target.value)}
-        list="title-suggestions"
-      />
-      <Input
-        type="text"
-        name="qty"
-        placeholder="الكمية"
-        defaultValue={qty}
-        onChange={(e) => handleChange("qty", e.target.value)}
-      />
-      <InputNumber
-        name="price"
-        maxLength={6}
-        placeholder="السعر"
-        onChange={(value) => handleChange("price", value)}
-        defaultValue={price}
-      />
-      <InputNumber
-        maxLength={10}
-        name="total"
-        placeholder="الاجمالي"
-        onChange={(value) => handleChange("total", value)}
-        defaultValue={total}
-      />
-      <div className="row-actions">
-        <button className="add" onClick={addRow} type="button">
-          <FontAwesomeIcon icon={faPlusCircle} />
-        </button>
-        <button className="delete" onClick={deleteRow} type="button">
-          <FontAwesomeIcon icon={faMinusCircle} />
-        </button>
-      </div>
-    </div>
   );
 }

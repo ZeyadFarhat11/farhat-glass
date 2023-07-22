@@ -2,7 +2,6 @@ const path = require("path");
 const catchAsync = require("../utils/catchAsync");
 // const Invoice = require("../models/invoiceModel");
 const InvoiceHTML = require("../utils/Invoice");
-// const Client = require("../models/clientModel");
 const db = require("../DB/db");
 
 const calcInvoiceTotal = (rows) =>
@@ -78,6 +77,11 @@ exports.createInvoice = catchAsync(async (req, res) => {
   });
 });
 
+exports.editInvoice = (req, res) => {
+  const { invoice } = req;
+  res.send();
+};
+
 exports.getInvoice = (req, res) => {
   const { invoice } = req;
   const html = new InvoiceHTML(
@@ -126,7 +130,7 @@ exports.deleteInvoice = catchAsync(async (req, res) => {
 
 exports.getInvoiceRowTitleSuggestions = (_, res) => {
   res.json([
-    "زجاج سيكوريت 10مل ابيض",
+    "زجاج سيكوريت 10مل شفاف",
     "اكسسوار",
     "مصنعية",
     "مسطرة مستورد",
@@ -134,6 +138,12 @@ exports.getInvoiceRowTitleSuggestions = (_, res) => {
     "ماكينة باب سيكوريت",
     "مقبض باب سيكوريت",
     "مساطر وزوايا",
-    "حرف الومونيوم",
+    "F حرف الومونيوم",
+    "U حرف الومونيوم",
+    "قطاع",
+    "كفر قطاع",
   ]);
+};
+exports.getInvoiceQtyUnits = (_, res) => {
+  res.json(["م", "م²", "قطعة", "عود"]);
 };
