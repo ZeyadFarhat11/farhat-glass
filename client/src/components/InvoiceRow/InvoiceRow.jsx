@@ -87,7 +87,7 @@ function InvoiceRow({
         className="qty-unit"
       >
         <option value="">الوحدة</option>
-        {qtyUnits.map((unit, i) => (
+        {qtyUnits?.map((unit, i) => (
           <option value={unit} key={i}>
             {unit}
           </option>

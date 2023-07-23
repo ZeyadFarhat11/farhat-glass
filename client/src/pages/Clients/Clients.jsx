@@ -20,8 +20,8 @@ const columns = [
   },
   {
     title: "عدد المعاملات",
-    dataIndex: "transactionsCount",
-    key: "transactionsCount",
+    dataIndex: "transactionCount",
+    key: "transactionCount",
   },
   {
     title: "ادوات",
@@ -76,6 +76,7 @@ export default function Clients() {
           columns={columns}
           dataSource={clients.map((c) => ({ ...c, deleteClient }))}
           rowKey={(r) => r._id}
+          pagination={false}
         />
       </div>
     </main>

@@ -1,4 +1,5 @@
 const Client = require("../models/clientModel");
+const APIFeatures = require("../utils/APIFeatures");
 const catchAsync = require("../utils/catchAsync");
 const httpStatus = require("http-status-codes");
 
@@ -74,10 +75,12 @@ exports.deleteAllClients = catchAsync(async (req, res) => {
 });
 
 exports.getAllClients = catchAsync(async (req, res) => {
-  let clients = await Client.find({}).lean();
+  let clients = await new APIFeatures(Client.find(), req.query)
+    .selectFields()
+    .query.lean();
   clients = clients.map((client) => ({
     ...client,
-    transactionCount: client.transactions.length,
+    transactionCount: client.transactions?.length,
     transactions: undefined,
   }));
   res.status(200).json(clients);

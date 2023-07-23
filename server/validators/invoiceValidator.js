@@ -20,13 +20,21 @@ const WRONG_ID = "Invalid invoice id";
 
 exports.validateUpdateInvoice = [
   param("id").custom(async (id, { req }) => {
-    const invoiceDocument = await Invoice.findById(id);
+    const invoiceDocument = await Invoice.findById(id).populate("client");
     if (!invoiceDocument) throw new Error(WRONG_ID);
     req.invoiceDocument = invoiceDocument;
   }),
   body("rows").isArray({ min: 1 }),
-  body("client").optional().isString(),
-  body("total").optional().isNumeric(),
+  body("client")
+    .isString()
+    .custom(async (id, { req }) => {
+      const clientDocument = await Client.findById(id);
+      if (!clientDocument) throw new Error("Invalid client id");
+      req.clientDocument = clientDocument;
+    }),
+  body("total").isNumeric(),
+  body("date").isString(),
+  body("title").exists(),
   checkValidationErrors,
 ];
 
@@ -47,7 +55,7 @@ exports.validateGetInvoice = [
 exports.validateDeleteInvoice = [
   param("id").custom(async (id, { req }) => {
     const invoiceDocument = await Invoice.findById(id);
-    if (!doc) throw new Error(WRONG_ID);
+    if (!invoiceDocument) throw new Error(WRONG_ID);
     req.invoiceDocument = invoiceDocument;
   }),
   checkValidationErrors,

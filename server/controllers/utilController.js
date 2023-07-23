@@ -14,12 +14,12 @@ exports.getHomeStats = catchAsync(async (req, res) => {
   });
 });
 
-exports.getCreateInvoiceSuggestions = catchAsync(async (req, res) => {
-  const clients = await Client.find().select("name").lean();
-  const clientNames = clients.map((c) => c.name);
+exports.getSuggestions = catchAsync(async (req, res) => {
+  // const clients = await Client.find().select("name").lean();
+  // const clientNames = clients.map((c) => c.name);
   res.json({
     qtyUnits: ["م", "م²", "قطعة", "عود"],
-    clientNames: clientNames,
+    // clientNames: clientNames,
     titles: [
       "زجاج سيكوريت 10مل شفاف",
       "اكسسوار",

@@ -20,7 +20,9 @@ const invoiceSchema = new Schema(
       type: Number,
       required: [true, "Invoice total is required"],
     },
-    title: String,
+    title: {
+      type: String,
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

@@ -35,84 +35,65 @@ exports.createInvoice = catchAsync(async (req, res) => {
     await clientDocument.save();
   }
 
-  const invoiceUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}/${
-    invoiceDocument._id
-  }`;
+  // const invoiceUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}/${
+  //   invoiceDocument._id
+  // }`;
+  await invoiceDocument.populate("client", "name");
   res.status(200).json(invoiceDocument);
 });
 
 exports.updateInvoice = async (req, res) => {
-  let { invoice } = req;
-  const { client } = req.body;
-  let invoiceClient = await db.clients.findOnePro({ _id: invoice.client });
+  let { invoiceDocument, clientDocument } = req;
 
   // if updated the client
-  if (client && invoiceClient.name !== client) {
-    let clientDocument = await db.clients.findOnePro({ name: client });
-    if (!clientDocument) {
-      const currentTime = Date.now();
-      clientDocument = await db.clients.insertPro({
-        name: client,
-        debt: 0,
-        transactions: [],
-        createdAt: currentTime,
-        updatedAt: currentTime,
-      });
-    }
+  if (
+    clientDocument &&
+    String(invoiceDocument.client?._id) !== String(clientDocument?._id)
+  ) {
     // update new client
     const transaction = {
       type: "purchase",
       date: Date.now(),
-      amount: invoice.total,
-      description: { invoice: invoice._id },
+      amount: req.body.total,
+      invoice: invoiceDocument._id,
     };
     clientDocument.transactions.push(transaction);
-    clientDocument.debt += invoice.total;
-    await db.clients.updatePro(
-      { _id: clientDocument._id },
-      { ...clientDocument }
-    );
+    clientDocument.debt += req.body.total;
+    await clientDocument.save();
 
     // update previous client
-    invoiceClient.debt -= invoice.total;
-    invoiceClient.transactions = invoiceClient.transactions.filter(
-      (trans) => trans.description?.invoice !== invoice._id
-    );
-    await db.clients.updatePro(
-      { _id: invoiceClient._id },
-      { ...invoiceClient }
-    );
+    if (invoiceDocument.client) {
+      invoiceDocument.client.debt -= invoiceDocument.total;
+      invoiceDocument.client.transactions =
+        invoiceDocument.client.transactions.filter(
+          (trans) => String(trans.invoice) !== String(invoiceDocument._id)
+        );
 
-    invoice.client = clientDocument._id;
-    invoiceClient = clientDocument;
+      await invoiceDocument.client.save();
+    }
   }
 
-  invoice.title = req.body.title;
-  invoice.rows = req.body.rows;
-  invoice.total = req.body.total;
-  invoice.invoiceDate = req.body.invoiceDate;
+  invoiceDocument.title = req.body.title;
+  invoiceDocument.rows = req.body.rows;
+  invoiceDocument.total = req.body.total;
+  invoiceDocument.date = req.body.date;
+  invoiceDocument.client = clientDocument.id;
 
-  let updateResponse = await db.invoices.updatePro(
-    { _id: invoice._id },
-    invoice,
-    {
-      returnUpdatedDocs: true,
-    }
-  );
-  invoice = updateResponse[1];
-  invoice.client = { name: invoiceClient.name, _id: invoiceClient._id };
-  res.json(invoice);
+  await invoiceDocument.save();
+  await invoiceDocument.populate("client", "name debt");
+  res.json(invoiceDocument);
 };
 
 exports.getInvoice = (req, res) => {
-  const { invoice } = req;
+  const { invoiceDocument } = req;
+  // console.log(req.headers)
   if (req.headers["content-type"] === "application/json") {
-    res.status(200).json(invoice);
+    res.status(200).json(invoiceDocument);
   }
   const html = new InvoiceHTML(
     path.join(__dirname, "../assets/template-invoice.html")
   )
-    .fromInvoiceDocument(invoice)
+    .fromInvoiceDocument(invoiceDocument)
     .getHTML();
 
   res.status(200).send(html);
@@ -129,7 +110,7 @@ exports.deleteInvoice = catchAsync(async (req, res) => {
 
   if (clientDocument) {
     clientDocument.transactions = clientDocument.transactions.filter(
-      (t) => t.invoice !== invoiceDocument._id
+      (t) => String(t.invoice) !== String(invoiceDocument._id)
     );
     clientDocument.debt -= invoiceDocument.total;
     await clientDocument.save();
