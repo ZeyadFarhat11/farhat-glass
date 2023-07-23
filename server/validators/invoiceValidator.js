@@ -1,58 +1,54 @@
 const { body, param } = require("express-validator");
 const checkValidationErrors = require("../middleware/checkValidationErrors");
-// const Client = require("../models/clientModel");
-// const mongoose = require("mongoose");
-// const Invoice = require("../models/invoiceModel");
-const db = require("../DB/db");
+const Invoice = require("../models/invoiceModel");
+const Client = require("../models/clientModel");
 
 exports.validateCreateInvoice = [
   body("rows").isArray({ min: 1 }),
-  body("client").optional().isString(),
-  body("invoiceTotal").optional().isNumeric(),
+  body("client")
+    .optional()
+    .custom(async (client, { req }) => {
+      const clientDocument = await Client.findById(client);
+      if (!clientDocument) throw new Error("Invalid client id");
+      req.clientDocument = clientDocument;
+    }),
+  body("total").optional().isNumeric(),
   checkValidationErrors,
 ];
 
+const WRONG_ID = "Invalid invoice id";
+
 exports.validateUpdateInvoice = [
   param("id").custom(async (id, { req }) => {
-    const invoiceDocument = await db.invoices.findOnePro({ _id: id });
-    if (!invoiceDocument) throw new Error("معرف فاتورة خاطئ");
-    req.invoice = invoiceDocument;
+    const invoiceDocument = await Invoice.findById(id);
+    if (!invoiceDocument) throw new Error(WRONG_ID);
+    req.invoiceDocument = invoiceDocument;
   }),
   body("rows").isArray({ min: 1 }),
   body("client").optional().isString(),
-  body("invoiceTotal").optional().isNumeric(),
+  body("total").optional().isNumeric(),
   checkValidationErrors,
 ];
 
 exports.validateGetInvoice = [
   param("id").custom(async (id, { req }) => {
-    const invoiceDocument = await db.invoices.findOnePro({ _id: id });
-    // const invoiceDocument = await Invoice.findById(id);
+    const invoiceDocument = await Invoice.findById(id).populate(
+      "client",
+      "name"
+    );
 
-    if (!invoiceDocument) throw new Error("معرف فاتورة خاطئ");
+    if (!invoiceDocument) throw new Error(WRONG_ID);
 
-    let clientDocument;
-    if (invoiceDocument.client) {
-      clientDocument = await db.clients.findOnePro({
-        _id: invoiceDocument.client,
-      });
-    }
-    req.invoice = {
-      ...invoiceDocument,
-      client: clientDocument
-        ? { name: clientDocument?.name, _id: clientDocument._id }
-        : undefined,
-    };
-    // req.invoice = await invoiceDocument.populate("client", { name: 1 });
+    req.invoiceDocument = invoiceDocument;
   }),
   checkValidationErrors,
 ];
 
 exports.validateDeleteInvoice = [
   param("id").custom(async (id, { req }) => {
-    const doc = await db.invoices.findOnePro({ _id: id });
-    if (!doc) throw new Error("معرف فاتورة غير صحيح");
-    req.invoice = doc;
+    const invoiceDocument = await Invoice.findById(id);
+    if (!doc) throw new Error(WRONG_ID);
+    req.invoiceDocument = invoiceDocument;
   }),
   checkValidationErrors,
 ];

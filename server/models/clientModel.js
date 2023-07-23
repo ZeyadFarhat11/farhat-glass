@@ -20,6 +20,10 @@ const transactionSchema = new Schema(
       type: String,
       default: "",
     },
+    invoice: {
+      type: mongoose.Types.ObjectId,
+      ref: "Invoice",
+    },
   },
   { _id: false }
 );

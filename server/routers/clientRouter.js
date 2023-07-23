@@ -1,34 +1,24 @@
 const { Router } = require("express");
 const clientController = require("../controllers/clientController");
 const clientValidator = require("../validators/clientValidator");
+const checkConfirmationCode = require("../middleware/checkConfirmationCode");
 const router = Router();
 
-router.post(
-  "/",
-  clientValidator.validateCreateClient,
-  clientController.createClient
-);
-router.post(
-  "/transactions",
-  clientValidator.validateMakeTransaction,
-  clientController.makeTransaction
-);
-router.delete(
-  "/:id",
-  clientValidator.validateDeleteClient,
-  clientController.deleteClient
-);
-router.get("/", clientController.getAllClients);
-router.get("/names", clientController.getClientNames);
-router.get(
-  "/:id",
-  clientValidator.validateGetClient,
-  clientController.getClient
-);
-router.patch(
-  "/:id",
-  clientValidator.validateUpdateClient,
-  clientController.updateClient
-);
+// router.post(
+//   "/transactions",
+//   clientValidator.validateMakeTransaction,
+//   clientController.makeTransaction
+// );
+router
+  .route("/:id")
+  .delete(clientValidator.validateDeleteClient, clientController.deleteClient)
+  .get(clientValidator.validateGetClient, clientController.getClient)
+  .patch(clientValidator.validateUpdateClient, clientController.updateClient);
+
+router
+  .route("/")
+  .delete(checkConfirmationCode, clientController.deleteAllClients)
+  .get(clientController.getAllClients)
+  .post(clientValidator.validateCreateClient, clientController.createClient);
 
 module.exports = router;

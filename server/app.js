@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
-const db = require("./DB/db");
+// const db = require("./DB/db");
 
 const app = express();
 
@@ -17,18 +17,8 @@ if (process.env.NODE_ENV === "development") {
 
 app.use("/api/v1/invoices", require("./routers/invoiceRouter"));
 app.use("/api/v1/clients", require("./routers/clientRouter"));
-app.use("/api/v1/home", async (req, res) => {
-  const clients = await db.clients.findPro({});
-  const invoicesCount = await db.invoices.countPro({});
-  const remainingDebt = clients
-    .map((client) => client.debt)
-    .reduce((a, b) => a + b, 0);
-  res.json({
-    clientsCount: clients.length,
-    invoicesCount,
-    remainingDebt,
-  });
-});
+app.use("/api/v1", require("./routers/utilRouter"));
+// app.use("/api/v1/home", );
 
 app.use(express.static(path.join(__dirname, "../client/dist")));
 app.use((req, res) => {

@@ -1,6 +1,6 @@
-const db = require("../DB/db");
-// const Client = require("../models/clientModel");
+const Client = require("../models/clientModel");
 const catchAsync = require("../utils/catchAsync");
+const httpStatus = require("http-status-codes");
 
 exports.makeTransaction = catchAsync(async (req, res) => {
   const { client, amount, date, operation, title } = req.body;
@@ -33,65 +33,52 @@ exports.makeTransaction = catchAsync(async (req, res) => {
 
 exports.createClient = catchAsync(async (req, res) => {
   const { name, debt } = req.body;
-  const currentTime = Date.now();
-  const clientObject = {
-    name,
-    debt: +debt || 0,
-    transactions: [],
-    createdAt: currentTime,
-    updatedAt: currentTime,
-  };
+
+  const transactions = [];
   if (debt)
-    clientObject.transactions.push({
+    transactions.push({
       type: "purchase",
-      date: Date.now(),
-      amount: +debt,
       description: "الدين المبدئي",
+      amount: debt,
     });
-  const clientDocument = await db.clients.insertPro(clientObject);
+
+  const clientDocument = await Client.create({
+    name,
+    debt,
+    transactions,
+  });
 
   res.status(200).json(clientDocument);
 });
 
 exports.getClient = catchAsync(async (req, res) => {
   // res.cookie("cookie", "cookieValue", { maxAge: 5000000, httpOnly: true });
-  res.status(200).json(req.client);
+  res.status(200).json(req.clientDocument);
 });
 
 exports.updateClient = catchAsync(async (req, res) => {
-  const { client } = req;
-  db.clients.update(
-    { _id: client._id },
-    { name: req.body.name || client.name, updatedAt: Date.now() },
-    { returnUpdatedDocs: true },
-    (err, _, doc) => {
-      if (err) {
-        console.log(err);
-        return res.status(400).send(err.message);
-      }
-
-      res.status(200).json(doc);
-    }
-  );
-});
-exports.deleteClient = catchAsync(async (req, res) => {
-  await db.invoices.deletePro({ client: req.client._id }, { multi: true });
-  await db.clients.deletePro({ _id: req.client._id });
+  const { clientDocument } = req;
+  clientDocument.name = req.name || clientDocument.name;
+  await clientDocument.save();
   res.sendStatus(200);
 });
-exports.getAllClients = catchAsync(async (req, res) => {
-  // const clients = await Client.find({}).select("-transactions -__v");
-  const clients = await db.clients.findPro({});
-  // console.log(clients);
-  res
-    .status(200)
-    .json(
-      clients.map((c) => ({ ...c, transactionsCount: c.transactions.length }))
-    );
+exports.deleteClient = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  await Invoice.deleteMany({ client: id });
+  await Client.deleteOne({ _id: id });
+  res.sendStatus(200);
+});
+exports.deleteAllClients = catchAsync(async (req, res) => {
+  await Client.deleteMany({});
+  res.sendStatus(200);
 });
 
-exports.getClientNames = catchAsync(async (req, res) => {
-  const clients = await db.clients.findPro({});
-  const names = clients.map((client) => client.name);
-  res.json(names);
+exports.getAllClients = catchAsync(async (req, res) => {
+  let clients = await Client.find({}).lean();
+  clients = clients.map((client) => ({
+    ...client,
+    transactionCount: client.transactions.length,
+    transactions: undefined,
+  }));
+  res.status(200).json(clients);
 });

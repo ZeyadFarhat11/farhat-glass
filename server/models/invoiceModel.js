@@ -7,7 +7,7 @@ const invoiceSchema = new Schema(
       type: mongoose.Types.ObjectId,
       ref: "Client",
     },
-    invoiceDate: {
+    date: {
       type: Date,
       required: [true, "invoice date is required"],
     },
@@ -16,10 +16,11 @@ const invoiceSchema = new Schema(
       required: [true, "Invoice rows is required"],
       minlength: 1,
     },
-    invoiceTotal: {
+    total: {
       type: Number,
       required: [true, "Invoice total is required"],
     },
+    title: String,
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
