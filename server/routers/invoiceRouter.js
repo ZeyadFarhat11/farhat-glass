@@ -21,4 +21,9 @@ router.delete(
   invoiceValidator.validateDeleteInvoice,
   invoiceController.deleteInvoice
 );
+router.put(
+  "/:id",
+  invoiceValidator.validateUpdateInvoice,
+  invoiceController.updateInvoice
+);
 module.exports = router;

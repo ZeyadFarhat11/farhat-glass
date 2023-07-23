@@ -39,7 +39,7 @@ exports.createInvoice = catchAsync(async (req, res) => {
 
   const transaction = {
     type: "purchase",
-    date: invoiceDateMS,
+    date: Date.now(),
     amount: total,
     description: { invoice: invoiceDocument._id },
   };
@@ -77,13 +77,74 @@ exports.createInvoice = catchAsync(async (req, res) => {
   });
 });
 
-exports.editInvoice = (req, res) => {
-  const { invoice } = req;
-  res.send();
+exports.updateInvoice = async (req, res) => {
+  let { invoice } = req;
+  const { client } = req.body;
+  let invoiceClient = await db.clients.findOnePro({ _id: invoice.client });
+
+  // if updated the client
+  if (client && invoiceClient.name !== client) {
+    let clientDocument = await db.clients.findOnePro({ name: client });
+    if (!clientDocument) {
+      const currentTime = Date.now();
+      clientDocument = await db.clients.insertPro({
+        name: client,
+        debt: 0,
+        transactions: [],
+        createdAt: currentTime,
+        updatedAt: currentTime,
+      });
+    }
+    // update new client
+    const transaction = {
+      type: "purchase",
+      date: Date.now(),
+      amount: invoice.total,
+      description: { invoice: invoice._id },
+    };
+    clientDocument.transactions.push(transaction);
+    clientDocument.debt += invoice.total;
+    await db.clients.updatePro(
+      { _id: clientDocument._id },
+      { ...clientDocument }
+    );
+
+    // update previous client
+    invoiceClient.debt -= invoice.total;
+    invoiceClient.transactions = invoiceClient.transactions.filter(
+      (trans) => trans.description?.invoice !== invoice._id
+    );
+    await db.clients.updatePro(
+      { _id: invoiceClient._id },
+      { ...invoiceClient }
+    );
+
+    invoice.client = clientDocument._id;
+    invoiceClient = clientDocument;
+  }
+
+  invoice.title = req.body.title;
+  invoice.rows = req.body.rows;
+  invoice.total = req.body.total;
+  invoice.invoiceDate = req.body.invoiceDate;
+
+  let updateResponse = await db.invoices.updatePro(
+    { _id: invoice._id },
+    invoice,
+    {
+      returnUpdatedDocs: true,
+    }
+  );
+  invoice = updateResponse[1];
+  invoice.client = { name: invoiceClient.name, _id: invoiceClient._id };
+  res.json(invoice);
 };
 
 exports.getInvoice = (req, res) => {
   const { invoice } = req;
+  if (req.headers["content-type"] === "application/json") {
+    res.status(200).json(invoice);
+  }
   const html = new InvoiceHTML(
     path.join(__dirname, "../assets/template-invoice.html")
   )

@@ -12,6 +12,18 @@ exports.validateCreateInvoice = [
   checkValidationErrors,
 ];
 
+exports.validateUpdateInvoice = [
+  param("id").custom(async (id, { req }) => {
+    const invoiceDocument = await db.invoices.findOnePro({ _id: id });
+    if (!invoiceDocument) throw new Error("معرف فاتورة خاطئ");
+    req.invoice = invoiceDocument;
+  }),
+  body("rows").isArray({ min: 1 }),
+  body("client").optional().isString(),
+  body("invoiceTotal").optional().isNumeric(),
+  checkValidationErrors,
+];
+
 exports.validateGetInvoice = [
   param("id").custom(async (id, { req }) => {
     const invoiceDocument = await db.invoices.findOnePro({ _id: id });
