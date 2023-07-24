@@ -28,6 +28,7 @@ exports.validateUpdateInvoice = [
   body("client")
     .isString()
     .custom(async (id, { req }) => {
+      if (!id) return;
       const clientDocument = await Client.findById(id);
       if (!clientDocument) throw new Error("Invalid client id");
       req.clientDocument = clientDocument;

@@ -7,7 +7,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./assets/style.scss";
 import Home from "./pages/Home/Home";
+import useGlobalContext from "./context/global.context";
+import HashLoader from "react-spinners/HashLoader";
+
 function App() {
+  const { globalLoading } = useGlobalContext();
+
   return (
     <>
       <ToastContainer autoClose={3000} position="top-left" />
@@ -17,6 +22,7 @@ function App() {
         <Route path="/clients" element={<Clients />} />
         <Route path="/invoices" element={<Invoices />} />
       </Routes>
+      <HashLoader loading={globalLoading} id="loading" />
     </>
   );
 }

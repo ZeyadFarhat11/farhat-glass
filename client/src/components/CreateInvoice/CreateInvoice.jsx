@@ -5,6 +5,7 @@ import { generateRandomNumber } from "../../utils";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../../utils/api";
+import "./create-invoice.scss";
 const initialRows = [
   {
     title: "",
@@ -43,7 +44,7 @@ export default function CreateInvoice({
   editingInvoice,
   setEditingInvoice,
 }) {
-  const [client, setClient] = useState();
+  const [client, setClient] = useState({ value: "", label: "بدون عميل" });
   const [invoiceDate, setInvoiceDate] = useState(dayjs());
   const [invoiceTotal, setInvoiceTotal] = useState();
   const [loading, setLoading] = useState(false);
@@ -62,13 +63,15 @@ export default function CreateInvoice({
       return;
     }
     try {
-      const response = await api.post("/invoices", {
+      const data = {
         rows: serializeRows(rows),
-        date: invoiceDate || undefined,
-        total: invoiceTotal || undefined,
-        client: client || undefined,
+        date: invoiceDate,
         title: invoiceTitle,
-      });
+      };
+      if (client.value) data.client = client.value;
+      if (invoiceTotal && window.confirm("هل انت متأكد من اجمالي الفاتورة"))
+        data.total = invoiceTotal;
+      const response = await api.post("/invoices", data);
       loadInvoices();
       toast.success("تم انشاء الفاتورة بنجاح");
       openInvoiceWindow(response.data.url);
@@ -90,13 +93,16 @@ export default function CreateInvoice({
   const handleEditSubmit = async () => {
     setLoading(true);
     try {
-      const response = await api.put(`/invoices/${editingInvoice._id}`, {
+      const data = {
         title: invoiceTitle,
         client: client?.value,
         date: invoiceDate.$d,
         rows: serializeRows(rows),
-        total: invoiceTotal,
-      });
+      };
+      if (invoiceTotal && window.confirm("هل انت متأكد من اجمالي الفاتورة"))
+        data.total = invoiceTotal;
+      else return;
+      await api.put(`/invoices/${editingInvoice._id}`, data);
       toast.success("تم حفظ التغييرات بنجاح");
       resetForm();
       loadInvoices();
@@ -156,16 +162,24 @@ export default function CreateInvoice({
     loadSuggestions();
   }, []);
 
+  // Set editing invoice data
   useEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
       return;
     }
     if (editingInvoice) {
-      setClient({
-        value: editingInvoice.client._id,
-        label: editingInvoice.client.name,
-      });
+      if (editingInvoice.client) {
+        setClient({
+          value: editingInvoice.client._id,
+          label: editingInvoice.client.name,
+        });
+      } else {
+        setClient({
+          value: "",
+          label: "بدون عميل",
+        });
+      }
       setRows(deserializeRows(editingInvoice.rows));
       setInvoiceDate(dayjs(editingInvoice.date));
       setInvoiceTotal(editingInvoice.total);
@@ -273,14 +287,14 @@ export default function CreateInvoice({
           </Button>
         </>
       )}
-      {/* 
+
       <datalist id="title-suggestions">
-        {rowTitleSuggestions.map((s, i) => (
+        {suggestions?.titles?.map((s, i) => (
           <option key={i} value={s}>
             {s}
           </option>
         ))}
-      </datalist> */}
+      </datalist>
     </form>
   );
 }

@@ -10,6 +10,7 @@ import "./invoices.scss";
 
 import dayjs from "dayjs";
 import CreateInvoice from "../../components/CreateInvoice/CreateInvoice";
+import useGlobalContext from "../../context/global.context";
 
 window.dayjs = dayjs;
 
@@ -27,12 +28,12 @@ const columns = [
   {
     title: "تاريخ الفاتورة",
     key: "invoiceDate",
-    render: (_, record) => dayjs(record.invoiceDate).format("YYYY-MM-DD"),
+    render: (_, record) => dayjs(record.date).format("YYYY-MM-DD"),
   },
   {
     title: "تاريخ الانشاء",
     key: "invoiceDate",
-    render: (_, record) => dayjs(record.invoiceDate).format("YYYY-MM-DD"),
+    render: (_, record) => dayjs(record.createdAt).format("YYYY-MM-DD"),
   },
   {
     title: "عدد الاصناف",
@@ -68,17 +69,19 @@ const columns = [
 
 export default function Invoices() {
   const [invoices, setInvoices] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [createInvoiceActive, setCreateInvoiceActive] = useState(false);
   const [calcActive, setCalcActive] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState();
-
+  const { setGlobalLoading } = useGlobalContext();
   async function loadInvoices() {
+    setGlobalLoading(true);
     try {
       const response = await api.get("/invoices");
       setInvoices(response.data.invoices);
     } catch (err) {
       console.log(err);
+    } finally {
+      setGlobalLoading(false);
     }
   }
 
@@ -91,7 +94,6 @@ export default function Invoices() {
       )
     )
       return;
-    setLoading(true);
     try {
       await api.delete(`/invoices/${invoice._id}`);
       toast.error(`تم حذف الفاتورة بنجاح`, { icon: false });
@@ -99,8 +101,6 @@ export default function Invoices() {
     } catch (err) {
       console.log(err);
       // handleError(err)
-    } finally {
-      setLoading(false);
     }
   };
 

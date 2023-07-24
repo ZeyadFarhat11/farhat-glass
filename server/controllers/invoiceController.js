@@ -35,11 +35,11 @@ exports.createInvoice = catchAsync(async (req, res) => {
     await clientDocument.save();
   }
 
-  // const invoiceUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}/${
-  //   invoiceDocument._id
-  // }`;
+  const invoiceUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}/${
+    invoiceDocument._id
+  }`;
   await invoiceDocument.populate("client", "name");
-  res.status(200).json(invoiceDocument);
+  res.status(200).json({ ...invoiceDocument.toObject(), url: invoiceUrl });
 });
 
 exports.updateInvoice = async (req, res) => {
@@ -77,7 +77,7 @@ exports.updateInvoice = async (req, res) => {
   invoiceDocument.rows = req.body.rows;
   invoiceDocument.total = req.body.total;
   invoiceDocument.date = req.body.date;
-  invoiceDocument.client = clientDocument.id;
+  if (clientDocument) invoiceDocument.client = clientDocument.id;
 
   await invoiceDocument.save();
   await invoiceDocument.populate("client", "name debt");

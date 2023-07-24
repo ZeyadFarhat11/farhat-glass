@@ -1,0 +1,40 @@
+@import "../../assets/components.scss";
+.row-control {
+  display: grid;
+  grid-template-columns: 2fr 1fr 0.4fr 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  > * {
+    width: 100%;
+  }
+  .qty-unit {
+    font-size: 12px;
+  }
+  @include tablet {
+    input {
+      font-size: 12px;
+    }
+    [name="title"] {
+      grid-column: span 4;
+    }
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+.row-actions {
+  display: flex;
+  justify-content: space-evenly;
+  // gap: 20px;
+  button {
+    all: unset;
+    font-size: 22px;
+    cursor: pointer;
+    &.delete {
+      color: var(--bs-danger);
+    }
+    &.add {
+      color: var(--bs-primary);
+    }
+  }
+}

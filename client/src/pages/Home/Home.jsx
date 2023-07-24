@@ -1,9 +1,12 @@
+import useGlobalContext from "../../context/global.context";
 import api from "../../utils/api";
 import "./home.scss";
 import { useEffect, useState } from "react";
 function Home() {
   const [data, setData] = useState();
+  const { setGlobalLoading } = useGlobalContext();
   const loadDate = async () => {
+    setGlobalLoading(true);
     try {
       const response = await api.get("/home");
       console.log(response);
@@ -11,6 +14,8 @@ function Home() {
     } catch (err) {
       alert("حدث خطأ ما");
       console.log(err);
+    } finally {
+      setGlobalLoading(false);
     }
   };
   useEffect(() => {
