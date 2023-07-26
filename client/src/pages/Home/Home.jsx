@@ -34,7 +34,7 @@ function Home() {
         </div>
         <div className="box">
           <h3 className="label">باقي المستحقات</h3>
-          <h3 className="value">{data?.remainingDebt}</h3>
+          <h3 className="value">{data?.remainingDebt} جنيه مصري</h3>
         </div>
       </div>
     </main>

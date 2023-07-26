@@ -1,32 +1,29 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const transactionSchema = new Schema(
-  {
-    type: {
-      type: String,
-      required: [true, "transaction type is required"],
-      enum: ["pay", "purchase"],
-    },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
-    amount: {
-      type: Number,
-      required: [true, "Transaction amount is required"],
-    },
-    description: {
-      type: String,
-      default: "",
-    },
-    invoice: {
-      type: mongoose.Types.ObjectId,
-      ref: "Invoice",
-    },
+const transactionSchema = new Schema({
+  type: {
+    type: String,
+    required: [true, "transaction type is required"],
+    enum: ["pay", "purchase"],
   },
-  { _id: false }
-);
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  amount: {
+    type: Number,
+    required: [true, "Transaction amount is required"],
+  },
+  description: {
+    type: String,
+    default: "",
+  },
+  invoice: {
+    type: mongoose.Types.ObjectId,
+    ref: "Invoice",
+  },
+});
 
 const clientSchema = new Schema(
   {

@@ -5,7 +5,8 @@ import api from "../../utils/api";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faEye, faEdit } from "@fortawesome/free-solid-svg-icons";
+import useGlobalContext from "../../context/global.context";
 
 const columns = [
   {
@@ -31,6 +32,9 @@ const columns = [
         <Link to={`/client/${record._id}`}>
           <FontAwesomeIcon icon={faEye} />
         </Link>
+        <button onClick={() => record.editClient(record)}>
+          <FontAwesomeIcon icon={faEdit} />
+        </button>
         <button onClick={() => record.deleteClient(record)}>
           <FontAwesomeIcon icon={faTrash} />
         </button>
@@ -40,19 +44,23 @@ const columns = [
 ];
 
 export default function Clients() {
+  const { globalLoading, setGlobalLoading } = useGlobalContext();
   const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [currentEditClient, setCurrentEditClient] = useState();
   async function loadClients() {
+    setGlobalLoading(true);
     try {
       const response = await api.get("/clients");
       setClients(response.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setGlobalLoading(false);
     }
   }
   const deleteClient = async (client) => {
     if (!window.confirm(`هل انت متأكد من حذف ${client.name}`)) return;
-    setLoading(true);
+    setGlobalLoading(true);
     try {
       await api.delete(`/clients/${client._id}`);
       toast.error(`تم حذف ${client.name} بنجاح`, { icon: false });
@@ -61,8 +69,11 @@ export default function Clients() {
       console.log(err);
       // handleError(err)
     } finally {
-      setLoading(false);
+      setGlobalLoading(false);
     }
+  };
+  const editClient = (record) => {
+    setCurrentEditClient(record);
   };
   useEffect(() => {
     loadClients();
@@ -70,11 +81,25 @@ export default function Clients() {
   return (
     <main id="clients">
       <div className="container">
-        <CreateClient {...{ loading, setLoading, loadClients }} />
+        {currentEditClient ? (
+          <EditClient
+            loading={globalLoading}
+            setLoading={setGlobalLoading}
+            loadClients={loadClients}
+            client={currentEditClient}
+            setCurrentEditClient={setCurrentEditClient}
+          />
+        ) : (
+          <CreateClient
+            loading={globalLoading}
+            setLoading={setGlobalLoading}
+            loadClients={loadClients}
+          />
+        )}
         <h2 className="title">العملاء</h2>
         <Table
           columns={columns}
-          dataSource={clients.map((c) => ({ ...c, deleteClient }))}
+          dataSource={clients.map((c) => ({ ...c, deleteClient, editClient }))}
           rowKey={(r) => r._id}
           pagination={false}
         />
@@ -104,13 +129,12 @@ function CreateClient({ loading, setLoading, loadClients }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="control">
+      <div className="control mt-4">
         <Input
           placeholder="اسم العميل"
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
-          className="client-name"
         />
       </div>
       <div className="control">
@@ -120,9 +144,49 @@ function CreateClient({ loading, setLoading, loadClients }) {
           onChange={(debt) => setDebt(debt)}
         />
       </div>
-      {/* <button className="main-btn"></button> */}
-      <Button type="primary" loading={loading} htmlType="submit">
+      <Button type="primary" htmlType="submit">
         انشاء
+      </Button>
+    </form>
+  );
+}
+function EditClient({
+  loading,
+  setLoading,
+  loadClients,
+  client,
+  setCurrentEditClient,
+}) {
+  const [name, setName] = useState(client.name);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    try {
+      await api.patch(`/clients/${client._id}`, { name });
+      toast.success("تم تعديل العميل بنجاح");
+      loadClients();
+      setCurrentEditClient();
+    } catch (err) {
+      console.log(err);
+      // handleError(err)
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="control mt-4">
+        <Input
+          placeholder="اسم العميل"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          type="text"
+        />
+      </div>
+      <Button type="primary" loading={loading} htmlType="submit">
+        تعديل
       </Button>
     </form>
   );

@@ -1,0 +1,14 @@
+.transactions {
+  border: 2px solid #000;
+  border-radius: 5px;
+  .transaction {
+    border-bottom: 2px solid #000;
+    padding: 15px;
+    p {
+      margin-bottom: 5px;
+    }
+  }
+  .transaction:last-child {
+    border: none;
+  }
+}

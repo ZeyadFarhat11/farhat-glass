@@ -2,13 +2,14 @@ const { body, param } = require("express-validator");
 const checkValidationErrors = require("../middleware/checkValidationErrors");
 // const mongoose = require("mongoose");
 const Client = require("../models/clientModel");
+const checkValidClientId = async (clientId, { req }) => {
+  const clientDocument = await Client.findById(clientId);
+  if (!clientDocument) throw new Error("Invalid client id");
+  req.clientDocument = clientDocument;
+};
 
 exports.validateMakeTransaction = [
-  body("client").custom(async (client, { req }) => {
-    const clientDocument = await Client.findById(client);
-    if (!clientDocument) throw new Error("Invalid client id");
-    req.clientDocument = clientDocument;
-  }),
+  body("client").custom(checkValidClientId),
   body("amount").isNumeric(),
   body("date").optional().isDate(),
   body("operation").isIn(["pay", "purchase"]),
@@ -17,14 +18,22 @@ exports.validateMakeTransaction = [
 ];
 
 exports.validateDeleteClient = [
-  param("id").custom(async (id, { req }) => {
-    const clientDocument = await Client.findById(id);
-    if (!clientDocument) throw new Error("Invalid client id");
-    req.clientDocument = clientDocument;
-  }),
+  param("id").custom(checkValidClientId),
   checkValidationErrors,
 ];
 exports.validateGetClient = exports.validateDeleteClient;
+
+exports.validateDeleteTransaction = [
+  param("clientId").custom(checkValidClientId),
+  param("transactionId").custom(async (transactionId, { req }) => {
+    const transaction = req.clientDocument.transactions.find(
+      (t) => String(t._id) === transactionId
+    );
+    if (!transaction) throw new Error("Invalid transaction id");
+    req.transaction = transaction;
+  }),
+  checkValidationErrors,
+];
 
 exports.validateCreateClient = [
   body("name")
@@ -38,11 +47,7 @@ exports.validateCreateClient = [
 ];
 
 exports.validateUpdateClient = [
-  param("id").custom(async (id, { req }) => {
-    const clientDocument = await Client.findById(id);
-    if (!clientDocument) throw new Error("Invalid client id");
-    req.clientDocument = clientDocument;
-  }),
+  param("id").custom(checkValidClientId),
   body("name")
     .isString()
     .custom(async (name, { req }) => {

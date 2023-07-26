@@ -60,9 +60,9 @@ exports.getClient = catchAsync(async (req, res) => {
 
 exports.updateClient = catchAsync(async (req, res) => {
   const { clientDocument } = req;
-  clientDocument.name = req.name || clientDocument.name;
+  clientDocument.name = req.body.name || clientDocument.name;
   await clientDocument.save();
-  res.sendStatus(200);
+  res.json(clientDocument);
 });
 exports.deleteClient = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -85,4 +85,22 @@ exports.getAllClients = catchAsync(async (req, res) => {
     transactions: undefined,
   }));
   res.status(200).json(clients);
+});
+
+exports.deleteTransaction = catchAsync(async (req, res) => {
+  const { clientDocument, transaction } = req;
+
+  if (transaction.invoice) {
+    await Invoice.findByIdAndDelete(transaction.invoice);
+  }
+  if (transaction.type === "purchase") {
+    clientDocument.debt -= transaction.amount;
+  } else {
+    clientDocument.debt += transaction.amount;
+  }
+  clientDocument.transactions = clientDocument.transactions.filter(
+    (t) => String(t._id) !== req.params.transactionId
+  );
+  await clientDocument.save();
+  res.json(clientDocument);
 });
