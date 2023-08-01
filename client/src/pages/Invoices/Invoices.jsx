@@ -56,11 +56,11 @@ const columns = [
         >
           <FontAwesomeIcon icon={faEye} />
         </Link>
-        <button onClick={() => record.deleteInvoice(record)}>
-          <FontAwesomeIcon icon={faTrash} />
-        </button>
         <button onClick={() => record.editInvoice(record)}>
           <FontAwesomeIcon icon={faEdit} />
+        </button>
+        <button onClick={() => record.deleteInvoice(record)}>
+          <FontAwesomeIcon icon={faTrash} />
         </button>
       </Space>
     ),

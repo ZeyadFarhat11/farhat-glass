@@ -45,13 +45,15 @@ const clientSchema = new Schema(
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-clientSchema.methods.updateDocument = function (requestBody) {
-  delete requestBody.transactions;
-  delete requestBody.debt;
-  delete requestBody._id;
-  for (let key in requestBody) {
-    this[key] = requestBody[key];
+clientSchema.methods.calcDebt = async function () {
+  let transactions = this.transactions;
+  if (!this.transactions) {
+    const clientDocument = await Client.findById(this._id);
+    transactions = clientDocument.transactions;
   }
+  this.debt = transactions
+    .map((t) => (t.type === "pay" ? -t.amount : t.amount))
+    .reduce((a, b) => a + b, 0);
 };
 
 const Client = mongoose.model("Client", clientSchema);

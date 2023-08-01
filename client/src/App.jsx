@@ -13,6 +13,7 @@ import useGlobalContext from "./context/global.context";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./assets/style.scss";
+import Login from "./pages/Login/Login";
 
 function App() {
   const { globalLoading } = useGlobalContext();
@@ -26,6 +27,7 @@ function App() {
         <Route path="/clients" element={<Clients />} />
         <Route path="/client/:clientId" element={<Client />} />
         <Route path="/invoices" element={<Invoices />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <HashLoader loading={globalLoading} id="loading" />
     </>

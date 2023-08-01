@@ -93,14 +93,12 @@ exports.deleteTransaction = catchAsync(async (req, res) => {
   if (transaction.invoice) {
     await Invoice.findByIdAndDelete(transaction.invoice);
   }
-  if (transaction.type === "purchase") {
-    clientDocument.debt -= transaction.amount;
-  } else {
-    clientDocument.debt += transaction.amount;
-  }
+
   clientDocument.transactions = clientDocument.transactions.filter(
     (t) => String(t._id) !== req.params.transactionId
   );
+  await clientDocument.calcDebt();
+
   await clientDocument.save();
   res.json(clientDocument);
 });

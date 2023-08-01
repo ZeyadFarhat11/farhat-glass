@@ -33,6 +33,10 @@ function Home() {
           <h3 className="value">{data?.invoicesCount}</h3>
         </div>
         <div className="box">
+          <h3 className="label">عدد فواتير عرض السعر</h3>
+          <h3 className="value">{data?.offerPriceInvoicesCount}</h3>
+        </div>
+        <div className="box">
           <h3 className="label">باقي المستحقات</h3>
           <h3 className="value">{data?.remainingDebt} جنيه مصري</h3>
         </div>
