@@ -65,14 +65,14 @@ class InvoiceHTML {
     return this;
   }
 
-  fromInvoiceDocument({ rows, _id, client, invoiceDate, total }) {
+  fromInvoiceDocument({ rows, _id, client, invoiceDate,title, total }) {
     this.setRows(rows)
       .fillRows()
       .setClient(client?.name || "")
       .setDate(dayjs(invoiceDate).locale("ar").format("YYYY-MM-DD"))
       .setInvoiceID(_id)
       .setInvoiceTotal(total)
-      .setDocumentTitle(`فاتورة ${client?.name || ""}`);
+      .setDocumentTitle(`فاتورة ${client?.name || ""}${title ? " - " : ""}${title ? title : ""}`);
     return this;
   }
   convertDate(d) {

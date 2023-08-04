@@ -71,7 +71,15 @@ exports.updateInvoice = async (req, res) => {
 
       await invoiceDocument.client.save();
     }
-  }
+  } else if 
+( invoiceDocument.client && String(invoiceDocument.client._id) === String(clientDocument?._id))
+{
+
+const transaction = clientDocument.transactions.find(t => String(t.invoice) === String(invoiceDocument._id));
+clientDocument.debt += req.body.total - transaction.amount;
+transaction.amount = req.body.total;
+await clientDocument.save()
+}
 
   invoiceDocument.title = req.body.title;
   invoiceDocument.rows = req.body.rows;
