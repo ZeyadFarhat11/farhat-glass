@@ -21,6 +21,12 @@ router
   .get(clientController.getAllClients)
   .post(clientValidator.validateCreateClient, clientController.createClient);
 
+router
+  .route("/:clientId/transactions")
+  .post(
+    clientValidator.validateMakeTransaction,
+    clientController.makeTransaction
+  );
 router.delete(
   "/:clientId/transactions/:transactionId",
   clientValidator.validateDeleteTransaction,

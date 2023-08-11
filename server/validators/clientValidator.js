@@ -9,11 +9,10 @@ const checkValidClientId = async (clientId, { req }) => {
 };
 
 exports.validateMakeTransaction = [
-  body("client").custom(checkValidClientId),
+  param("clientId").custom(checkValidClientId),
   body("amount").isNumeric(),
   body("date").optional().isDate(),
-  body("operation").isIn(["pay", "purchase"]),
-  body("title").optional().isString(),
+  body("type").isIn(["pay", "purchase"]),
   checkValidationErrors,
 ];
 

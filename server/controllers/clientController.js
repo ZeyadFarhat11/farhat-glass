@@ -5,30 +5,24 @@ const catchAsync = require("../utils/catchAsync");
 const httpStatus = require("http-status-codes");
 
 exports.makeTransaction = catchAsync(async (req, res) => {
-  const { client, amount, date, operation, title } = req.body;
+  const { amount, type, description } = req.body;
+  const { clientDocument } = req;
 
-  let clientDocument = await Client.findOne({ name: client });
-  if (!clientDocument) {
-    clientDocument = await Client.create({ name: client });
-  }
-
-  const transactionDate = date ? new Date(date) : Date.now();
   const transaction = {
-    type: operation,
-    date: transactionDate,
+    type,
+    date: Date.now(),
     amount,
   };
-  if (operation === "pay") {
-    const defaultTitle = "دفع" + ` ${amount} ` + "جنيه";
-    transaction.description = title || defaultTitle;
+  if (type === "pay") {
+    const defaultDescription = "دفع" + ` ${amount} ` + "جنيه";
+    transaction.description = description || defaultDescription;
     clientDocument.debt -= amount;
-    clientDocument.transactions.push(transaction);
-  } else if (operation === "purchase") {
-    const defaultTitle = "شراء" + ` ${amount} ` + "جنيه";
-    transaction.description = title || defaultTitle;
+  } else if (type === "purchase") {
+    const defaultDescription = "شراء" + ` ${amount} ` + "جنيه";
+    transaction.description = description || defaultDescription;
     clientDocument.debt += amount;
-    clientDocument.transactions.push(transaction);
   }
+  clientDocument.transactions.push(transaction);
   await clientDocument.save();
   res.status(200).json(clientDocument);
 });

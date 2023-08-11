@@ -3,8 +3,10 @@ import "./client.scss";
 import useGlobalContext from "../../context/global.context";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
-import { Button, Input } from "antd";
+import { Button, Input, InputNumber } from "antd";
 import dayjs from "dayjs";
+import Select from "react-select";
+import { toast } from "react-toastify";
 
 export default function Client() {
   const { clientId } = useParams();
@@ -36,6 +38,7 @@ export default function Client() {
         setLoading={setGlobalLoading}
         setClient={setClient}
       />
+      <MakeTransactionForm clientId={clientId} loadClient={loadClient} />
       <h3 className="mt-5 text-center">المعاملات</h3>
       <div className="transactions">
         {client?.transactions?.map((transaction, idx) => (
@@ -92,13 +95,79 @@ function ClientForm({
         <label htmlFor="client-debt">الدين</label>
         <Input value={client.debt} disabled type="text" id="client-debt" />
       </div>
-      <Button
-        type="primary"
-        loading={loading}
-        htmlType="submit"
-        disabled={!isEdited}
-      >
+      <Button type="primary" loading={loading} disabled={!isEdited}>
         تعديل
+      </Button>
+    </form>
+  );
+}
+
+const transitionTypes = [
+  { label: "دفع", value: "pay" },
+  { label: "شراء", value: "purchase" },
+];
+function MakeTransactionForm({ clientId, loadClient }) {
+  const [loading, setLoading] = useState(false);
+  const [type, setType] = useState(transitionTypes[0]);
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
+    try {
+      const res = await api.post(`/clients/${clientId}/transactions`, {
+        type: type.value,
+        amount,
+        description,
+      });
+      toast.success(`تم انشاء عملية ${type.label}`);
+      loadClient();
+      resetForm();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetForm = () => {
+    setAmount("");
+    setDescription("");
+  };
+
+  return (
+    <form className="mt-4" onSubmit={handleSubmit}>
+      <h3>انشاء عملية</h3>
+      <div className="control">
+        <label>نوع العملية</label>
+        <Select
+          options={transitionTypes}
+          defaultValue={type}
+          onChange={(val) => setType(val)}
+        />
+      </div>
+      <div className="control">
+        <label htmlFor="amount">القيمة</label>
+        <InputNumber
+          id="amount"
+          value={amount}
+          onChange={(val) => setAmount(val)}
+          placeholder="القيمة"
+        />
+      </div>
+      <div className="control">
+        <label htmlFor="desc">الوصف</label>
+        <Input
+          id="desc"
+          placeholder="الوصف"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      <Button loading={loading} htmlType="submit">
+        انشاء
       </Button>
     </form>
   );
@@ -111,14 +180,14 @@ function Transaction({ type, date, amount, description, invoice }) {
         النوع : <span>{type === "purchase" ? "شراء" : "دفع"}</span>
       </p>
       <p>
-        التاريخ : <span>{dayjs(date).format("YYYY-MM-DD")}</span>
+        التاريخ : <span>{dayjs(date).format("YYYY-MM-DD hh:mm")}</span>
       </p>
       <p>
         القيمة : <span>{amount}</span>
       </p>
       {description ? (
         <p>
-          الوصف : <p>{description}</p>
+          الوصف : <span>{description}</span>
         </p>
       ) : null}
       {invoice ? (
