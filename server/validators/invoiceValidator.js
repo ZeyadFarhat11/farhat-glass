@@ -12,7 +12,6 @@ exports.validateCreateInvoice = [
       if (!clientDocument) throw new Error("Invalid client id");
       req.clientDocument = clientDocument;
     }),
-  body("total").optional().isNumeric(),
   checkValidationErrors,
 ];
 
@@ -33,7 +32,6 @@ exports.validateUpdateInvoice = [
       if (!clientDocument) throw new Error("Invalid client id");
       req.clientDocument = clientDocument;
     }),
-  body("total").isNumeric(),
   body("date").isString(),
   body("title").exists(),
   checkValidationErrors,

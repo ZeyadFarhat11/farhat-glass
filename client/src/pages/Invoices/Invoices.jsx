@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../../utils/api";
-import { Table, Space, Input, InputNumber, Button, DatePicker } from "antd";
+import { Table, Space, Button } from "antd";
 import { Calculator } from "react-mac-calculator";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,7 +9,8 @@ import { faEdit, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
 import "./invoices.scss";
 
 import dayjs from "dayjs";
-import CreateInvoice from "../../components/CreateInvoice/CreateInvoice";
+import CreateInvoice from "../../components/Invoices/CreateInvoice/CreateInvoice";
+import CalcInvoicesTotal from "../../components/Invoices/CalcInvoicesTotal";
 import useGlobalContext from "../../context/global.context";
 
 window.dayjs = dayjs;
@@ -71,6 +72,7 @@ export default function Invoices() {
   const [invoices, setInvoices] = useState([]);
   const [createInvoiceActive, setCreateInvoiceActive] = useState(false);
   const [calcActive, setCalcActive] = useState(false);
+  const [calcInvoicesTotalActive, setCalcInvoicesTotalActive] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState();
   const { setGlobalLoading } = useGlobalContext();
   async function loadInvoices() {
@@ -126,7 +128,17 @@ export default function Invoices() {
         <Button onClick={() => setCalcActive((p) => !p)} className="my-3 me-2">
           الالة الحاسبة
         </Button>
+        <Button
+          onClick={() => setCalcInvoicesTotalActive((p) => !p)}
+          className="my-3 me-2"
+        >
+          حساب مجموع فواتير
+        </Button>
         {calcActive && <Calculator />}
+        <CalcInvoicesTotal
+          active={calcInvoicesTotalActive}
+          invoices={invoices}
+        />
         <CreateInvoice
           active={createInvoiceActive}
           loadInvoices={loadInvoices}

@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "cd .. && git pull origin main && cd server && nodemon server.js",
+    "start": "nodemon server.js",
+    "startf": "SET MODE=fake&& nodemon server.js",
     "update-db": "git add . && git commit -m \"update database\" && git push origin main"
   },
   "keywords": [],

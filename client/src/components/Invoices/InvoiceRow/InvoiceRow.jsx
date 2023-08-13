@@ -1,7 +1,8 @@
 import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Input, InputNumber } from "antd";
-import { generateRandomNumber } from "../../utils";
+import { generateRandomNumber } from "../../../utils";
+import "./invoice-row.scss";
 
 function InvoiceRow({
   title,

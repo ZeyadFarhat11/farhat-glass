@@ -32,9 +32,6 @@ const columns = [
         <Link to={`/client/${record._id}`}>
           <FontAwesomeIcon icon={faEye} />
         </Link>
-        <button onClick={() => record.editClient(record)}>
-          <FontAwesomeIcon icon={faEdit} />
-        </button>
         <button onClick={() => record.deleteClient(record)}>
           <FontAwesomeIcon icon={faTrash} />
         </button>
@@ -72,34 +69,22 @@ export default function Clients() {
       setGlobalLoading(false);
     }
   };
-  const editClient = (record) => {
-    setCurrentEditClient(record);
-  };
+
   useEffect(() => {
     loadClients();
   }, []);
   return (
     <main id="clients">
       <div className="container">
-        {currentEditClient ? (
-          <EditClient
-            loading={globalLoading}
-            setLoading={setGlobalLoading}
-            loadClients={loadClients}
-            client={currentEditClient}
-            setCurrentEditClient={setCurrentEditClient}
-          />
-        ) : (
-          <CreateClient
-            loading={globalLoading}
-            setLoading={setGlobalLoading}
-            loadClients={loadClients}
-          />
-        )}
+        <CreateClient
+          loading={globalLoading}
+          setLoading={setGlobalLoading}
+          loadClients={loadClients}
+        />
         <h2 className="title">العملاء</h2>
         <Table
           columns={columns}
-          dataSource={clients.map((c) => ({ ...c, deleteClient, editClient }))}
+          dataSource={clients.map((c) => ({ ...c, deleteClient }))}
           rowKey={(r) => r._id}
           pagination={false}
         />
@@ -119,6 +104,8 @@ function CreateClient({ loading, setLoading, loadClients }) {
       await api.post("/clients", { name, debt: debt || 0 });
       toast.success("تم انشاء العميل بنجاح");
       loadClients();
+      setName("");
+      setDebt("");
     } catch (err) {
       console.log(err);
       // handleError(err)
@@ -129,7 +116,8 @@ function CreateClient({ loading, setLoading, loadClients }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="control mt-4">
+      <h4 className="mt-4">عميل جديد</h4>
+      <div className="control mt-3">
         <Input
           placeholder="اسم العميل"
           value={name}

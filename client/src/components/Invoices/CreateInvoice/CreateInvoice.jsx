@@ -1,10 +1,10 @@
 import Select from "react-select";
 import { Input, InputNumber, Button, DatePicker } from "antd";
-import InvoiceRow from "../InvoiceRow/InvoiceRow";
-import { generateRandomNumber } from "../../utils";
+import InvoiceRow from "../../Invoices/InvoiceRow/InvoiceRow";
+import { generateRandomNumber } from "../../../utils";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import api from "../../utils/api";
+import api from "../../../utils/api";
 import "./create-invoice.scss";
 const initialRows = [
   {
@@ -69,8 +69,6 @@ export default function CreateInvoice({
         title: invoiceTitle,
       };
       if (client.value) data.client = client.value;
-      if (invoiceTotal && window.confirm("هل انت متأكد من اجمالي الفاتورة"))
-        data.total = invoiceTotal;
       const response = await api.post("/invoices", data);
       loadInvoices();
       toast.success("تم انشاء الفاتورة بنجاح");
@@ -99,9 +97,6 @@ export default function CreateInvoice({
         date: invoiceDate.$d,
         rows: serializeRows(rows),
       };
-      if (invoiceTotal && window.confirm("هل انت متأكد من اجمالي الفاتورة"))
-        data.total = invoiceTotal;
-      else return;
       await api.put(`/invoices/${editingInvoice._id}`, data);
       toast.success("تم حفظ التغييرات بنجاح");
       resetForm();
@@ -230,6 +225,7 @@ export default function CreateInvoice({
           onChange={(total) => setInvoiceTotal(total)}
           placeholder="اجمالي الفاتورة"
           value={invoiceTotal}
+          disabled
         />
         <Button
           htmlType="button"

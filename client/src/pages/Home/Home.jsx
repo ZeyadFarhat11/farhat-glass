@@ -9,7 +9,6 @@ function Home() {
     setGlobalLoading(true);
     try {
       const response = await api.get("/home");
-      console.log(response);
       setData(response.data);
     } catch (err) {
       alert("حدث خطأ ما");

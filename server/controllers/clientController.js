@@ -48,7 +48,6 @@ exports.createClient = catchAsync(async (req, res) => {
 });
 
 exports.getClient = catchAsync(async (req, res) => {
-  // res.cookie("cookie", "cookieValue", { maxAge: 5000000, httpOnly: true });
   res.status(200).json(req.clientDocument);
 });
 

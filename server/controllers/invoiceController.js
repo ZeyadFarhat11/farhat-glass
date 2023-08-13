@@ -8,12 +8,12 @@ const calcInvoiceTotal = (rows) =>
   rows.map((row) => +row.at(-1)).reduce((a, b) => a + b, 0);
 
 exports.createInvoice = catchAsync(async (req, res) => {
-  let { rows, date, total, client, title } = req.body;
+  let { rows, date, client, title } = req.body;
 
   let clientDocument = await Client.findById(client);
 
   const invoiceDateMS = date || Date.now();
-  total = total || calcInvoiceTotal(rows);
+  let total = calcInvoiceTotal(rows);
 
   const invoiceDocument = await Invoice.create({
     client,
@@ -44,6 +44,7 @@ exports.createInvoice = catchAsync(async (req, res) => {
 
 exports.updateInvoice = async (req, res) => {
   let { invoiceDocument, clientDocument } = req;
+  let total = calcInvoiceTotal(req.body.rows);
 
   // if updated the client
   if (
@@ -54,11 +55,11 @@ exports.updateInvoice = async (req, res) => {
     const transaction = {
       type: "purchase",
       date: Date.now(),
-      amount: req.body.total,
+      amount: total,
       invoice: invoiceDocument._id,
     };
     clientDocument.transactions.push(transaction);
-    clientDocument.debt += req.body.total;
+    clientDocument.debt += total;
     await clientDocument.save();
 
     // update previous client
@@ -71,19 +72,21 @@ exports.updateInvoice = async (req, res) => {
 
       await invoiceDocument.client.save();
     }
-  } else if 
-( invoiceDocument.client && String(invoiceDocument.client._id) === String(clientDocument?._id))
-{
-
-const transaction = clientDocument.transactions.find(t => String(t.invoice) === String(invoiceDocument._id));
-clientDocument.debt += req.body.total - transaction.amount;
-transaction.amount = req.body.total;
-await clientDocument.save()
-}
+  } else if (
+    invoiceDocument.client &&
+    String(invoiceDocument.client._id) === String(clientDocument?._id)
+  ) {
+    const transaction = clientDocument.transactions.find(
+      (t) => String(t.invoice) === String(invoiceDocument._id)
+    );
+    clientDocument.debt += total - transaction.amount;
+    transaction.amount = total;
+    await clientDocument.save();
+  }
 
   invoiceDocument.title = req.body.title;
   invoiceDocument.rows = req.body.rows;
-  invoiceDocument.total = req.body.total;
+  invoiceDocument.total = total;
   invoiceDocument.date = req.body.date;
   if (clientDocument) invoiceDocument.client = clientDocument.id;
 

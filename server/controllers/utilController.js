@@ -29,7 +29,7 @@ exports.getSuggestions = catchAsync(async (req, res) => {
   // const clients = await Client.find().select("name").lean();
   // const clientNames = clients.map((c) => c.name);
   res.json({
-    qtyUnits: ["م", "م²", "قطعة", "عود"],
+    qtyUnits: ["م", "م²", "قطعة", "عود", "ايام عمل", "عبوة", ""],
     // clientNames: clientNames,
     titles: [
       "زجاج سيكوريت 10مل شفاف",
