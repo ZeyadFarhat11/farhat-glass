@@ -17,6 +17,7 @@ if (process.env.NODE_ENV === "development") {
 
 app.use("/api/v1/invoices", require("./routers/invoiceRouter"));
 app.use("/api/v1/clients", require("./routers/clientRouter"));
+app.use("/api/v1", require("./routers/jobRouter"));
 app.use("/api/v1", require("./routers/utilRouter"));
 // app.use("/api/v1/home", );
 
