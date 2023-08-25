@@ -1,0 +1,14 @@
+.create-invoice-btns {
+  display: flex;
+  gap: 20px;
+  button.add-row {
+    margin-right: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    svg {
+      color: #1677ff;
+      font-size: 17px;
+    }
+  }
+}

@@ -1,4 +1,9 @@
-import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faAngleUp,
+  faMinusCircle,
+  faPlusCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Input, InputNumber } from "antd";
 import { generateRandomNumber } from "../../../utils";
@@ -29,19 +34,6 @@ function InvoiceRow({
     if (rows.length <= 1) return;
     setRows((prevRows) => prevRows.filter((row) => row.id !== id));
   };
-  const addRow = () => {
-    const currentRowIndex = rows.findIndex((row) => row.id === id);
-    const newRow = {
-      title: "",
-      price: "",
-      qty: "",
-      qtyUnit: "",
-      total: "",
-      id: generateRandomNumber(),
-    };
-    rows.splice(currentRowIndex + 1, 0, newRow);
-    setRows([...rows]);
-  };
 
   const calcRowTotal = ({ qty, price }) => {
     if (qty && price) {
@@ -59,6 +51,17 @@ function InvoiceRow({
       } catch (err) {
         console.log(err);
       }
+    }
+  };
+
+  const changeRowOrder = (direction, id) => {
+    const index = rows.findIndex((e) => e.id === id);
+    if (direction === "up" && index !== 0) {
+      [rows[index], rows[index - 1]] = [rows[index - 1], rows[index]];
+      setRows([...rows]);
+    } else if (direction === "down" && index !== rows.length - 1) {
+      [rows[index], rows[index + 1]] = [rows[index + 1], rows[index]];
+      setRows([...rows]);
     }
   };
 
@@ -112,11 +115,14 @@ function InvoiceRow({
         value={total}
       />
       <div className="row-actions">
-        <button className="add" onClick={addRow} type="button">
-          <FontAwesomeIcon icon={faPlusCircle} />
-        </button>
         <button className="delete" onClick={deleteRow} type="button">
           <FontAwesomeIcon icon={faMinusCircle} />
+        </button>
+        <button onClick={() => changeRowOrder("up", id)} type="button">
+          <FontAwesomeIcon icon={faAngleUp} />
+        </button>
+        <button onClick={() => changeRowOrder("down", id)} type="button">
+          <FontAwesomeIcon icon={faAngleDown} />
         </button>
       </div>
     </div>

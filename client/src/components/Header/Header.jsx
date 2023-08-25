@@ -8,6 +8,7 @@ function Header() {
         <Link to="/">الرئيسية</Link>
         <Link to="/invoices">الفواتير</Link>
         <Link to="/clients">العملاء</Link>
+        <Link to="/jobs">الاعمال</Link>
       </div>
     </header>
   );

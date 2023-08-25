@@ -44,3 +44,12 @@ input {
   border: 1px solid #d6d6d6;
   outline: transparent;
 }
+
+.table-actions {
+  a,
+  button {
+    all: unset;
+    font-size: 16px;
+    cursor: pointer;
+  }
+}

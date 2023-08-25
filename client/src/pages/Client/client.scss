@@ -4,11 +4,60 @@
   .transaction {
     border-bottom: 2px solid #000;
     padding: 15px;
+    position: relative;
+    .purchase {
+      color: #0d6efd;
+      font-weight: 600;
+    }
+    .pay {
+      color: #198754;
+      font-weight: 600;
+    }
+    .discount {
+      color: #d19e03;
+      font-weight: 600;
+    }
     p {
       margin-bottom: 5px;
+    }
+    .delete-transaction,
+    .edit-transaction {
+      all: unset;
+      color: #fff;
+      background-color: rgb(192, 4, 4);
+      width: 25px;
+      height: 25px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgb(146, 0, 0);
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      cursor: pointer;
+    }
+    .edit-transaction {
+      left: 50px;
+      background-color: transparent;
+      color: #000;
+      border-color: #000;
     }
   }
   .transaction:last-child {
     border: none;
   }
+}
+
+.edit-transaction-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 30;
+  width: 600px;
+  // height: 400px;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
 }

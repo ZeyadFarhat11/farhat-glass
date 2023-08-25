@@ -6,6 +6,12 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../../../utils/api";
 import "./create-invoice.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircle,
+  faPlus,
+  faPlusCircle,
+} from "@fortawesome/free-solid-svg-icons";
 const initialRows = [
   {
     title: "",
@@ -185,6 +191,18 @@ export default function CreateInvoice({
     }
   }, [editingInvoice]);
 
+  const addRow = () => {
+    const newRow = {
+      title: "",
+      price: "",
+      qty: "",
+      qtyUnit: "",
+      total: "",
+      id: generateRandomNumber(),
+    };
+    setRows((prev) => [...prev, newRow]);
+  };
+
   // Save Invoice to Local Storage on Change
   useEffect(() => {
     if (rows.length === 1 && !rows[0].title) return;
@@ -262,26 +280,30 @@ export default function CreateInvoice({
             loading={loading}
             type="default"
             htmlType="button"
-            className="me-4"
             onClick={cancelEditing}
           >
             الغاء التعديلات
           </Button>
         </>
       ) : (
-        <>
+        <div className="create-invoice-btns">
           <Button loading={loading} type="primary" htmlType="submit">
             انشاء فاتورة
           </Button>
-          <Button
-            type="dashed"
-            htmlType="button"
-            onClick={restoreLastInvoice}
-            className="me-4"
-          >
+          <Button type="dashed" htmlType="button" onClick={restoreLastInvoice}>
             استعادة اخر فاتورة
           </Button>
-        </>
+
+          <Button
+            type="default"
+            htmlType="button"
+            onClick={addRow}
+            className="add-row"
+          >
+            اضافة صف
+            <FontAwesomeIcon icon={faPlusCircle} />
+          </Button>
+        </div>
       )}
 
       <datalist id="title-suggestions">

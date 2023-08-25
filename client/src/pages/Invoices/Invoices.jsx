@@ -116,6 +116,14 @@ export default function Invoices() {
     loadInvoices();
   }, []);
 
+  const dataSource = invoices
+    .map((i) => ({
+      ...i,
+      deleteInvoice,
+      editInvoice,
+    }))
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
   return (
     <main id="invoices">
       <div className="container">
@@ -148,11 +156,7 @@ export default function Invoices() {
         <h2 className="title">الفـــــواتير</h2>
         <Table
           columns={columns}
-          dataSource={invoices.map((i) => ({
-            ...i,
-            deleteInvoice,
-            editInvoice,
-          }))}
+          dataSource={dataSource}
           rowKey={(i) => i._id}
           bordered={true}
           pagination={false}
