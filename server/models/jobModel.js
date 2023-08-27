@@ -28,6 +28,26 @@ const jobSchema = new Schema(
       type: Number,
       default: 0,
     },
+    workDiagram: [String],
+    comments: {
+      type: [
+        {
+          user: {
+            type: String,
+            minlength: 3,
+            maxlength: 32,
+            trim: true,
+          },
+          message: {
+            type: String,
+            minlength: 3,
+            maxlength: 520,
+            trim: true,
+          },
+        },
+      ],
+      default: [],
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

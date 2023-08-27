@@ -7,18 +7,15 @@ const OFFER_PRICE_ID = "64c9881cc7fd028354656523";
 exports.getHomeStats = catchAsync(async (req, res) => {
   const clients = await Client.find().select("debt");
   const invoicesCount = await Invoice.find({
-    client: { $ne: OFFER_PRICE_ID },
+    priceOffer: { $ne: true },
   }).countDocuments();
   const offerPriceInvoicesCount = await Invoice.find({
-    client: OFFER_PRICE_ID,
+    priceOffer: true,
   }).countDocuments();
 
-  const remainingDebt = clients
-    .filter((c) => c._id.toString() !== OFFER_PRICE_ID)
-    .map((c) => c.debt)
-    .reduce((a, b) => a + b, 0);
+  const remainingDebt = clients.map((c) => c.debt).reduce((a, b) => a + b, 0);
   res.json({
-    clientsCount: clients.length - 1,
+    clientsCount: clients.length,
     invoicesCount,
     offerPriceInvoicesCount,
     remainingDebt,

@@ -1,19 +1,35 @@
 const { body, param } = require("express-validator");
 const checkValidationErrors = require("../middleware/checkValidationErrors");
-// const mongoose = require("mongoose");
+
 const Client = require("../models/clientModel");
+
 const checkValidClientId = async (clientId, { req }) => {
   const clientDocument = await Client.findById(clientId);
   if (!clientDocument) throw new Error("Invalid client id");
   req.clientDocument = clientDocument;
 };
 
+const checkValidTransactionId = async (transactionId, { req }) => {
+  const transaction = req.clientDocument.transactions.find(
+    (t) => String(t._id) === transactionId
+  );
+  if (!transaction) throw new Error("Invalid transaction id");
+  req.transaction = transaction;
+};
+
 exports.validateMakeTransaction = [
   param("clientId").custom(checkValidClientId),
   body("amount").isNumeric(),
-  body("date").optional().isDate(),
-  body("type").isIn(["pay", "purchase"]),
+  body("type").isIn(Client.TransactionTypes),
   checkValidationErrors,
+];
+
+exports.validateEditTransaction = [
+  param("clientId").custom(checkValidClientId),
+  param("transactionId").custom(checkValidTransactionId),
+  body("amount").isNumeric(),
+  body("type").isIn(Client.TransactionTypes),
+  body("description").isString().isLength({ min: 3, max: 520 }),
 ];
 
 exports.validateDeleteClient = [
@@ -24,13 +40,7 @@ exports.validateGetClient = exports.validateDeleteClient;
 
 exports.validateDeleteTransaction = [
   param("clientId").custom(checkValidClientId),
-  param("transactionId").custom(async (transactionId, { req }) => {
-    const transaction = req.clientDocument.transactions.find(
-      (t) => String(t._id) === transactionId
-    );
-    if (!transaction) throw new Error("Invalid transaction id");
-    req.transaction = transaction;
-  }),
+  param("transactionId").custom(checkValidTransactionId),
   checkValidationErrors,
 ];
 

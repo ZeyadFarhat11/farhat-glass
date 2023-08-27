@@ -1,5 +1,5 @@
 import Select from "react-select";
-import { Input, InputNumber, Button, DatePicker } from "antd";
+import { Input, InputNumber, Button, DatePicker, Checkbox } from "antd";
 import InvoiceRow from "../../Invoices/InvoiceRow/InvoiceRow";
 import { generateRandomNumber } from "../../../utils";
 import { useEffect, useRef, useState } from "react";
@@ -7,18 +7,15 @@ import { toast } from "react-toastify";
 import api from "../../../utils/api";
 import "./create-invoice.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircle,
-  faPlus,
-  faPlusCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 const initialRows = [
   {
-    title: "",
-    price: "",
+    title: "زجاج سيكوريت 10مل شفاف",
+    price: "900",
     total: "",
     qty: "",
-    qtyUnit: "",
+    qtyUnit: "م²",
     id: generateRandomNumber(),
   },
 ];
@@ -52,12 +49,13 @@ export default function CreateInvoice({
 }) {
   const [client, setClient] = useState({ value: "", label: "بدون عميل" });
   const [invoiceDate, setInvoiceDate] = useState(dayjs());
-  const [invoiceTotal, setInvoiceTotal] = useState();
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState(initialRows);
   const [clients, setClients] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [invoiceTitle, setInvoiceTitle] = useState("");
+  const [priceOffer, setPriceOffer] = useState(false);
+  const navigate = useNavigate();
   let firstRender = useRef(true);
 
   const handleSubmit = async (e) => {
@@ -73,12 +71,13 @@ export default function CreateInvoice({
         rows: serializeRows(rows),
         date: invoiceDate,
         title: invoiceTitle,
+        priceOffer,
       };
       if (client.value) data.client = client.value;
       const response = await api.post("/invoices", data);
       loadInvoices();
       toast.success("تم انشاء الفاتورة بنجاح");
-      openInvoiceWindow(response.data.url);
+      openInvoiceWindow(`/invoice/${response.data._id}`);
     } catch (err) {
       console.log(err);
       // handleError(err)
@@ -88,7 +87,6 @@ export default function CreateInvoice({
   };
   const resetForm = () => {
     setClient();
-    setInvoiceTotal();
     setInvoiceTitle("");
     setInvoiceDate(dayjs());
     setRows(initialRows);
@@ -102,6 +100,7 @@ export default function CreateInvoice({
         client: client?.value,
         date: invoiceDate.$d,
         rows: serializeRows(rows),
+        priceOffer,
       };
       await api.put(`/invoices/${editingInvoice._id}`, data);
       toast.success("تم حفظ التغييرات بنجاح");
@@ -150,10 +149,6 @@ export default function CreateInvoice({
     }
   };
 
-  const calcInvoiceTotal = () => {
-    setInvoiceTotal(rows.map((row) => row.total).reduce((a, b) => a + b, 0));
-  };
-
   const cancelEditing = () => {
     setEditingInvoice();
     resetForm();
@@ -183,8 +178,8 @@ export default function CreateInvoice({
       }
       setRows(deserializeRows(editingInvoice.rows));
       setInvoiceDate(dayjs(editingInvoice.date));
-      setInvoiceTotal(editingInvoice.total);
       setInvoiceTitle(editingInvoice.title);
+      setPriceOffer(editingInvoice.priceOffer);
     } else {
       setClient("");
       setRows(initialRows);
@@ -211,9 +206,16 @@ export default function CreateInvoice({
       JSON.stringify({
         client,
         rows,
+        invoiceTitle,
+        invoiceDate,
+        priceOffer,
       })
     );
-  }, [rows, client, invoiceDate, invoiceTotal]);
+  }, [rows, client, invoiceDate, priceOffer, invoiceTitle]);
+
+  const invoiceTotal = rows
+    .map((row) => row.total || 0)
+    .reduce((a, b) => a + b, 0);
 
   return (
     <form
@@ -222,42 +224,49 @@ export default function CreateInvoice({
     >
       <h4 className="mb-3">معلومات الفاتورة</h4>
       <div className="control">
+        <label htmlFor="client">اسم العميل</label>
         <Select
           placeholder="اسم العميل"
           options={[{ label: "بدون عميل", value: "" }, ...clients]}
           onChange={(newValue) => setClient(newValue)}
           value={client}
+          id="client"
         />
       </div>
       <div className="control">
+        <label htmlFor="title">عنوان الفاتورة</label>
         <Input
           type="text"
           onChange={(e) => setInvoiceTitle(e.target.value)}
           value={invoiceTitle}
           placeholder="عنوان الفاتورة"
+          id="title"
         />
       </div>
       <div className="control">
+        <label>اجمالي الفاتورة</label>
         <InputNumber
           type="number"
-          onChange={(total) => setInvoiceTotal(total)}
           placeholder="اجمالي الفاتورة"
           value={invoiceTotal}
           disabled
         />
-        <Button
-          htmlType="button"
-          className="mt-1"
-          size="small"
-          onClick={calcInvoiceTotal}
-        >
-          حساب اجمالي الفاتورة
-        </Button>
       </div>
       <div className="control">
+        <label htmlFor="date">التاريخ</label>
         <DatePicker
+          id="date"
           onChange={(date) => setInvoiceDate(date)}
           value={invoiceDate}
+        />
+      </div>
+      <div className="control">
+        <label htmlFor="priceOffer">عرض سعر</label>
+        <Checkbox
+          checked={priceOffer}
+          onChange={(e) => setPriceOffer(e.target.checked)}
+          id="priceOffer"
+          className="me-2"
         />
       </div>
       <h4 className="mb-3">محتوي الفاتورة</h4>
@@ -271,40 +280,46 @@ export default function CreateInvoice({
         />
       ))}
 
-      {editingInvoice ? (
-        <>
-          <Button loading={loading} type="primary" htmlType="submit">
-            حفظ التعديلات
-          </Button>
-          <Button
-            loading={loading}
-            type="default"
-            htmlType="button"
-            onClick={cancelEditing}
-          >
-            الغاء التعديلات
-          </Button>
-        </>
-      ) : (
-        <div className="create-invoice-btns">
-          <Button loading={loading} type="primary" htmlType="submit">
-            انشاء فاتورة
-          </Button>
-          <Button type="dashed" htmlType="button" onClick={restoreLastInvoice}>
-            استعادة اخر فاتورة
-          </Button>
+      <div className="create-invoice-btns">
+        {editingInvoice ? (
+          <>
+            <Button loading={loading} type="primary" htmlType="submit">
+              حفظ التعديلات
+            </Button>
+            <Button
+              loading={loading}
+              type="default"
+              htmlType="button"
+              onClick={cancelEditing}
+            >
+              الغاء التعديلات
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button loading={loading} type="primary" htmlType="submit">
+              انشاء فاتورة
+            </Button>
+            <Button
+              type="dashed"
+              htmlType="button"
+              onClick={restoreLastInvoice}
+            >
+              استعادة اخر فاتورة
+            </Button>
+          </>
+        )}
 
-          <Button
-            type="default"
-            htmlType="button"
-            onClick={addRow}
-            className="add-row"
-          >
-            اضافة صف
-            <FontAwesomeIcon icon={faPlusCircle} />
-          </Button>
-        </div>
-      )}
+        <Button
+          type="default"
+          htmlType="button"
+          onClick={addRow}
+          className="add-row"
+        >
+          اضافة صف
+          <FontAwesomeIcon icon={faPlusCircle} />
+        </Button>
+      </div>
 
       <datalist id="title-suggestions">
         {suggestions?.titles?.map((s, i) => (

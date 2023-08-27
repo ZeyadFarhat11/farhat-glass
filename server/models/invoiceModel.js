@@ -23,6 +23,10 @@ const invoiceSchema = new Schema(
     title: {
       type: String,
     },
+    priceOffer: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

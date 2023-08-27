@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const TransactionTypes = ["pay", "purchase", "discount"];
 const transactionSchema = new Schema({
   type: {
     type: String,
     required: [true, "transaction type is required"],
-    enum: ["pay", "purchase"],
+    enum: TransactionTypes,
   },
   date: {
     type: Date,
@@ -52,10 +53,13 @@ clientSchema.methods.calcDebt = async function () {
     transactions = clientDocument.transactions;
   }
   this.debt = transactions
-    .map((t) => (t.type === "pay" ? -t.amount : t.amount))
+    .map((t) =>
+      t.type === "pay" || t.type === "discount" ? -t.amount : t.amount
+    )
     .reduce((a, b) => a + b, 0);
 };
 
 const Client = mongoose.model("Client", clientSchema);
+Client.TransactionTypes = TransactionTypes;
 
 module.exports = Client;

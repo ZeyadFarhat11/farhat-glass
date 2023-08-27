@@ -4,11 +4,6 @@ const clientValidator = require("../validators/clientValidator");
 const checkConfirmationCode = require("../middleware/checkConfirmationCode");
 const router = Router();
 
-// router.post(
-//   "/transactions",
-//   clientValidator.validateMakeTransaction,
-//   clientController.makeTransaction
-// );
 router
   .route("/:id")
   .delete(clientValidator.validateDeleteClient, clientController.deleteClient)
@@ -27,10 +22,16 @@ router
     clientValidator.validateMakeTransaction,
     clientController.makeTransaction
   );
-router.delete(
-  "/:clientId/transactions/:transactionId",
-  clientValidator.validateDeleteTransaction,
-  clientController.deleteTransaction
-);
+router
+  .route("/:clientId/transactions/:transactionId")
+  .delete(
+    checkConfirmationCode,
+    clientValidator.validateDeleteTransaction,
+    clientController.deleteTransaction
+  )
+  .patch(
+    clientValidator.validateEditTransaction,
+    clientController.editTransaction
+  );
 
 module.exports = router;

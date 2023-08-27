@@ -1,11 +1,8 @@
 const Job = require("../models/jobModel");
 const catchAsync = require("../utils/catchAsync");
+const { createOne } = require("./factory");
 
-exports.createJob = catchAsync(async (req, res) => {
-  const jobDocument = await Job.create(req.body);
-
-  res.status(200).json(jobDocument);
-});
+exports.createJob = createOne(Job);
 
 exports.deleteAllJobs = catchAsync(async () => {
   await Job.deleteMany({});
@@ -13,7 +10,7 @@ exports.deleteAllJobs = catchAsync(async () => {
 });
 
 exports.getAllJobs = catchAsync(async (req, res) => {
-  const jobs = await Job.find({});
+  const jobs = await Job.find({}).populate("client", "name");
   res.json({ length: jobs.length, jobs });
 });
 

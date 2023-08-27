@@ -4,29 +4,6 @@ const APIFeatures = require("../utils/APIFeatures");
 const catchAsync = require("../utils/catchAsync");
 const httpStatus = require("http-status-codes");
 
-exports.makeTransaction = catchAsync(async (req, res) => {
-  const { amount, type, description } = req.body;
-  const { clientDocument } = req;
-
-  const transaction = {
-    type,
-    date: Date.now(),
-    amount,
-  };
-  if (type === "pay") {
-    const defaultDescription = "دفع" + ` ${amount} ` + "جنيه";
-    transaction.description = description || defaultDescription;
-    clientDocument.debt -= amount;
-  } else if (type === "purchase") {
-    const defaultDescription = "شراء" + ` ${amount} ` + "جنيه";
-    transaction.description = description || defaultDescription;
-    clientDocument.debt += amount;
-  }
-  clientDocument.transactions.push(transaction);
-  await clientDocument.save();
-  res.status(200).json(clientDocument);
-});
-
 exports.createClient = catchAsync(async (req, res) => {
   const { name, debt } = req.body;
 
@@ -78,6 +55,49 @@ exports.getAllClients = catchAsync(async (req, res) => {
     transactions: undefined,
   }));
   res.status(200).json(clients);
+});
+
+exports.makeTransaction = catchAsync(async (req, res) => {
+  const { amount, type, description, date } = req.body;
+  const { clientDocument } = req;
+
+  const transaction = {
+    type,
+    date: date || Date.now(),
+    amount,
+  };
+  if (type === "pay") {
+    const defaultDescription = "دفع" + ` ${amount} ` + "جنيه";
+    transaction.description = description || defaultDescription;
+    clientDocument.debt -= amount;
+  } else if (type === "discount") {
+    const defaultDescription = "خصم" + ` ${amount} ` + "جنيه";
+    transaction.description = description || defaultDescription;
+    clientDocument.debt -= amount;
+  } else if (type === "purchase") {
+    const defaultDescription = "شراء" + ` ${amount} ` + "جنيه";
+    transaction.description = description || defaultDescription;
+    clientDocument.debt += amount;
+  }
+  clientDocument.transactions.push(transaction);
+  await clientDocument.save();
+  res.status(200).json(clientDocument);
+});
+
+exports.editTransaction = catchAsync(async (req, res) => {
+  const { type, amount, description, date } = req.body;
+  const { clientDocument, transaction } = req;
+  if (transaction.invoice) {
+    return res.send("معاملة غير قابلة للتعديل!");
+  }
+  transaction.type = type || transaction.type;
+  transaction.amount = amount || transaction.amount;
+  transaction.description = description || transaction.description;
+  transaction.date = date || transaction.date;
+  await clientDocument.calcDebt();
+  await clientDocument.save();
+
+  res.json(transaction);
 });
 
 exports.deleteTransaction = catchAsync(async (req, res) => {

@@ -1,14 +1,11 @@
-const path = require("path");
 const catchAsync = require("../utils/catchAsync");
-const InvoiceHTML = require("../utils/Invoice");
 const Client = require("../models/clientModel");
 const Invoice = require("../models/invoiceModel");
-
 const calcInvoiceTotal = (rows) =>
   rows.map((row) => +row.at(-1)).reduce((a, b) => a + b, 0);
 
 exports.createInvoice = catchAsync(async (req, res) => {
-  let { rows, date, client, title } = req.body;
+  let { rows, date, client, title, priceOffer } = req.body;
 
   let clientDocument = await Client.findById(client);
 
@@ -21,6 +18,7 @@ exports.createInvoice = catchAsync(async (req, res) => {
     rows,
     total,
     title,
+    priceOffer,
   });
 
   const transaction = {
@@ -29,17 +27,14 @@ exports.createInvoice = catchAsync(async (req, res) => {
     invoice: invoiceDocument._id,
   };
 
-  if (clientDocument) {
+  if (clientDocument && !priceOffer) {
     clientDocument.transactions.push(transaction);
     clientDocument.debt += total;
     await clientDocument.save();
   }
 
-  const invoiceUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}/${
-    invoiceDocument._id
-  }`;
   await invoiceDocument.populate("client", "name");
-  res.status(200).json({ ...invoiceDocument.toObject(), url: invoiceUrl });
+  res.status(200).json(invoiceDocument);
 });
 
 exports.updateInvoice = async (req, res) => {
@@ -79,15 +74,34 @@ exports.updateInvoice = async (req, res) => {
     const transaction = clientDocument.transactions.find(
       (t) => String(t.invoice) === String(invoiceDocument._id)
     );
-    clientDocument.debt += total - transaction.amount;
-    transaction.amount = total;
-    await clientDocument.save();
+    if (transaction) transaction.amount = total;
+    await clientDocument.calcDebt();
   }
+
+  if (req.body.priceOffer && clientDocument) {
+    clientDocument.transactions = clientDocument.transactions.filter(
+      (t) => String(t.invoice) !== String(invoiceDocument._id)
+    );
+  } else if (!req.body.priceOffer && clientDocument) {
+    const transactionExist = clientDocument.transactions.find(
+      (t) => String(t.invoice) === String(invoiceDocument._id)
+    );
+    if (!transactionExist)
+      clientDocument.transactions.push({
+        type: "purchase",
+        date: Date.now(),
+        amount: total,
+        invoice: invoiceDocument._id,
+      });
+  }
+  await clientDocument.calcDebt();
+  await clientDocument.save();
 
   invoiceDocument.title = req.body.title;
   invoiceDocument.rows = req.body.rows;
   invoiceDocument.total = total;
   invoiceDocument.date = req.body.date;
+  invoiceDocument.priceOffer = req.body.priceOffer;
   if (clientDocument) invoiceDocument.client = clientDocument.id;
 
   await invoiceDocument.save();
@@ -97,17 +111,7 @@ exports.updateInvoice = async (req, res) => {
 
 exports.getInvoice = (req, res) => {
   const { invoiceDocument } = req;
-  // console.log(req.headers)
-  if (req.headers["content-type"] === "application/json") {
-    res.status(200).json(invoiceDocument);
-  }
-  const html = new InvoiceHTML(
-    path.join(__dirname, "../assets/template-invoice.html")
-  )
-    .fromInvoiceDocument(invoiceDocument)
-    .getHTML();
-
-  res.status(200).send(html);
+  res.status(200).json(invoiceDocument);
 };
 
 exports.getAllInvoices = catchAsync(async (req, res) => {
