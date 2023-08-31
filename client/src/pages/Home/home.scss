@@ -1,5 +1,6 @@
+@import "../../assets/components.scss";
 #home {
-  background-color: #f1f1f1;
+  // background-color: #f1f1f1;
   height: calc(100vh - 50px);
   .box-grid {
     display: grid;
@@ -8,15 +9,32 @@
     padding-top: 30px;
   }
   .box {
-    // width: 300px;
     background-color: #fff;
-    padding: 10px;
-    // height: 100px;
+    padding: 20px;
     border: 1px solid #ccc;
     border-radius: 10px;
+    position: relative;
     .label {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      transform: translateY(-50%);
+      font-size: 18px;
+      background-color: #fff;
+      padding: 0 10px;
     }
     .value {
+      font-weight: bold;
+      margin-top: 20px;
+      color: $main;
+      letter-spacing: 1px;
+      font-size: 35px;
+      span {
+        font-size: 25px;
+        letter-spacing: 0px;
+        color: #000;
+        font-weight: normal;
+      }
     }
   }
 }

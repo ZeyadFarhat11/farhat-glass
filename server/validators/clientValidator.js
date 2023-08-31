@@ -52,6 +52,7 @@ exports.validateCreateClient = [
       if (clientDocumentCheck) throw new Error("Duplicated client name");
     }),
   body("debt").optional().isNumeric(),
+  body("vendor").isBoolean(),
   checkValidationErrors,
 ];
 
@@ -66,6 +67,6 @@ exports.validateUpdateClient = [
       });
       if (clientDocumentCheck) throw new Error("Duplicated client name");
     }),
-
+  body("vendor").isBoolean(),
   checkValidationErrors,
 ];

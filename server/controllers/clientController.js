@@ -2,10 +2,9 @@ const Client = require("../models/clientModel");
 const Invoice = require("../models/invoiceModel");
 const APIFeatures = require("../utils/APIFeatures");
 const catchAsync = require("../utils/catchAsync");
-const httpStatus = require("http-status-codes");
 
 exports.createClient = catchAsync(async (req, res) => {
-  const { name, debt } = req.body;
+  const { name, debt, vendor = false } = req.body;
 
   const transactions = [];
   if (debt)
@@ -19,6 +18,7 @@ exports.createClient = catchAsync(async (req, res) => {
     name,
     debt,
     transactions,
+    vendor,
   });
 
   res.status(200).json(clientDocument);
@@ -30,7 +30,12 @@ exports.getClient = catchAsync(async (req, res) => {
 
 exports.updateClient = catchAsync(async (req, res) => {
   const { clientDocument } = req;
-  clientDocument.name = req.body.name || clientDocument.name;
+  const { name = clientDocument.name, vendor = clientDocument.vendor } =
+    req.body;
+
+  clientDocument.name = name;
+  clientDocument.vendor = vendor;
+
   await clientDocument.save();
   res.json(clientDocument);
 });

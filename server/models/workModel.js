@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const jobSchema = new Schema(
+const workSchema = new Schema(
   {
     client: { type: mongoose.Types.ObjectId, ref: "Client" },
     invoices: [{ type: mongoose.Types.ObjectId, ref: "Invoice" }],
     title: {
       type: String,
-      required: [true, "Job title is required"],
+      required: [true, "Work title is required"],
     },
     workTime: {
       type: [
@@ -52,6 +52,6 @@ const jobSchema = new Schema(
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-const Job = mongoose.model("Job", jobSchema);
+const Work = mongoose.model("Work", workSchema);
 
-module.exports = Job;
+module.exports = Work;

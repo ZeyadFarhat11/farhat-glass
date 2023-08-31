@@ -3,7 +3,7 @@ import "./client.scss";
 import useGlobalContext from "../../context/global.context";
 import React, { useContext, useEffect, useState } from "react";
 import api from "../../utils/api";
-import { Button, DatePicker, Input, InputNumber } from "antd";
+import { Button, Checkbox, DatePicker, Input, InputNumber } from "antd";
 import dayjs from "dayjs";
 import Select from "react-select";
 import { toast } from "react-toastify";
@@ -15,13 +15,12 @@ const Context = React.createContext();
 
 export default function Client() {
   const { clientId } = useParams();
-  const { globalLoading, setGlobalLoading } = useGlobalContext();
+  const [loading, setLoading] = useState(true);
   const [client, setClient] = useState();
   const [editingTransaction, setEditingTransaction] = useState(null);
   const navigate = useNavigate();
 
   const loadClient = async () => {
-    setGlobalLoading(true);
     try {
       const res = await api.get(`/clients/${clientId}`);
       setClient(res.data);
@@ -29,7 +28,7 @@ export default function Client() {
       console.log(err);
       navigate("/clients");
     } finally {
-      setGlobalLoading(false);
+      setLoading(false);
     }
   };
 
@@ -41,21 +40,18 @@ export default function Client() {
     loadClient,
     client,
     setClient,
-    loading: globalLoading,
-    setLoading: setGlobalLoading,
+    loading,
+    setLoading,
     editingTransaction,
     setEditingTransaction,
   };
 
+  if (loading) return <h3>جار التحميل...</h3>;
+
   return (
     <Context.Provider value={value}>
       <div className="container">
-        <ClientForm
-          client={client}
-          loading={globalLoading}
-          setLoading={setGlobalLoading}
-          setClient={setClient}
-        />
+        <ClientForm client={client} setClient={setClient} />
         <MakeTransactionForm clientId={clientId} loadClient={loadClient} />
         <h3 className="mt-5 text-center">المعاملات</h3>
         <div className="transactions">
@@ -75,33 +71,27 @@ export default function Client() {
   );
 }
 
-function ClientForm({
-  loading,
-  setLoading,
-  client = { name: "", debt: "" },
-  setClient,
-}) {
-  const [name, setName] = useState();
+function ClientForm({ client, setClient }) {
+  const [name, setName] = useState(client.name);
+  const [vendor, setVendor] = useState(client.vendor);
   const [isEdited, setIsEdited] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e) => {
+    console.log(`test`);
     e.preventDefault();
     if (loading) return;
     setLoading(true);
     try {
-      const res = await api.patch(`/clients/${client._id}`, { name });
+      const res = await api.patch(`/clients/${client._id}`, { name, vendor });
       toast.success("تم تعديل العميل بنجاح");
       setClient(res.data);
     } catch (err) {
       console.log(err);
-      // handleError(err)
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    setName(client.name);
-  }, [client]);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -121,7 +111,24 @@ function ClientForm({
         <label htmlFor="client-debt">الدين</label>
         <Input value={client.debt} disabled type="text" id="client-debt" />
       </div>
-      <Button type="primary" loading={loading} disabled={!isEdited}>
+      <div className="control">
+        <label htmlFor="vendor">بائع</label>
+        <Checkbox
+          checked={vendor}
+          onChange={(e) => {
+            setIsEdited(true);
+            setVendor(e.target.checked);
+          }}
+          id="vendor"
+          className="me-2"
+        />
+      </div>
+      <Button
+        type="primary"
+        loading={loading}
+        disabled={!isEdited}
+        htmlType="submit"
+      >
         تعديل
       </Button>
     </form>

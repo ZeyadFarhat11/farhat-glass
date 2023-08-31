@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./clients.scss";
-import { Table, Space, Button, Input, InputNumber } from "antd";
+import { Table, Space, Button, Input, InputNumber, Checkbox } from "antd";
 import api from "../../utils/api";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
@@ -96,12 +96,14 @@ export default function Clients() {
 function CreateClient({ loading, setLoading, loadClients }) {
   const [name, setName] = useState("");
   const [debt, setDebt] = useState("");
+  const [vendor, setVendor] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
     setLoading(true);
     try {
-      await api.post("/clients", { name, debt: debt || 0 });
+      await api.post("/clients", { name, debt: debt || 0, vendor });
       toast.success("تم انشاء العميل بنجاح");
       loadClients();
       setName("");
@@ -132,49 +134,17 @@ function CreateClient({ loading, setLoading, loadClients }) {
           onChange={(debt) => setDebt(debt)}
         />
       </div>
-      <Button type="primary" htmlType="submit">
-        انشاء
-      </Button>
-    </form>
-  );
-}
-function EditClient({
-  loading,
-  setLoading,
-  loadClients,
-  client,
-  setCurrentEditClient,
-}) {
-  const [name, setName] = useState(client.name);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (loading) return;
-    setLoading(true);
-    try {
-      await api.patch(`/clients/${client._id}`, { name });
-      toast.success("تم تعديل العميل بنجاح");
-      loadClients();
-      setCurrentEditClient();
-    } catch (err) {
-      console.log(err);
-      // handleError(err)
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <div className="control mt-4">
-        <Input
-          placeholder="اسم العميل"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          type="text"
+      <div className="control">
+        <label htmlFor="vendor">بائع</label>
+        <Checkbox
+          checked={vendor}
+          onChange={(e) => setVendor(e.target.checked)}
+          id="vendor"
+          className="me-2"
         />
       </div>
-      <Button type="primary" loading={loading} htmlType="submit">
-        تعديل
+      <Button type="primary" htmlType="submit">
+        انشاء
       </Button>
     </form>
   );

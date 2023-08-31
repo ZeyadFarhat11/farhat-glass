@@ -14,7 +14,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./assets/style.scss";
 import Login from "./pages/Login/Login";
-import Jobs from "./pages/Jobs/Jobs";
+import Works from "./pages/Works/Works";
 import Invoice from "./pages/Invoice/Invoice";
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
         <Route path="/client/:clientId" element={<Client />} />
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/invoice/:invoiceId" element={<Invoice />} />
-        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/works" element={<Works />} />
         {/* <Route path="/login" element={<Login />} /> */}
       </Routes>
       <HashLoader loading={globalLoading} id="loading" />

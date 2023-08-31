@@ -28,6 +28,10 @@ function Home() {
           <h3 className="value">{data?.clientsCount}</h3>
         </div>
         <div className="box">
+          <h3 className="label">عدد البائعين</h3>
+          <h3 className="value">{data?.vendorsCount}</h3>
+        </div>
+        <div className="box">
           <h3 className="label">عدد الفواتير</h3>
           <h3 className="value">{data?.invoicesCount}</h3>
         </div>
@@ -37,7 +41,15 @@ function Home() {
         </div>
         <div className="box">
           <h3 className="label">باقي المستحقات</h3>
-          <h3 className="value">{data?.remainingDebt} جنيه مصري</h3>
+          <h3 className="value">
+            {data?.remainingDebt} <span>جنيه مصري</span>
+          </h3>
+        </div>
+        <div className="box">
+          <h3 className="label">باقي الديون</h3>
+          <h3 className="value">
+            {data?.ourDebt} <span>جنيه مصري</span>
+          </h3>
         </div>
       </div>
     </main>

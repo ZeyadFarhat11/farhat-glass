@@ -1,30 +1,29 @@
 const { body, param } = require("express-validator");
 const checkValidationErrors = require("../middleware/checkValidationErrors");
-const Invoice = require("../models/invoiceModel");
 const Client = require("../models/clientModel");
-const Job = require("../models/jobModel");
+const Work = require("../models/workModel");
 
 const isValidClientId = async (id, { req }) => {
   const clientDocument = await Client.findById(id);
   if (!clientDocument) throw new Error();
   req.clientDocument = clientDocument;
 };
-const isValidJobId = async (id, { req }) => {
-  const jobDocument = await Job.findById(id);
-  if (!jobDocument) throw new Error();
-  req.jobDocument = jobDocument;
+const isValidWorkId = async (id, { req }) => {
+  const workDocument = await Work.findById(id);
+  if (!workDocument) throw new Error();
+  req.workDocument = workDocument;
 };
 
 const InvalidClientMsg = "Invalid Client Id";
 
-exports.validateCreateJob = [
+exports.validateCreateWork = [
   body("client", InvalidClientMsg).custom(isValidClientId),
   body("title").isString(),
   body("expectedWorkDays").optional().isNumeric(),
   checkValidationErrors,
 ];
 
-exports.validateDeleteJob = [
-  param("id").custom(isValidJobId),
+exports.validateDeleteWork = [
+  param("id").custom(isValidWorkId),
   checkValidationErrors,
 ];

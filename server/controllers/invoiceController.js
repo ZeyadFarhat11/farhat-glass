@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const Client = require("../models/clientModel");
 const Invoice = require("../models/invoiceModel");
+const APIFeatures = require("../utils/APIFeatures");
 const calcInvoiceTotal = (rows) =>
   rows.map((row) => +row.at(-1)).reduce((a, b) => a + b, 0);
 
@@ -115,8 +116,11 @@ exports.getInvoice = (req, res) => {
 };
 
 exports.getAllInvoices = catchAsync(async (req, res) => {
-  const documents = await Invoice.find().populate("client", "name");
-  res.json({ count: documents.length, invoices: documents });
+  const invoices = await new APIFeatures(Invoice.find(), req.query)
+    .selectFields()
+    .query.populate("client", "name");
+  // const documents = await Invoice.find().populate("client", "name");
+  res.json({ count: invoices.length, invoices });
 });
 
 exports.deleteInvoice = catchAsync(async (req, res) => {

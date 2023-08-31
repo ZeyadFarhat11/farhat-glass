@@ -42,6 +42,10 @@ const clientSchema = new Schema(
       type: [transactionSchema],
       default: [],
     },
+    vendor: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
