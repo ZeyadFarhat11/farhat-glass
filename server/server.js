@@ -1,4 +1,3 @@
-const { networkInterfaces } = require("node:os");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const app = require("./app");
@@ -22,10 +21,8 @@ mongoose
 const port = process.env.PORT || 8000;
 
 const server = app.listen(port, "0.0.0.0", () => {
-  const ip = networkInterfaces()["Wi-Fi"].at(-1).address;
   console.log(`SERVER STARTED
-  Local: http://localhost:${port}
-  Network: http://${ip}:${port}`);
+  Local: http://localhost:${port}`);
 });
 
 const setStats = async () => {
