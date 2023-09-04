@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import HashLoader from "react-spinners/HashLoader";
 
@@ -16,9 +16,15 @@ import "./assets/style.scss";
 import Login from "./pages/Login/Login";
 import Works from "./pages/Works/Works";
 import Invoice from "./pages/Invoice/Invoice";
+import { useEffect } from "react";
 
 function App() {
   const { globalLoading } = useGlobalContext();
+  const location = useLocation();
+  useEffect(() => {
+    console.log("test");
+    window.document.title = "فرحات للزجاج والسيكوريت";
+  }, [location]);
 
   return (
     <>
@@ -31,7 +37,6 @@ function App() {
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/invoice/:invoiceId" element={<Invoice />} />
         <Route path="/works" element={<Works />} />
-        {/* <Route path="/login" element={<Login />} /> */}
       </Routes>
       <HashLoader loading={globalLoading} id="loading" />
     </>

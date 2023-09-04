@@ -1,7 +1,8 @@
+const { networkInterfaces } = require("node:os");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const app = require("./app");
-const setHomeStats = require("./utils/setHomeStats");
+const getHomeStats = require("./utils/getHomeStats");
 
 mongoose
   .connect(process.env.DATABASE_URL, {
@@ -12,20 +13,31 @@ mongoose
   })
   .then(() => {
     console.log(`DATABASE CONNECTED ✅`);
-    setHomeStatsInterval();
   })
   .catch((err) => {
     console.log(`DATABASE CONNECTION ERROR ❌`);
     console.log(err);
   });
 
-const setHomeStatsInterval = () => {
-  setHomeStats();
-  setInterval(setHomeStats, 10000);
-};
-
 const port = process.env.PORT || 8000;
 
-app.listen(port, "0.0.0.0", () => {
-  console.log(`SERVER STARTED - PORT: ${port}`);
+const server = app.listen(port, "0.0.0.0", () => {
+  const ip = networkInterfaces()["Wi-Fi"].at(-1).address;
+  console.log(`SERVER STARTED
+  Local: http://localhost:${port}
+  Network: http://${ip}:${port}`);
+});
+
+const setStats = async () => {
+  const stats = await getHomeStats();
+  app.set("home-stats", stats);
+};
+setStats();
+
+server.on("request", (req, res) => {
+  if (req.method === "GET") return;
+  res.on("finish", async () => {
+    console.log("response finish");
+    setStats();
+  });
 });

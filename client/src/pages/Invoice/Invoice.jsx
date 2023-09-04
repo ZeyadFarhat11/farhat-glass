@@ -1,25 +1,27 @@
-import { useEffect, useState } from "react";
-import api from "../../utils/api";
-import "./invoice.scss";
-import { useParams } from "react-router-dom";
-import logo from "../../assets/images/invoice-logo.svg";
-import info from "../../assets/images/invoice-info.svg";
+import { Button, Checkbox } from "antd";
 import dayjs from "dayjs";
-import { Button } from "antd";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import { useParams } from "react-router-dom";
+import info from "../../assets/images/invoice-info.svg";
+import logo from "../../assets/images/invoice-logo.svg";
+import api from "../../utils/api";
 import convertToArabicDate from "../../utils/convertToArabicDate";
+import "./invoice.scss";
 
 export default function Invoice() {
   const { invoice, loading } = useGetInvoice();
+  const [titleActive, setTitleActive] = useState(false);
   if (loading) return "جار التحميل...";
+
+  const toggleTitleActive = () => setTitleActive((p) => !p);
 
   const date = convertToArabicDate(dayjs(invoice.date).format("DD-MM-YYYY"));
   return (
     <>
       <Helmet>
         <title>
-          فرحات للزجاج والسيكوريت | فاتورة {invoice.client.name} |{" "}
-          {invoice.title}
+          فاتورة {invoice.client.name} | {invoice.title}
         </title>
       </Helmet>
       <Button onClick={window.print} id="export-pdf" htmlType="button">
@@ -38,6 +40,10 @@ export default function Invoice() {
           <div className="date">
             <span>التاريخ : </span>
             <span>{date}</span>
+          </div>
+          <div className={`title${titleActive ? "" : " hidden"}`}>
+            {invoice.title}
+            <Checkbox onChange={toggleTitleActive} checked={titleActive} />
           </div>
         </div>
 

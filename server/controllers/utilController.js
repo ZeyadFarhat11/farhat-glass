@@ -1,21 +1,14 @@
 const catchAsync = require("../utils/catchAsync");
 
-exports.getHomeStats = (_, res) => {
-  res.json({
-    clientsCount: process.clientsCount,
-    vendorsCount: process.vendorsCount,
-    ourDebt: process.ourDebt,
-    invoicesCount: process.invoicesCount,
-    offerPriceInvoicesCount: process.offerPriceInvoicesCount,
-    remainingDebt: process.remainingDebt,
-  });
+exports.getHomeStats = (req, res) => {
+  res.json(req.app.get("home-stats"));
 };
 
 exports.getSuggestions = catchAsync(async (req, res) => {
   res.json({
     qtyUnits: ["م", "م²", "قطعة", "عود", "ايام عمل", "عبوة"],
     titles: [
-      "زجاج سيكوريت 10مل شفاف",
+      "زجاج سيكوريت ١٠مل شفاف",
       "اكسسوار",
       "مصنعية",
       "مسطرة مستورد",

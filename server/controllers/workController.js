@@ -1,13 +1,10 @@
 const Work = require("../models/workModel");
 const catchAsync = require("../utils/catchAsync");
-const { createOne } = require("./factory");
+const { createOne, deleteAll } = require("./factory");
 
 exports.createWork = createOne(Work);
 
-exports.deleteAllWorks = catchAsync(async () => {
-  await Work.deleteMany({});
-  res.sendStatus(200);
-});
+exports.deleteAllWorks = deleteAll(Work);
 
 exports.getAllWorks = catchAsync(async (req, res) => {
   const works = await Work.find({}).populate("client", "name");
