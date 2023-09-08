@@ -1,44 +1,40 @@
-import { Routes, Route, useLocation } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import HashLoader from "react-spinners/HashLoader";
-
-import Header from "./components/Header/Header";
-import Clients from "./pages/Clients/Clients";
-import Invoices from "./pages/Invoices/Invoices";
-import Home from "./pages/Home/Home";
-import Client from "./pages/Client/Client";
-
-import useGlobalContext from "./context/global.context";
-
 import "bootstrap/dist/css/bootstrap.min.css";
-import "react-toastify/dist/ReactToastify.css";
-import "./assets/style.scss";
-import Login from "./pages/Login/Login";
-import Works from "./pages/Works/Works";
-import Invoice from "./pages/Invoice/Invoice";
 import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+
+import DefaultLayout from "./pages";
+import Admin from "./pages/Admin";
+import Client from "./pages/Admin/Client/Client";
+import Clients from "./pages/Admin/Clients/Clients";
+import Dashboard from "./pages/Admin/Dashboard/Dashboard";
+import Invoice from "./pages/Admin/Invoice/Invoice";
+import Invoices from "./pages/Admin/Invoices/Invoices";
+import Works from "./pages/Admin/Works/Works";
+import Home from "./pages/Home/Home";
+import "./assets/style.scss";
 
 function App() {
-  const { globalLoading } = useGlobalContext();
   const location = useLocation();
   useEffect(() => {
-    console.log("test");
     window.document.title = "فرحات للزجاج والسيكوريت";
   }, [location]);
 
   return (
     <>
-      <ToastContainer autoClose={3000} position="top-left" />
-      <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/clients" element={<Clients />} />
-        <Route path="/client/:clientId" element={<Client />} />
-        <Route path="/invoices" element={<Invoices />} />
-        <Route path="/invoice/:invoiceId" element={<Invoice />} />
-        <Route path="/works" element={<Works />} />
+        <Route path="/admin" element={<Admin />}>
+          <Route element={<Dashboard />} index />
+          <Route path="clients" element={<Clients />} />
+          <Route path="client/:clientId" element={<Client />} />
+          <Route path="invoices" element={<Invoices />} />
+          <Route path="invoice/:invoiceId" element={<Invoice />} />
+          <Route path="works" element={<Works />} />
+        </Route>
+        <Route path="/" element={<DefaultLayout />}>
+          <Route index element={<Home />} />
+        </Route>
       </Routes>
-      <HashLoader loading={globalLoading} id="loading" />
     </>
   );
 }

@@ -1,17 +1,21 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import logo from "../../assets/images/logo.svg";
 import "./header.scss";
 
-function Header() {
+export default function Header() {
   return (
-    <header id="header">
+    <div id="client-header">
       <div className="container">
-        <NavLink to="/">الرئيسية</NavLink>
-        <NavLink to="/invoices">الفواتير</NavLink>
-        <NavLink to="/clients">العملاء</NavLink>
-        <NavLink to="/works">الاعمال</NavLink>
+        <nav>
+          <NavLink to="/">الرئيسية</NavLink>
+          <NavLink to="/about-us">من نحن</NavLink>
+          <NavLink to="/our-work">اعمالنا</NavLink>
+          <NavLink to="/contact">تواصل معنا</NavLink>
+        </nav>
+        <Link to="/" className="logo">
+          <img src={logo} alt="logo" />
+        </Link>
       </div>
-    </header>
+    </div>
   );
 }
-
-export default Header;

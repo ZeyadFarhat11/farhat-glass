@@ -1,6 +1,17 @@
 $main: #1677ff;
+$gold: gold;
+@mixin laptop {
+  @media (max-width: 992px) {
+    @content;
+  }
+}
 @mixin tablet {
   @media (max-width: 768px) {
+    @content;
+  }
+}
+@mixin mobile {
+  @media (max-width: 500px) {
     @content;
   }
 }

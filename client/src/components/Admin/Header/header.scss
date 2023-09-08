@@ -1,0 +1,19 @@
+#header {
+  border-bottom: 1px solid #ccc;
+  .container {
+    a {
+      display: inline-block;
+      text-decoration: none;
+      color: #000;
+      padding: 10px 15px;
+      border-left: 1px solid #ccc;
+      transition: 0.3s;
+      &.active {
+        background-color: #f6f6f6;
+      }
+      &:hover {
+        background-color: #f6f6f6;
+      }
+    }
+  }
+}

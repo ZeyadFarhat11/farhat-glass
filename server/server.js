@@ -11,18 +11,18 @@ mongoose
         : process.env.DATABASE_FAKE_NAME,
   })
   .then(() => {
-    console.log(`DATABASE CONNECTED ✅`);
+    console.log("\x1b[32m%s\x1b[0m", "DATABASE CONNECTED");
   })
   .catch((err) => {
-    console.log(`DATABASE CONNECTION ERROR ❌`);
+    console.log("\x1b[31m%s\x1b[0m", "DATABASE CONNECTION ERROR");
     console.log(err);
   });
 
 const port = process.env.PORT || 8000;
 
 const server = app.listen(port, "0.0.0.0", () => {
-  console.log(`SERVER STARTED
-  Local: http://localhost:${port}`);
+  console.log("\x1b[33m%s\x1b[0m", "SERVER STARTED");
+  console.log(`Local: http://localhost:${port}`);
 });
 
 const setStats = async () => {
@@ -34,7 +34,20 @@ setStats();
 server.on("request", (req, res) => {
   if (req.method === "GET") return;
   res.on("finish", async () => {
-    console.log("response finish");
-    setStats();
+    try {
+      console.log("response finish");
+      setStats();
+    } catch (err) {
+      console.log(`Cann't set home stats ❌`);
+    }
   });
+});
+
+process.on("SIGINT", async () => {
+  // Perform cleanup operations here
+  console.log("Server shutting down...");
+  // Close database connections, release resources, etc.
+  await mongoose.disconnect();
+  // Exit the process
+  process.exit(0);
 });
