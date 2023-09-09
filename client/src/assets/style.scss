@@ -1,3 +1,4 @@
+@import "./components.scss";
 * {
   box-sizing: border-box;
   margin: 0;
@@ -43,5 +44,23 @@ input {
     all: unset;
     font-size: 16px;
     cursor: pointer;
+  }
+}
+
+.main-title {
+  font-weight: bold;
+  position: relative;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+  width: fit-content;
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 10px;
+    background-color: $gold;
   }
 }

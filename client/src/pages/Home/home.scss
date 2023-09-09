@@ -2,6 +2,9 @@
 .landing {
   height: calc(100vh - 80px);
   background-image: url("../../assets/images/header.jpg");
+  background-size: cover;
+  // background-attachment: fixed;
+  background-position: center;
   background-repeat: no-repeat;
   color: #fff;
   .container {
@@ -9,28 +12,117 @@
   }
   .decoration {
     width: 450px;
+    max-width: 100%;
+    height: fit-content;
     margin-bottom: -50px;
     filter: drop-shadow(0 0 5px #000);
+    color: $gold;
   }
   h1 {
     font-weight: 900;
+    text-shadow: 0 0 10px #000;
+    font-family: "Marhey", cursive;
   }
   p {
     position: relative;
     width: fit-content;
-    margin: 10px auto;
+    margin: 30px auto;
+    text-shadow: 0 0 5px #000;
+    font-weight: 500;
+    font-size: 18px;
     svg {
       position: absolute;
       color: $gold;
       font-size: 60px;
       top: -5px;
       filter: drop-shadow(0 0 5px #424242);
+      display: none;
       &.right-quote {
         right: -60px;
       }
       &.left-quote {
         left: -60px;
       }
+    }
+  }
+  .phone {
+    display: block;
+    width: fit-content;
+    margin: 30px auto 70px;
+    padding: 10px 30px;
+    background-color: $main;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    box-shadow: 0 7px 0px #0c428d;
+    transform: translateY(0px);
+    transition: 300ms;
+    &:hover {
+      box-shadow: none;
+      transform: translateY(7px);
+    }
+    span {
+      font-size: 30px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-left: 10px;
+    }
+    svg {
+      font-size: 30px;
+    }
+  }
+  .arrow-down {
+    transform: rotate(180deg);
+    width: 57px;
+    height: 80px;
+    filter: drop-shadow(0 0 5px #000);
+    animation: shake 1.3s infinite;
+  }
+}
+
+@keyframes shake {
+  0%,
+  30%,
+  60% {
+    transform: translateY(0px) rotate(180deg);
+  }
+  15%,
+  45% {
+    transform: translateY(20px) rotate(180deg);
+  }
+}
+
+.brief {
+  padding: 50px 0;
+  .container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .img {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 10px #00000059;
+  }
+  .text {
+    width: 500px;
+    max-width: 100%;
+    h3 {
+      margin: 0 auto 30px;
+    }
+    p {
+      line-height: 1.7;
+    }
+  }
+  @include tablet {
+    .container {
+      flex-direction: column-reverse;
+      gap: 20px;
+    }
+    .text p {
+      text-align: center;
     }
   }
 }

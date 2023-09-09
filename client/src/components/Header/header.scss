@@ -5,6 +5,7 @@
   position: sticky;
   top: 0;
   border-bottom: 1px solid #ccc;
+  z-index: 50;
   .container {
     display: flex;
     justify-content: space-between;
@@ -18,7 +19,7 @@
   }
   nav {
     display: flex;
-    gap: 20px;
+    gap: 30px;
     height: 100%;
     a {
       color: #000;
@@ -52,7 +53,7 @@
     }
   }
 
-  @include mobile {
+  @include tablet {
     .container {
       flex-direction: column-reverse;
       height: auto;
@@ -64,6 +65,7 @@
       }
     }
     nav {
+      gap: 20px;
       a {
         height: 40px;
         &::before {
