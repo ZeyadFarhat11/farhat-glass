@@ -68,11 +68,17 @@
       gap: 20px;
       a {
         height: 40px;
+        white-space: nowrap;
         &::before {
           top: auto;
           bottom: 0;
         }
       }
+    }
+  }
+  @include mobile {
+    nav {
+      gap: 10px;
     }
   }
 }

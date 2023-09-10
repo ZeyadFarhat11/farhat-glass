@@ -29,7 +29,7 @@ const columns = [
     key: "actions",
     render: (_, record) => (
       <Space size="middle" className="actions">
-        <Link to={`/client/${record._id}`}>
+        <Link to={`/admin/client/${record._id}`}>
           <FontAwesomeIcon icon={faEye} />
         </Link>
         <button onClick={() => record.deleteClient(record)}>

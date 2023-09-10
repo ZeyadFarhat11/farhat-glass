@@ -13,6 +13,7 @@ import Invoices from "./pages/Admin/Invoices/Invoices";
 import Works from "./pages/Admin/Works/Works";
 import Home from "./pages/Home/Home";
 import "./assets/style.scss";
+import Contact from "./pages/Contact/Contact";
 
 function App() {
   const location = useLocation();
@@ -33,6 +34,7 @@ function App() {
         </Route>
         <Route path="/" element={<DefaultLayout />}>
           <Route index element={<Home />} />
+          <Route path="contact" element={<Contact />} />
         </Route>
       </Routes>
     </>
