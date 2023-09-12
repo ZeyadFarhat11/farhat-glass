@@ -1,0 +1,56 @@
+@import "../../assets/components.scss";
+.about-brief {
+  padding: 50px 0;
+  .container {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+  }
+  .imgs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+    img {
+      border-radius: 10px;
+      max-width: 100%;
+    }
+    img:first-child {
+      height: 80%;
+    }
+  }
+  .text {
+    width: 60%;
+    .title {
+      span {
+        font-size: 30px;
+        color: $main;
+      }
+      h2 {
+        margin-bottom: 30px;
+        margin-top: 5px;
+      }
+    }
+    p {
+      line-height: 1.7;
+      font-weight: 500;
+      font-size: 17px;
+    }
+  }
+  @include laptop {
+    .container {
+      flex-direction: column-reverse;
+    }
+    .text {
+      width: auto;
+    }
+  }
+  @include tablet {
+    .text {
+      p {
+        font-size: 15px;
+        line-height: 1.6;
+      }
+    }
+  }
+}

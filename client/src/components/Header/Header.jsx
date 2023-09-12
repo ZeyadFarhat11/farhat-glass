@@ -8,7 +8,7 @@ export default function Header() {
       <div className="container">
         <nav>
           <NavLink to="/">الرئيسية</NavLink>
-          <NavLink to="/about-us">من نحن</NavLink>
+          <NavLink to="/about">من نحن</NavLink>
           <NavLink to="/our-work">اعمالنا</NavLink>
           <NavLink to="/contact">تواصل معنا</NavLink>
         </nav>

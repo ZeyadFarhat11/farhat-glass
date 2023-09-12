@@ -1,3 +1,4 @@
+@import "../../assets/components.scss";
 .info-cards {
   padding: 50px 0;
   h2 {
@@ -27,6 +28,62 @@
     }
     h3 {
       margin-bottom: 15px;
+    }
+  }
+}
+
+.contact-form {
+  padding: 50px 0;
+  h2 {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .wrapper {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    width: fit-content;
+    margin: 0 auto;
+  }
+  .image {
+    img {
+      border-radius: 10px;
+      max-width: 100%;
+    }
+  }
+  form {
+    #message {
+      resize: vertical;
+      min-height: 100px;
+    }
+  }
+  @include laptop {
+    .wrapper {
+      gap: 20px;
+    }
+    form {
+      width: 300px;
+    }
+  }
+  @include tablet {
+    .wrapper {
+      flex-direction: column;
+    }
+    form {
+      text-align: center;
+      width: 100%;
+      .control {
+        margin-left: auto;
+        margin-right: auto;
+        width: auto;
+        input,
+        textarea {
+          text-align: center;
+        }
+      }
     }
   }
 }

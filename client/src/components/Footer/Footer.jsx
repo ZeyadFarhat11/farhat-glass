@@ -35,7 +35,7 @@ function FooterHeader() {
           <a
             href="https://web.whatsapp.com/send?phone=201008917819&text=السلام عليكم ورحمة الله وبركاته"
             target="_blank"
-            style={{ color: "#075e54" }}
+            style={{ color: "#25d366" }}
           >
             <FontAwesomeIcon icon={faWhatsapp} />
           </a>

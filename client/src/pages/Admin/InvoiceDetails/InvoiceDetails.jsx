@@ -7,15 +7,19 @@ import info from "../../../assets/images/invoice-info.svg";
 import logo from "../../../assets/images/invoice-logo.svg";
 import api from "../../../utils/api";
 import convertToArabicDate from "../../../utils/convertToArabicDate";
-import "./invoice.scss";
+import "./invoice-details.scss";
 
-export default function Invoice() {
+export default function InvoiceDetails() {
   const { invoice, loading } = useGetInvoice();
   const [titleActive, setTitleActive] = useState(false);
+
+  useEffect(() => {
+    return () => (window.document.title = "فرحات للزجاج والسيكوريت");
+  }, []);
+
   if (loading) return "جار التحميل...";
 
   const toggleTitleActive = () => setTitleActive((p) => !p);
-
   const date = convertToArabicDate(dayjs(invoice.date).format("DD-MM-YYYY"));
   return (
     <>

@@ -51,7 +51,7 @@ const columns = [
     key: "actions",
     render: (_, record) => (
       <Space size="middle" className="actions">
-        <Link to={`/invoice/${record._id}`} target="_blank">
+        <Link to={`/admin/invoice/${record._id}`} target="_blank">
           <FontAwesomeIcon icon={faEye} />
         </Link>
         <button onClick={() => record.editInvoice(record)}>
