@@ -57,3 +57,16 @@ exports.updateOne = (
     await Model.findByIdAndUpdate(req.params.id, data, updateOptions);
     res.sendStatus(httpStatus.StatusCodes.OK);
   });
+
+exports.list = (Model, { withLength } = {}) =>
+  catchAsync(async (req, res) => {
+    const docs = await Model.find({});
+    res.json(withLength ? { results: docs.length, docs } : docs);
+  });
+
+exports.getOne = (Model, { fromReq = false, reqField = "" } = {}) =>
+  catchAsync(async (req, res) => {
+    if (fromReq) return res.json(req[reqField]);
+    const doc = await Model.findById(req.params.id);
+    res.json(doc);
+  });

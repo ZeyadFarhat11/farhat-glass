@@ -35,8 +35,7 @@ server.on("request", (req, res) => {
   if (req.method === "GET") return;
   res.on("finish", async () => {
     try {
-      console.log("response finish");
-      setStats();
+      await setStats();
     } catch (err) {
       console.log(`Cann't set home stats ❌`);
     }

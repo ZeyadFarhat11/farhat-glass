@@ -23,3 +23,20 @@ exports.getSuggestions = catchAsync(async (req, res) => {
     ],
   });
 });
+
+exports.login = (req, res) => {
+  const { password } = req.body;
+
+  const getToken = (password) =>
+    ({
+      [process.env.ZEYAD_PASSWORD]: process.env.ZEYAD_TOKEN,
+      [process.env.ROSHDY_PASSWORD]: process.env.ROSHDY_TOKEN,
+      [process.env.TEST_PASSWORD]: process.env.TEST_TOKEN,
+    }[password]);
+
+  if (getToken(password)) {
+    return res.status(200).json({ token: getToken(password) });
+  }
+
+  res.sendStatus(401);
+};

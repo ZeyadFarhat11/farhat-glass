@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "startf": "SET MODE=fake&& nodemon server.js",
-    "update-db": "git add . && git commit -m \"update database\" && git push origin main"
+    "start:prod": "SET NODE_ENV=production&&node server.js",
+    "start:fake": "SET MODE=fake&&node server.js"
   },
   "keywords": [],
   "author": "",

@@ -5,25 +5,25 @@ const checkConfirmationCode = require("../middleware/checkConfirmationCode");
 const router = Router();
 
 router
-  .route("/:id")
+  .route("/clients/:id")
   .delete(clientValidator.validateDeleteClient, clientController.deleteClient)
   .get(clientValidator.validateGetClient, clientController.getClient)
   .patch(clientValidator.validateUpdateClient, clientController.updateClient);
 
 router
-  .route("/")
+  .route("/clients/")
   .delete(checkConfirmationCode, clientController.deleteAllClients)
   .get(clientController.getAllClients)
   .post(clientValidator.validateCreateClient, clientController.createClient);
 
 router
-  .route("/:clientId/transactions")
+  .route("/clients/:clientId/transactions")
   .post(
     clientValidator.validateMakeTransaction,
     clientController.makeTransaction
   );
 router
-  .route("/:clientId/transactions/:transactionId")
+  .route("/clients/:clientId/transactions/:transactionId")
   .delete(
     checkConfirmationCode,
     clientValidator.validateDeleteTransaction,

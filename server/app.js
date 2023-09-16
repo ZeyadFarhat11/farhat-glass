@@ -2,28 +2,35 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
+const checkAdmin = require("./middleware/checkAdmin");
 
 const app = express();
 
-app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
+  app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 }
 
-app.use("/api/v1/invoices", require("./routers/invoiceRouter"));
-app.use("/api/v1/clients", require("./routers/clientRouter"));
 app.use(
   "/api/v1",
   require("./routers/utilRouter"),
+  require("./routers/messageRouter"),
+  checkAdmin,
+  require("./routers/clientRouter"),
+  require("./routers/invoiceRouter"),
   require("./routers/workRouter")
 );
 
-app.use(express.static(path.join(__dirname, "../client/dist")));
-app.use((_, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+app.use("/api/v1", (_, res) => {
+  res.status(404).json("Invalid route!");
 });
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "client")));
+  app.use((_, res) => {
+    res.sendFile(path.join(__dirname, "client", "index.html"));
+  });
+}
 module.exports = app;
