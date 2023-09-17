@@ -5,9 +5,10 @@ const checkConfirmationCode = require("../middleware/checkConfirmationCode");
 const checkAdmin = require("../middleware/checkAdmin");
 const router = Router();
 
+router.post("/message", v.validateCreateMessage, c.createMessage);
+
 router
   .route("/messages")
-  .post(v.validateCreateMessage, c.createMessage)
   .get(checkAdmin, c.listMessages)
   .delete(checkAdmin, checkConfirmationCode, c.deleteAllMessages);
 

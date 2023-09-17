@@ -1,0 +1,15 @@
+.fall-back-loading {
+  position: fixed;
+  inset: 0;
+  background-color: #dadada;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 70;
+  .wrapper {
+    text-align: center;
+    h3 {
+      margin-top: 20px;
+    }
+  }
+}

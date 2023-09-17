@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import CreateWork from "../../../components/Admin/Work/CreateWork/CreateWork";
 import useGlobalContext from "../../../context/globalContext";
-import api from "../../../utils/api";
+import api, { adminApi } from "../../../utils/api";
 import "./works.scss";
 
 const columns = [
@@ -49,7 +49,7 @@ export default function Works() {
   const deleteWork = async (work) => {
     setGlobalLoading(true);
     try {
-      await api.delete(`/work/${work._id}`, {
+      await adminApi.delete(`/work/${work._id}`, {
         headers: { confirmation: prompt("رمز الأمان") },
       });
       toast.error(`تم حذف العمل بنجاح`, { icon: false });
@@ -88,7 +88,7 @@ function useGetWorks() {
   async function loadWorks() {
     setGlobalLoading(true);
     try {
-      const response = await api.get("/works");
+      const response = await adminApi.get("/works");
       setWorks(response.data.works);
     } catch (err) {
       console.log(err);
@@ -101,45 +101,3 @@ function useGetWorks() {
   }, []);
   return { works, setWorks, loadWorks };
 }
-
-// function EditClient({
-//   loading,
-//   setLoading,
-//   loadClients,
-//   client,
-//   setCurrentEditClient,
-// }) {
-//   const [name, setName] = useState(client.name);
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (loading) return;
-//     setLoading(true);
-//     try {
-//       await api.patch(`/clients/${client._id}`, { name });
-//       toast.success("تم تعديل العميل بنجاح");
-//       loadClients();
-//       setCurrentEditClient();
-//     } catch (err) {
-//       console.log(err);
-//       // handleError(err)
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <div className="control mt-4">
-//         <Input
-//           placeholder="اسم العميل"
-//           value={name}
-//           onChange={(e) => setName(e.target.value)}
-//           type="text"
-//         />
-//       </div>
-//       <Button type="primary" loading={loading} htmlType="submit">
-//         تعديل
-//       </Button>
-//     </form>
-//   );
-// }

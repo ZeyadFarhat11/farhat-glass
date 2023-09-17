@@ -1,0 +1,31 @@
+@import "../../../../assets/components.scss";
+
+#website-messages {
+  h1 {
+    text-align: center;
+    margin: 30px 0;
+  }
+
+  .messages {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    .message {
+      box-shadow: 2px 2px 10px #30303046;
+      border-radius: 5px;
+      padding: 15px;
+      .line {
+        .label {
+          color: $main;
+          font-weight: bold;
+        }
+      }
+      .message-content {
+        font-size: 18px;
+        text-align: center;
+        margin-top: 20px;
+        font-weight: bold;
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import { Button, Input } from "antd";
 import img from "../../assets/images/contact-form-img.webp";
 import { useState } from "react";
-import api from "../../utils/api";
+import { adminApi } from "../../utils/api";
 import { toast } from "react-toastify";
 function ContactForm() {
   const [name, setName] = useState("");
@@ -10,16 +10,26 @@ function ContactForm() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
-    console.log("test");
     e.preventDefault();
     if (loading) return;
     setLoading(true);
     try {
-      const res = await api.post("/message", { name, email, phone, message });
-      toast.success("تم ارسال الرسالة بنجاح.");
+      const res = await adminApi.post("/message", {
+        name,
+        email,
+        phone,
+        message,
+      });
+      console.log(res);
+      // if (res === 200) toast.success("تم ارسال الرسالة بنجاح.");
     } catch (err) {
       console.log(err);
-      toast.error("حدث خطأ! يرجي اعادة المحاولة.");
+      if (err.response?.data?.errors) {
+        const errors = err.response.data.errors;
+        errors.map((error) => toast.error(error.msg));
+      } else {
+        toast.error("حدث خطأ! يرجي اعادة المحاولة.");
+      }
     } finally {
       setLoading(false);
     }
@@ -76,7 +86,7 @@ function ContactForm() {
                 required
               />
             </div>
-            <Button htmlType="submit" type="primary">
+            <Button htmlType="submit" type="primary" loading={loading}>
               إرسال
             </Button>
           </form>

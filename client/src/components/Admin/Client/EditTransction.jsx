@@ -4,6 +4,8 @@ import Select from "react-select";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { transitionTypes } from "./CreateTransaction";
+import { adminApi } from "../../../utils/api";
+import { toast } from "react-toastify";
 
 export default function EditTransaction({
   setEditingTransaction,
@@ -22,7 +24,7 @@ export default function EditTransaction({
     if (loading) return;
     setLoading(true);
     try {
-      await api.patch(
+      await adminApi.patch(
         `/clients/${client._id}/transactions/${editingTransaction._id}`,
         { type: type.value, amount, description, date: date.$d }
       );
@@ -37,7 +39,6 @@ export default function EditTransaction({
   };
 
   useEffect(() => {
-    console.log("edit transaction render");
     setType(transitionTypes.find((e) => e.value === editingTransaction.type));
     setAmount(editingTransaction.amount);
     setDescription(editingTransaction.description);

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import { generateRandomNumber } from "../../../../utils";
-import api from "../../../../utils/api";
+import api, { adminApi } from "../../../../utils/api";
 import InvoiceRow from "../InvoiceRow/InvoiceRow.jsx";
 import "./create-invoice.scss";
 const initialRows = [
@@ -55,7 +55,6 @@ export default function CreateInvoice({
   const [suggestions, setSuggestions] = useState([]);
   const [invoiceTitle, setInvoiceTitle] = useState("");
   const [priceOffer, setPriceOffer] = useState(false);
-  const navigate = useNavigate();
   let firstRender = useRef(true);
 
   const handleSubmit = async (e) => {
@@ -74,13 +73,13 @@ export default function CreateInvoice({
         priceOffer,
       };
       if (client.value) data.client = client.value;
-      const response = await api.post("/invoices", data);
+      const response = await adminApi.post("/invoices", data);
       loadInvoices();
       toast.success("تم انشاء الفاتورة بنجاح");
-      openInvoiceWindow(`/invoice/${response.data._id}`);
+      openInvoiceWindow(`/admin/invoice/${response.data._id}`);
+      resetForm();
     } catch (err) {
       console.log(err);
-      // handleError(err)
     } finally {
       setLoading(false);
     }
@@ -102,11 +101,11 @@ export default function CreateInvoice({
         rows: serializeRows(rows),
         priceOffer,
       };
-      await api.put(`/invoices/${editingInvoice._id}`, data);
-      toast.success("تم حفظ التغييرات بنجاح");
+      await adminApi.put(`/invoices/${editingInvoice._id}`, data);
       resetForm();
       loadInvoices();
       setEditingInvoice();
+      toast.success("تم حفظ التغييرات بنجاح");
     } catch (err) {
       console.log(err);
       // handleError(err)
@@ -117,7 +116,7 @@ export default function CreateInvoice({
 
   const loadClients = async () => {
     try {
-      const response = await api.get("/clients?fields=name");
+      const response = await adminApi.get("/clients?fields=name");
       setClients(
         response.data.map((client) => ({
           label: client.name,
@@ -131,7 +130,7 @@ export default function CreateInvoice({
   };
   const loadSuggestions = async () => {
     try {
-      const response = await api.get("/suggestions");
+      const response = await adminApi.get("/suggestions");
       setSuggestions(response.data);
     } catch (err) {
       console.log(err);

@@ -1,53 +1,54 @@
+import { Button, Input } from "antd";
 import { useState } from "react";
-import { Input, Button } from "antd";
-import "./login.scss";
-import useGlobalContext from "../../../context/globalContext";
-import api from "../../../utils/api";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { adminApi } from "../../../utils/api";
+import "./login.scss";
 
-function Login() {
-  const { setGlobalLoading, globalLoading } = useGlobalContext();
-  const [username, setUsername] = useState("");
+export default function Login() {
+  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const isAdmin = !!localStorage.token;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (globalLoading) return;
-    setGlobalLoading(true);
+    if (loading) return;
+    setLoading(true);
     try {
-      const response = await api.post("/auth/login", { username, password });
-      sessionStorage.token = response.data.token;
+      const res = await adminApi.post("/auth/login", { password });
+      window.localStorage.token = res.data.token;
       toast.success("تم تسجيل الدخول!");
+      navigate("/admin");
     } catch (err) {
-      alert("فشل تسجيل الدخول");
-      console.log(err);
+      if (err.response?.status === 401) {
+        toast.error("كلمة مرور غير صالحة");
+      } else {
+        toast.error("حدث خطأ اثناء محاولة تسجيل الدخول");
+      }
     } finally {
-      setGlobalLoading(false);
+      setLoading(false);
     }
   };
+
+  if (isAdmin) return <Navigate to="/admin" />;
   return (
     <main id="login">
       <div className="container">
         <form onSubmit={handleSubmit}>
           <h3>تسجيل الدخول</h3>
           <Input
-            type="text"
-            onChange={(e) => setUsername(e.target.value)}
-            value={username}
-            placeholder="اسم المستخدم"
-          />
-          <Input
             type="password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             placeholder="كلمة المرور"
           />
-          <Button>تسجيل الدخول</Button>
+          <Button htmlType="submit" loading={loading} type="primary">
+            تسجيل الدخول
+          </Button>
         </form>
       </div>
     </main>
   );
 }
-
-export default Login;

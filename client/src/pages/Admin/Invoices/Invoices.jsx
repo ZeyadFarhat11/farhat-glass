@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import CalcInvoicesTotal from "../../../components/Admin/Invoices/CalcInvoicesTotal.jsx";
 import CreateInvoice from "../../../components/Admin/Invoices/CreateInvoice/CreateInvoice";
 import useGlobalContext from "../../../context/globalContext";
-import api from "../../../utils/api";
+import api, { adminApi } from "../../../utils/api";
 import "./invoices.scss";
 
 window.dayjs = dayjs;
@@ -75,7 +75,7 @@ export default function Invoices() {
   async function loadInvoices() {
     setGlobalLoading(true);
     try {
-      const response = await api.get("/invoices");
+      const response = await adminApi.get("/invoices");
       setInvoices(response.data.invoices);
     } catch (err) {
       console.log(err);
@@ -94,10 +94,11 @@ export default function Invoices() {
     )
       return;
     try {
-      await api.delete(`/invoices/${invoice._id}`);
+      await adminApi.delete(`/invoices/${invoice._id}`);
       toast.error(`تم حذف الفاتورة بنجاح`, { icon: false });
       loadInvoices();
     } catch (err) {
+      toast.error("حدث خطأ اثناء حذف الفاتورة");
       console.log(err);
       // handleError(err)
     }

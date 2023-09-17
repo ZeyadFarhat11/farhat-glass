@@ -3,7 +3,7 @@ import img2 from "../../assets/images/about-img2.png";
 
 function Brief() {
   return (
-    <div className="about-brief">
+    <section className="about-brief">
       <div className="container">
         <div className="imgs">
           <div className="img">
@@ -30,7 +30,7 @@ function Brief() {
           </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

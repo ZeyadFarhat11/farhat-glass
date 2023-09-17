@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import CreateTransaction from "../../../components/Admin/Client/CreateTransaction";
 import EditTransaction from "../../../components/Admin/Client/EditTransction";
 import Transaction from "../../../components/Admin/Client/Transaction";
-import api from "../../../utils/api";
+import api, { adminApi } from "../../../utils/api";
 import "./client.scss";
 
 const Context = React.createContext();
@@ -19,7 +19,7 @@ export default function Client() {
 
   const loadClient = async () => {
     try {
-      const res = await api.get(`/clients/${clientId}`);
+      const res = await adminApi.get(`/clients/${clientId}`);
       setClient(res.data);
     } catch (err) {
       console.log(err);
@@ -88,7 +88,7 @@ function ClientForm({ client, setClient }) {
     if (loading) return;
     setLoading(true);
     try {
-      const res = await api.patch(`/clients/${client._id}`, { name, vendor });
+      const res = awaitpatch(`/clients/${client._id}`, { name, vendor });
       toast.success("تم تعديل العميل بنجاح");
       setClient(res.data);
     } catch (err) {

@@ -4,15 +4,15 @@ import { Button, Checkbox, Input, InputNumber, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import api from "../../../utils/api";
+import api, { adminApi } from "../../../utils/api";
 import useGlobalContext from "../../../context/globalContext";
 import "./clients.scss";
 
 const columns = [
   {
     title: "الاسم",
-    dataIndex: "name",
     key: "name",
+    render: (record) => record.name + (record.vendor ? " (بائع)" : ""),
   },
   {
     title: "الدين",
@@ -40,14 +40,17 @@ const columns = [
   },
 ];
 
+const sortHandle = (a, b) => {
+  return new Date(b.createdAt) - new Date(a.createdAt);
+};
+
 export default function Clients() {
   const { globalLoading, setGlobalLoading } = useGlobalContext();
   const [clients, setClients] = useState([]);
-  const [currentEditClient, setCurrentEditClient] = useState();
   async function loadClients() {
     setGlobalLoading(true);
     try {
-      const response = await api.get("/clients");
+      const response = await adminApi.get("/clients");
       setClients(response.data);
     } catch (err) {
       console.log(err);
@@ -59,7 +62,7 @@ export default function Clients() {
     if (!window.confirm(`هل انت متأكد من حذف ${client.name}`)) return;
     setGlobalLoading(true);
     try {
-      await api.delete(`/clients/${client._id}`);
+      await adminApi.delete(`/clients/${client._id}`);
       toast.error(`تم حذف ${client.name} بنجاح`, { icon: false });
       loadClients();
     } catch (err) {
@@ -84,7 +87,9 @@ export default function Clients() {
         <h2 className="title">العملاء</h2>
         <Table
           columns={columns}
-          dataSource={clients.map((c) => ({ ...c, deleteClient }))}
+          dataSource={clients
+            .map((c) => ({ ...c, deleteClient }))
+            .sort(sortHandle)}
           rowKey={(r) => r._id}
           pagination={false}
         />
@@ -103,7 +108,7 @@ function CreateClient({ loading, setLoading, loadClients }) {
     if (loading) return;
     setLoading(true);
     try {
-      await api.post("/clients", { name, debt: debt || 0, vendor });
+      await adminApi.post("/clients", { name, debt: debt || 0, vendor });
       toast.success("تم انشاء العميل بنجاح");
       loadClients();
       setName("");

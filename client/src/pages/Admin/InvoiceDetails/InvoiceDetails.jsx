@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
 import info from "../../../assets/images/invoice-info.svg";
 import logo from "../../../assets/images/invoice-logo.svg";
-import api from "../../../utils/api";
+import api, { adminApi } from "../../../utils/api";
 import convertToArabicDate from "../../../utils/convertToArabicDate";
 import "./invoice-details.scss";
 
@@ -25,7 +25,9 @@ export default function InvoiceDetails() {
     <>
       <Helmet>
         <title>
-          فاتورة {invoice.client.name} | {invoice.title}
+          {invoice.client
+            ? `فاتورة ${invoice.client.name} | ${invoice.title}`
+            : `فاتورة ${invoice.title}`}
         </title>
       </Helmet>
 
@@ -37,7 +39,7 @@ export default function InvoiceDetails() {
         <div className="info">
           <div className="client">
             <span>العميل : </span>
-            <span>{invoice.client.name}</span>
+            <span>{invoice.client?.name}</span>
           </div>
           <div className="date">
             <span>التاريخ : </span>
@@ -53,17 +55,17 @@ export default function InvoiceDetails() {
           </div>
         </div>
 
-        <div class="invoice-table">
-          <div class="head">
+        <div className="invoice-table">
+          <div className="head">
             <span>م</span>
             <span>الصنف</span>
             <span>الكمية</span>
             <span>السعر</span>
             <span>الاجمالي</span>
           </div>
-          <div class="body">
+          <div className="body">
             {invoice.rows.map((row, i) => (
-              <div class="invoice-row">
+              <div className="invoice-row" key={i}>
                 <span>{i + 1}</span>
                 <span>{row[0]}</span>
                 <span>
@@ -75,8 +77,8 @@ export default function InvoiceDetails() {
             ))}
             {Array(13 - invoice.rows.length)
               .fill(0)
-              .map(() => (
-                <div class="invoice-row empty">
+              .map((_, i) => (
+                <div className="invoice-row empty" key={i}>
                   <span></span>
                   <span></span>
                   <span></span>
@@ -85,13 +87,15 @@ export default function InvoiceDetails() {
                 </div>
               ))}
           </div>
-          <div class="invoice-total">
+          <div className="invoice-total">
             <span>اجمالي الفاتورة</span>
-            <span class="value">{invoice.total.toLocaleString("en-US")}</span>
+            <span className="value">
+              {invoice.total.toLocaleString("en-US")}
+            </span>
           </div>
         </div>
 
-        <p class="footer">
+        <p className="footer">
           العنوان : السنانية - الشيخ سديد - بجوار الهندي للأسمنت ت : ٠١٠٠٨٩١٧٨١٩
         </p>
       </div>
@@ -113,7 +117,7 @@ function useGetInvoice() {
   const [loading, setLoading] = useState(true);
   const loadInvoice = async () => {
     try {
-      const res = await api.get(`/invoices/${invoiceId}`, {
+      const res = await adminApi.get(`/invoices/${invoiceId}`, {
         headers: { json: "json" },
       });
       setInvoice(res.data);

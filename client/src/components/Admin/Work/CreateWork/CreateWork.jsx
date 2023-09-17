@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import api from "../../../../utils/api";
+import api, { adminApi } from "../../../../utils/api";
 import { toast } from "react-toastify";
 import { Button, Input, InputNumber } from "antd";
 import Select from "react-select";
@@ -20,7 +20,7 @@ export default function CreateWork({ loadWorks, active }) {
     if (loading) return;
     setLoading(true);
     try {
-      await api.post("/work", {
+      await adminApi.post("/work", {
         title,
         client: client.value,
         expectedWorkDays,
@@ -97,7 +97,7 @@ function useClients() {
 
   const loadClients = async () => {
     try {
-      const response = await api.get("/clients?fields=name");
+      const response = awaitget("/clients?fields=name");
       setClients(
         response.data.map((client) => ({
           label: client.name,
@@ -120,7 +120,9 @@ function useInvoices() {
 
   const loadInvoices = async () => {
     try {
-      const response = await api.get("/invoices?fields=title,client,total");
+      const response = await adminApi.get(
+        "/invoices?fields=title,client,total"
+      );
       setInvoices(
         response.data.invoices.map((invoice) => ({
           label: `${invoice.client?.name} | ${invoice.title} | ${invoice.total}`,

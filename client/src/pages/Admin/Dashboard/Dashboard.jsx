@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useGlobalContext from "../../../context/globalContext";
-import api from "../../../utils/api";
+import api, { adminApi } from "../../../utils/api";
 import "./dashboard.scss";
 
 export default function Dashboard() {
@@ -9,10 +9,9 @@ export default function Dashboard() {
   const loadDate = async () => {
     setGlobalLoading(true);
     try {
-      const response = await api.get("/dashboard");
+      const response = await adminApi.get("/dashboard");
       setData(response.data);
     } catch (err) {
-      alert("حدث خطأ ما");
       console.log(err);
     } finally {
       setGlobalLoading(false);

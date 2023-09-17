@@ -2,6 +2,8 @@ import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { adminApi } from "../../../utils/api";
+import { toast } from "react-toastify";
 
 export default function Transaction({
   _id,
@@ -17,7 +19,7 @@ export default function Transaction({
 }) {
   const deleteTransaction = async () => {
     try {
-      await api.delete(`/clients/${client._id}/transactions/${_id}`, {
+      await adminApi.delete(`/clients/${client._id}/transactions/${_id}`, {
         headers: { confirmation: prompt("رمز الامان") },
       });
       toast.success("تم حذف المعاملة بنجاح");
@@ -52,7 +54,7 @@ export default function Transaction({
       {invoice ? (
         <p>
           الفاتورة :{" "}
-          <Link to={`/invoice/${invoice}`} target="_blank">
+          <Link to={`/admin/invoice/${invoice}`} target="_blank">
             عرض الفاتورة
           </Link>
         </p>

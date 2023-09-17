@@ -29,7 +29,7 @@ exports.login = (req, res) => {
 
   const getToken = (password) =>
     ({
-      [process.env.ZEYAD_PASSWORD]: process.env.ZEYAD_TOKEN,
+      [process.env.MAIN_ADMINPASSWORD]: process.env.MAIN_ADMINTOKEN,
       [process.env.ROSHDY_PASSWORD]: process.env.ROSHDY_TOKEN,
       [process.env.TEST_PASSWORD]: process.env.TEST_TOKEN,
     }[password]);

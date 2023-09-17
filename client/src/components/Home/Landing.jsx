@@ -6,12 +6,16 @@ import {
   faQuoteRight,
 } from "@fortawesome/free-solid-svg-icons";
 import arrow from "../../assets/images/landing-arrow.svg";
+import { useNavigate } from "react-router-dom";
 function Landing() {
+  const navigate = useNavigate();
   return (
     <div className="landing">
       <div className="container">
-        {/* <img src={landingDecoration} alt="decoration" className="decoration" /> */}
-        <LandingDecoration className="decoration" />
+        <LandingDecoration
+          className="decoration"
+          onDoubleClick={() => navigate("/admin")}
+        />
         <h1>فرحات للزجاج والسيكوريت</h1>
         <p>
           <FontAwesomeIcon icon={faQuoteRight} className="right-quote" />

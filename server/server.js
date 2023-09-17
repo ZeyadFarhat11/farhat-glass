@@ -1,4 +1,10 @@
 require("dotenv").config();
+if (process.argv.includes("--production")) {
+  process.env.NODE_ENV = "production";
+} else if (process.argv.includes("--development")) {
+  process.env.NODE_ENV = "development";
+}
+
 const mongoose = require("mongoose");
 const app = require("./app");
 const getHomeStats = require("./utils/getHomeStats");

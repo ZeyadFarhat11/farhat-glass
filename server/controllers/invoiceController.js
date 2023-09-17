@@ -95,8 +95,10 @@ exports.updateInvoice = async (req, res) => {
         invoice: invoiceDocument._id,
       });
   }
-  await clientDocument.calcDebt();
-  await clientDocument.save();
+  if (clientDocument) {
+    await clientDocument.calcDebt();
+    await clientDocument.save();
+  }
 
   invoiceDocument.title = req.body.title;
   invoiceDocument.rows = req.body.rows;

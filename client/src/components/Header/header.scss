@@ -64,6 +64,7 @@
         height: 50px;
       }
     }
+
     nav {
       gap: 20px;
       a {
@@ -78,7 +79,8 @@
   }
   @include mobile {
     nav {
-      gap: 10px;
+      justify-content: space-between;
+      width: 100%;
     }
   }
 }

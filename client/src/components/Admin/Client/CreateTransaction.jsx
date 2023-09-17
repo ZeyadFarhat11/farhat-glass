@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../../../utils/api";
+import { adminApi } from "../../../utils/api";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { Button, DatePicker, Input, InputNumber } from "antd";
@@ -21,7 +21,7 @@ export default function CreateTransaction({ clientId, loadClient }) {
     if (loading) return;
     setLoading(true);
     try {
-      await api.post(`/clients/${clientId}/transactions`, {
+      await adminApi.post(`/clients/${clientId}/transactions`, {
         type: type.value,
         amount,
         description,

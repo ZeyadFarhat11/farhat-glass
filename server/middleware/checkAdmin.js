@@ -1,7 +1,7 @@
 const httpStatus = require("http-status-codes");
 
-const { ROSHDY_TOKEN, ZEYAD_TOKEN, TEST_TOKEN } = process.env;
-const admins = [ROSHDY_TOKEN, ZEYAD_TOKEN, TEST_TOKEN];
+const { ROSHDY_TOKEN, MAIN_ADMINTOKEN, TEST_TOKEN } = process.env;
+const admins = [ROSHDY_TOKEN, MAIN_ADMINTOKEN, TEST_TOKEN];
 
 module.exports = (req, res, next) => {
   const token = req.body.token || req.headers.token;

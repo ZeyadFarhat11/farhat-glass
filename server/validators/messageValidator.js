@@ -1,12 +1,16 @@
 const { body, param } = require("express-validator");
 const checkValidationErrors = require("../middleware/checkValidationErrors");
 const Message = require("../models/messageModel");
+const validator = require("validator").default;
 
 const checkPhoneNumber = (val) => {
-  throw new Error();
+  const pattern = /^01\d{9}$/;
+  if (!pattern.test(val)) throw new Error("رقم هاتف غير صالح!");
+  return true;
 };
 const checkEmail = (val) => {
-  throw new Error();
+  if (!validator.isEmail(val)) throw new Error("بريد الكتروني غير صالح!");
+  return true;
 };
 
 const checkValidMessageId = async (id, { req }) => {
@@ -16,10 +20,14 @@ const checkValidMessageId = async (id, { req }) => {
 };
 
 exports.validateCreateMessage = [
-  body("name").isString().isLength({ min: 3, max: 32 }),
-  body("phone").isString().custom(checkPhoneNumber),
-  body("email").isString().custom(checkEmail),
-  body("message").isString().isLength({ min: 3, max: 1000 }),
+  body("name", "يرجي كتابة اسمك الثنائي")
+    .isString()
+    .isLength({ min: 3, max: 32 }),
+  body("phone").custom(checkPhoneNumber),
+  body("email").custom(checkEmail),
+  body("message", "يرجي كتابة رسالة بحد اقصي 1000 حرف")
+    .isString()
+    .isLength({ min: 3, max: 1000 }),
   checkValidationErrors,
 ];
 
