@@ -29,8 +29,8 @@ exports.login = (req, res) => {
 
   const getToken = (password) =>
     ({
-      [process.env.MAIN_ADMINPASSWORD]: process.env.MAIN_ADMINTOKEN,
-      [process.env.ROSHDY_PASSWORD]: process.env.ROSHDY_TOKEN,
+      [process.env.MAIN_ADMIN_PASSWORD]: process.env.MAIN_ADMIN_TOKEN,
+      [process.env.SECONDARY_ADMIN_PASSWORD]: process.env.SECONDARY_ADMIN_TOKEN,
       [process.env.TEST_PASSWORD]: process.env.TEST_TOKEN,
     }[password]);
 
