@@ -5,6 +5,7 @@ if (process.argv.includes("--production")) {
   process.env.NODE_ENV = "development";
 }
 
+require("./cloudinary");
 const mongoose = require("mongoose");
 const app = require("./app");
 const getHomeStats = require("./utils/getHomeStats");

@@ -20,7 +20,8 @@ app.use(
   checkAdmin,
   require("./routers/clientRouter"),
   require("./routers/invoiceRouter"),
-  require("./routers/workRouter")
+  require("./routers/workRouter"),
+  require("./routers/galleryRouter")
 );
 
 app.use("/api/v1", (_, res) => {
