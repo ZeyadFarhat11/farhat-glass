@@ -44,7 +44,10 @@ function ContactForm() {
           </div>
           <form onSubmit={handleSubmit}>
             <div className="control">
-              <label htmlFor="name">الاسم</label>
+              <label htmlFor="name">
+                الاسم
+                <span>*</span>
+              </label>
               <Input
                 id="name"
                 value={name}
@@ -54,7 +57,10 @@ function ContactForm() {
               />
             </div>
             <div className="control">
-              <label htmlFor="phone">رقم الهاتف</label>
+              <label htmlFor="phone">
+                رقم الهاتف
+                <span>*</span>
+              </label>
               <Input
                 type="tel"
                 id="phone"
@@ -65,7 +71,10 @@ function ContactForm() {
               />
             </div>
             <div className="control">
-              <label htmlFor="email">البريد الالكتروني</label>
+              <label htmlFor="email">
+                البريد الالكتروني
+                <span>*</span>
+              </label>
               <Input
                 type="email"
                 id="email"
@@ -76,7 +85,9 @@ function ContactForm() {
               />
             </div>
             <div className="control">
-              <label htmlFor="message">الرسالة</label>
+              <label htmlFor="message">
+                الرسالة <span>*</span>
+              </label>
               <Input.TextArea
                 type="text"
                 id="message"
@@ -86,7 +97,12 @@ function ContactForm() {
                 required
               />
             </div>
-            <Button htmlType="submit" type="primary" loading={loading}>
+            <Button
+              htmlType="submit"
+              type="primary"
+              loading={loading}
+              size="middle"
+            >
               إرسال
             </Button>
           </form>

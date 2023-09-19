@@ -17,6 +17,10 @@ form {
     margin-bottom: 20px;
     label {
       margin-bottom: 5px;
+      span {
+        color: red;
+        margin-right: 5px;
+      }
     }
     > div,
     > input {

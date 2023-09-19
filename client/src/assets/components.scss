@@ -1,5 +1,6 @@
 $main: #1677ff;
 $gold: #dfbd00;
+$font-family: "Cairo", sans-serif;
 @mixin laptop {
   @media (max-width: 992px) {
     @content;

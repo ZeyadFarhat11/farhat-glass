@@ -1,8 +1,8 @@
 const catchAsync = require("../utils/catchAsync");
 const multer = require("multer");
 const cloudinary = require("cloudinary");
-const GalleryImage = require("../models/GalleryImageModel");
-
+const GalleryImage = require("../models/galleryImageModel");
+// const {list} = require('./factory')
 const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, Date.now() + " - " + file.originalname);
@@ -47,4 +47,12 @@ exports.deleteImage = catchAsync(async (req, res) => {
     await cloudinary.v2.uploader.destroy(imageDocument.publicId);
   await imageDocument.deleteOne();
   res.sendStatus(200);
+});
+
+exports.listImages = catchAsync(async (req, res) => {
+  const { type } = req.query;
+  let filter = {};
+  if (type) filter.type = type;
+  const docs = await GalleryImage.find(filter);
+  res.json(docs);
 });

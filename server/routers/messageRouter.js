@@ -15,6 +15,6 @@ router
 router
   .route("/message/:id")
   .get(checkAdmin, v.validateGetMessage, c.getMessage)
-  .delete(checkAdmin, c.deleteMessage);
+  .delete(checkAdmin, checkConfirmationCode, c.deleteMessage);
 
 module.exports = router;

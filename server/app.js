@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const checkAdmin = require("./middleware/checkAdmin");
+const fs = require("fs");
 
 const app = express();
 
@@ -20,13 +21,11 @@ app.use(
   checkAdmin,
   require("./routers/clientRouter"),
   require("./routers/invoiceRouter"),
-  require("./routers/workRouter"),
-  require("./routers/galleryRouter")
+  require("./routers/galleryRouter"),
+  (_, res) => {
+    res.status(404).json("Invalid route!");
+  }
 );
-
-app.use("/api/v1", (_, res) => {
-  res.status(404).json("Invalid route!");
-});
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client")));

@@ -10,7 +10,6 @@ export default function Messages() {
   const loadMessages = async () => {
     try {
       const res = await adminApi.get("/messages");
-      await new Promise((res) => setTimeout(res, 3000));
       setLoading(false);
       setMessages(res.data);
     } catch (e) {
@@ -25,7 +24,11 @@ export default function Messages() {
   return (
     <main id="website-messages">
       <h1>رسائل العملاء</h1>
-      <MessagesList messages={messages} loading={loading} />
+      <MessagesList
+        messages={messages}
+        loadMessages={loadMessages}
+        loading={loading}
+      />
     </main>
   );
 }

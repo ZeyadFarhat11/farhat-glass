@@ -59,6 +59,10 @@
       resize: vertical;
       min-height: 100px;
     }
+    button[type="submit"] {
+      font-family: $font-family;
+      font-weight: bold;
+    }
   }
   @include laptop {
     .wrapper {
@@ -73,16 +77,9 @@
       flex-direction: column;
     }
     form {
-      text-align: center;
       width: 100%;
       .control {
-        margin-left: auto;
-        margin-right: auto;
         width: auto;
-        input,
-        textarea {
-          text-align: center;
-        }
       }
     }
   }

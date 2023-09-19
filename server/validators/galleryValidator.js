@@ -1,6 +1,6 @@
 const { body, param } = require("express-validator");
 const checkValidationErrors = require("../middleware/checkValidationErrors");
-const GalleryImage = require("../models/GalleryImageModel");
+const GalleryImage = require("../models/galleryImageModel");
 
 const checkImageId = async (id, { req }) => {
   const document = await GalleryImage.findById(id);
