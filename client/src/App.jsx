@@ -11,6 +11,7 @@ import Contact from "./pages/Contact/Contact";
 import Home from "./pages/Home/Home";
 import FallBackLoading from "./components/FallBackLoading/FallBackLoading";
 import Login from "./pages/admin/Login/Login";
+import Gallery from "./pages/Gallery/Gallery";
 
 const Admin = lazy(() => import("./pages/admin"));
 
@@ -26,6 +27,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="contact" element={<Contact />} />
             <Route path="about" element={<About />} />
+            <Route path="gallery" element={<Gallery />} />
           </Route>
         </Routes>
       </Suspense>

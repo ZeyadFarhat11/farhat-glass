@@ -1,7 +1,7 @@
 import { faFacebook, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gmailIcon from "../../assets/images/gmail-icon.png";
-import { email, location } from "../../data.json";
+import { email, location, whatsapp } from "../../data.json";
 import "./footer.scss";
 
 function FooterHeader() {
@@ -32,11 +32,7 @@ function FooterHeader() {
               style={{ width: "30px", paddingBottom: "8px" }}
             />
           </a>
-          <a
-            href="https://web.whatsapp.com/send?phone=201008917819&text=السلام عليكم ورحمة الله وبركاته"
-            target="_blank"
-            style={{ color: "#25d366" }}
-          >
+          <a href={whatsapp} target="_blank" style={{ color: "#25d366" }}>
             <FontAwesomeIcon icon={faWhatsapp} />
           </a>
         </div>

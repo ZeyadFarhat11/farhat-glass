@@ -1,4 +1,4 @@
-const { body, param } = require("express-validator");
+const { body, param, query } = require("express-validator");
 const checkValidationErrors = require("../middleware/checkValidationErrors");
 const GalleryImage = require("../models/galleryImageModel");
 
@@ -10,5 +10,10 @@ const checkImageId = async (id, { req }) => {
 
 exports.validateDeleteImage = [
   param("id", "Unvalid image id").custom(checkImageId),
+  checkValidationErrors,
+];
+
+exports.validateAddImage = [
+  query("type").isIn(GalleryImage.imageTypes),
   checkValidationErrors,
 ];

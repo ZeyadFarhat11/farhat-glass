@@ -1,21 +1,23 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { HashLoader } from "react-spinners";
-import Header from "../../components/Admin/Header/Header.jsx";
-import useGlobalContext from "../../context/globalContext.jsx";
-import Dashboard from "./Dashboard/Dashboard.jsx";
-import Clients from "./Clients/Clients.jsx";
-import Client from "./Client/Client.jsx";
-import Invoices from "./Invoices/Invoices.jsx";
-import InvoiceDetails from "./InvoiceDetails/InvoiceDetails.jsx";
-import Works from "./Works/Works.jsx";
+import Header from "../../components/Admin/Header/Header";
+import useGlobalContext from "../../context/globalContext";
+import Dashboard from "./Dashboard/Dashboard";
+import Clients from "./Clients/Clients";
+import Client from "./Client/Client";
+import Invoices from "./Invoices/Invoices";
+import InvoiceDetails from "./InvoiceDetails/InvoiceDetails";
+import Works from "./Works/Works";
 import Messages from "./Website/Messages/Messages";
+import Gallery from "./Website/Gallery/Gallery";
+import UploadGalleryImages from "./Website/UploadGalleryImages/UploadGalleryImages";
 import Helmet from "react-helmet";
-export const isAdmin = () => !!localStorage.token;
 
 export default function Admin() {
   const { globalLoading } = useGlobalContext();
+  const notAdmin = !localStorage.token;
 
-  if (!isAdmin()) return <Navigate to="/admin/login" />;
+  if (notAdmin) return <Navigate to="/admin/login" />;
   return (
     <>
       <Helmet>
@@ -31,6 +33,11 @@ export default function Admin() {
         <Route path="invoice/:invoiceId" element={<InvoiceDetails />} />
         <Route path="works" element={<Works />} />
         <Route path="website/messages" element={<Messages />} />
+        <Route path="website/gallery" element={<Gallery />} />
+        <Route
+          path="website/gallery/upload"
+          element={<UploadGalleryImages />}
+        />
       </Routes>
     </>
   );

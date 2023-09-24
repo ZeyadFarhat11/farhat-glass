@@ -1,12 +1,18 @@
 const c = require("../controllers/galleryController");
+const checkAdmin = require("../middleware/checkAdmin");
+const checkConfirmationCode = require("../middleware/checkConfirmationCode");
 const v = require("../validators/galleryValidator");
 const { Router } = require("express");
 const router = Router();
 
-router.post("/gallery", c.uploadGalleryImages, c.saveImages);
+router
+  .route("/gallery")
+  .get(c.listImages)
+  .post(checkAdmin, c.uploadGalleryImages, c.saveImages)
+  .delete(checkAdmin, checkConfirmationCode, c.deleteAllImages);
 
-router.delete("/gallery/:id", v.validateDeleteImage, c.deleteImage);
-
-router.get("/gallery", c.listImages);
+router
+  .route("/gallery/:id")
+  .delete(checkAdmin, v.validateDeleteImage, c.deleteImage);
 
 module.exports = router;

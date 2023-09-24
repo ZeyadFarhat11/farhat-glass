@@ -39,6 +39,9 @@ export default function Header() {
             <li>
               <Link to="/admin/website/gallery">المعرض</Link>
             </li>
+            <li>
+              <Link to="/admin/website/gallery/upload">رفع صور للمعرض</Link>
+            </li>
           </ul>
         </button>
       </div>

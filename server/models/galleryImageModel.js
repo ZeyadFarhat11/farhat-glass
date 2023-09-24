@@ -1,17 +1,13 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const imageTypes = ["shawer", "staircase", "frontage", "mirror"];
+const imageTypes = ["shawer", "staircase", "frontage", "mirror", "structure"];
 
 const galleryImageSchema = new Schema(
   {
     url: {
       type: String,
       required: true,
-    },
-    active: {
-      type: Boolean,
-      default: true,
     },
     type: {
       type: String,
@@ -21,11 +17,21 @@ const galleryImageSchema = new Schema(
       type: String,
       required: true,
     },
+    width: Number,
+    height: Number,
+    hidden: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
-const GalleryImage = mongoose.model("GalleryImage", galleryImageSchema);
+const GalleryImage = mongoose.model(
+  "GalleryImage",
+  galleryImageSchema,
+  "gallery_images"
+);
 GalleryImage.imageTypes = imageTypes;
 
 module.exports = GalleryImage;

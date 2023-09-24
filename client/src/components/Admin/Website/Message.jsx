@@ -1,20 +1,9 @@
-import { Button, Skeleton } from "antd";
-import { toast } from "react-toastify";
-import { adminApi } from "../../utils/api";
 import dayjs from "dayjs";
+import { adminApi } from "../../../utils/api";
+import { toast } from "react-toastify";
+import { Button } from "antd";
 
-export default function MessagesList({ loading, messages, loadMessages }) {
-  if (loading) return <MessagesPlaceholder />;
-  return (
-    <div className="container messages">
-      {messages.map((message) => (
-        <Message key={message._id} {...message} loadMessages={loadMessages} />
-      ))}
-    </div>
-  );
-}
-
-function Message({
+export default function Message({
   _id,
   name,
   phone,
@@ -64,19 +53,6 @@ function Message({
       <Button type="primary" onClick={deleteMessage} className="delete-message">
         ازالة
       </Button>
-    </div>
-  );
-}
-
-function MessagesPlaceholder() {
-  const array = Array(8).fill(0);
-  return (
-    <div className="container messages">
-      {array.map((el, i) => (
-        <div className="message">
-          <Skeleton active key={i} />
-        </div>
-      ))}
     </div>
   );
 }

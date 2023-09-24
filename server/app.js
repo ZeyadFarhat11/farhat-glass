@@ -18,10 +18,10 @@ app.use(
   "/api/v1",
   require("./routers/utilRouter"),
   require("./routers/messageRouter"),
+  require("./routers/galleryRouter"),
   checkAdmin,
   require("./routers/clientRouter"),
   require("./routers/invoiceRouter"),
-  require("./routers/galleryRouter"),
   (_, res) => {
     res.status(404).json("Invalid route!");
   }

@@ -9,7 +9,7 @@ export default function Header() {
         <nav>
           <NavLink to="/">الرئيسية</NavLink>
           <NavLink to="/about">من نحن</NavLink>
-          <NavLink to="/our-work">اعمالنا</NavLink>
+          <NavLink to="/gallery">اعمالنا</NavLink>
           <NavLink to="/contact">تواصل معنا</NavLink>
         </nav>
         <Link to="/" className="logo">

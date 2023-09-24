@@ -22,22 +22,26 @@ exports.uploadGalleryImages = upload.array("images");
 
 exports.saveImages = catchAsync(async (req, res) => {
   const files = req.files;
+  const { types } = req.body;
   const results = [];
 
-  for (let i in files) {
-    let file = files[i];
+  console.log({ files, body: req.body });
+
+  for (let file of files) {
     let result = await cloudinary.v2.uploader.upload(file.path);
     results.push(result);
+    console.log("Image Upload Result", result);
   }
 
   const docs = await GalleryImage.create(
-    results.map((image) => ({
+    results.map((image, i) => ({
       url: image.url,
-      type: req.body.type,
+      type: Array.isArray(types) ? types[i] : types,
       publicId: image.public_id,
+      width: image.width,
+      height: image.height,
     }))
   );
-
   res.json(docs);
 });
 
@@ -49,10 +53,24 @@ exports.deleteImage = catchAsync(async (req, res) => {
   res.sendStatus(200);
 });
 
+exports.deleteAllImages = catchAsync(async (req, res) => {
+  await GalleryImage.deleteMany({});
+  const { resources } = await cloudinary.v2.api.resources({
+    type: "upload",
+    max_results: 500,
+  });
+
+  for (const resource of resources) {
+    await cloudinary.uploader.destroy(resource.public_id);
+  }
+
+  res.sendStatus(204);
+});
+
 exports.listImages = catchAsync(async (req, res) => {
   const { type } = req.query;
   let filter = {};
-  if (type) filter.type = type;
+  if (type && type !== "all") filter.type = type;
   const docs = await GalleryImage.find(filter);
   res.json(docs);
 });

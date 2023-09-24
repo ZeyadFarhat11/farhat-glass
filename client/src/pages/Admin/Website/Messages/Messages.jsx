@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import MessagesList from "../../../../components/Website/MessagesList";
+import MessagesList from "../../../../components/Admin/Website/MessagesList";
 import { adminApi } from "../../../../utils/api";
 import "./messages.scss";
 

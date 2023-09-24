@@ -1,0 +1,22 @@
+@import "../../assets/components.scss";
+#gallery {
+  nav.change-type {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    button {
+      all: unset;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 4px 10px;
+      font-weight: bold;
+      cursor: pointer;
+      &[data-active="true"] {
+        color: #fff;
+        background-color: $main;
+        border-color: $main;
+      }
+    }
+  }
+}
