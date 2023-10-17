@@ -28,12 +28,14 @@ exports.saveImages = catchAsync(async (req, res) => {
   console.log({ files, body: req.body });
 
   for (let file of files) {
-    let result = await cloudinary.v2.uploader.upload(file.path);
+    let result = await cloudinary.v2.uploader.upload(file.path, {
+      format: "webp",
+    });
     results.push(result);
     console.log("Image Upload Result", result);
   }
 
-  const docs = await GalleryImage.create(
+  await GalleryImage.create(
     results.map((image, i) => ({
       url: image.url,
       type: Array.isArray(types) ? types[i] : types,
@@ -42,7 +44,7 @@ exports.saveImages = catchAsync(async (req, res) => {
       height: image.height,
     }))
   );
-  res.json(docs);
+  res.sendStatus(200);
 });
 
 exports.deleteImage = catchAsync(async (req, res) => {

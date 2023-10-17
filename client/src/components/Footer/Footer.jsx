@@ -46,11 +46,11 @@ export default function Footer() {
       <FooterHeader />
       <hr />
       <div className="container">
-        <p dir="ltr">&copy; 2023 Farhat Glass</p>
+        <p>جميع الحقوق محفوظة - فرحات للزجاج والسيكوريت - &copy; 2023</p>
         <p>
-          Built and Managed by{" "}
+          تصميم وبرمجة{" "}
           <a href="https://zeyad-farhat.onrender.com" target="_blank">
-            Zeyad Farhat
+            زياد فرحات
           </a>
         </p>
       </div>

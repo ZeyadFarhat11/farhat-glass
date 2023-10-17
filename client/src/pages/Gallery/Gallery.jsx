@@ -58,21 +58,13 @@ export default function Gallery() {
         ))}
       </nav>
       <div className="container my-5">
-        {/* <GalleryGrid
-          images={photos.map((photo) => ({ ...photo, src: photo.url }))}
-          enableImageSelection={false}
-          rowHeight={400}
-          margin={20}
-        /> */}
-        <ResponsiveMasonry
-          columnsCountBreakPoints={{ 0: 1, 450: 2, 900: 3, 1200: 4 }}
-        >
-          <Masonry gutter={15}>
+        <ResponsiveMasonry columnsCountBreakPoints={{ 0: 2, 900: 3, 1200: 4 }}>
+          <Masonry gutter="15px">
             {photos.map(({ url, _id, type }) => (
               <img
                 key={_id}
                 src={url}
-                style={{ width: "100%", display: "block" }}
+                style={{ width: "100%", display: "block", borderRadius: "5px" }}
                 alt={type}
               />
             ))}

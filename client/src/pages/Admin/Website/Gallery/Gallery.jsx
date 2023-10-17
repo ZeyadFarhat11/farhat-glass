@@ -22,7 +22,8 @@ export default function Gallery() {
     loadImages();
   }, []);
   return (
-    <main id="gallery">
+    <main id="admin-gallery">
+      <h1 className="text-center py-3">صور المعرض</h1>
       <GalleryImagesList
         images={images}
         loadImages={loadImages}

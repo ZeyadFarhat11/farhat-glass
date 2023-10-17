@@ -1,0 +1,52 @@
+#admin-gallery {
+  .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+  }
+  .image-box {
+    box-shadow: 3px 3px 10px #bbbbbb;
+    border-radius: 5px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+    }
+    .line {
+      padding: 5px 15px;
+    }
+    .btns {
+      display: flex;
+      justify-content: center;
+      padding: 15px 0;
+      gap: 20px;
+      button {
+        all: unset;
+        color: #fff;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 4px;
+        padding: 4px 10px;
+        cursor: pointer;
+        &.delete {
+          background-color: var(--bs-danger);
+        }
+        &.edit {
+          background-color: var(--bs-warning);
+        }
+      }
+    }
+    &.image-placeholder {
+      height: 200px;
+      > div {
+        width: 100%;
+        height: 100%;
+        > div {
+          height: 100%;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

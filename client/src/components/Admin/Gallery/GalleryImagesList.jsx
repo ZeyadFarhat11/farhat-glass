@@ -1,12 +1,10 @@
 import { Skeleton } from "antd";
 import GalleryImage from "./GalleryImage";
 
-export default function GalleryImagesList({
-  images,
-  loadImages,
-  loading = true,
-}) {
+export default function GalleryImagesList({ images, loadImages, loading }) {
   if (loading) return <GalleryImagesPlaceholder />;
+  if (images.length === 0)
+    return <h3 className="text-center text-secondary">لا يوجد صور بالمعرض</h3>;
   return (
     <div className="container">
       {images.map((image) => (
@@ -21,8 +19,8 @@ function GalleryImagesPlaceholder() {
   return (
     <div className="container">
       {array.map((_, i) => (
-        <div className="image placeholder" key={i}>
-          <Skeleton />
+        <div className="image-box image-placeholder" key={i}>
+          <Skeleton.Image active />
         </div>
       ))}
     </div>
