@@ -3,7 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const checkAdmin = require("./middleware/checkAdmin");
-const fs = require("fs");
+const xss = require("xss-clean");
+const rateLimit = require("express-rate-limit");
+const mongoSanitize = require("express-mongo-sanitize");
 
 const app = express();
 
@@ -13,6 +15,16 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
   app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 }
+app.options("*", cors());
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 60 seconds
+  max: 30,
+  message:
+    "Too many accounts created from this IP, please try again after an hour!",
+});
+app.use("/api/*", limiter);
+app.use(xss());
+app.use(mongoSanitize());
 
 app.use(
   "/api/v1",
