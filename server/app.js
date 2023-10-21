@@ -16,13 +16,17 @@ if (process.env.NODE_ENV === "development") {
   app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 }
 app.options("*", cors());
-const limiter = rateLimit({
-  windowMs: 60 * 1000, // 60 seconds
-  max: 30,
-  message:
-    "Too many accounts created from this IP, please try again after an hour!",
-});
-app.use("/api/*", limiter);
+
+if (process.env.NODE_ENV === "development") {
+  const limiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 30,
+    message:
+      "Too many accounts created from this IP, please try again after an hour!",
+  });
+  app.use("/api/*", limiter);
+}
+
 app.use(xss());
 app.use(mongoSanitize());
 

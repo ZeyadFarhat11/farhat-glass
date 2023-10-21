@@ -31,6 +31,9 @@ export default function Header() {
           الموقع
           <ul className="submenu" data-active={websiteSubmenu}>
             <li>
+              <Link to="/">الموقع</Link>
+            </li>
+            <li>
               <Link to="/admin/website/settings">الاعدادات</Link>
             </li>
             <li>

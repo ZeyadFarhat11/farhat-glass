@@ -4,12 +4,13 @@ import UploadImagePreview from "../../../../components/Admin/Gallery/UploadImage
 import { adminApi } from "../../../../utils/api";
 import { Button } from "antd";
 
-const types = [
+export const types = [
   { label: "واجهات سيكوريت", value: "frontage" },
   { label: "حمامات شاور", value: "shawer" },
   { label: "مرايات", value: "mirror" },
   { label: "استراكشر", value: "structure" },
   { label: "هاندريل سلالم", value: "staircase" },
+  { label: "اخري", value: "other" },
 ];
 
 const getFormData = (files) => {

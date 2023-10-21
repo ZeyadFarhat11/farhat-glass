@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const imageTypes = ["shawer", "staircase", "frontage", "mirror", "structure"];
+const imageTypes = [
+  "shawer",
+  "staircase",
+  "frontage",
+  "mirror",
+  "structure",
+  "other",
+];
 
 const galleryImageSchema = new Schema(
   {

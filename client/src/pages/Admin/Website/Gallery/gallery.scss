@@ -6,12 +6,13 @@
   }
   .image-box {
     box-shadow: 3px 3px 10px #bbbbbb;
-    border-radius: 5px;
-    overflow: hidden;
+    border-radius: 7px;
+    // overflow: hidden;
     img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
+      border-radius: 7px 7px 0 0;
     }
     .line {
       padding: 5px 15px;
@@ -32,8 +33,12 @@
         &.delete {
           background-color: var(--bs-danger);
         }
-        &.edit {
+        &.edit,
+        &.cancel {
           background-color: var(--bs-warning);
+        }
+        &.submit {
+          background-color: var(--bs-success);
         }
       }
     }

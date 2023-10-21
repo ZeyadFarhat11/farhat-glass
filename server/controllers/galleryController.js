@@ -2,6 +2,7 @@ const catchAsync = require("../utils/catchAsync");
 const multer = require("multer");
 const cloudinary = require("cloudinary");
 const GalleryImage = require("../models/galleryImageModel");
+const APIFeatures = require("../utils/APIFeatures");
 // const {list} = require('./factory')
 const storage = multer.diskStorage({
   filename: (req, file, cb) => {
@@ -29,7 +30,9 @@ exports.saveImages = catchAsync(async (req, res) => {
 
   for (let file of files) {
     let result = await cloudinary.v2.uploader.upload(file.path, {
-      format: "webp",
+      resource_type: "image",
+      quality: 40,
+      fetch_format: "auto",
     });
     results.push(result);
     console.log("Image Upload Result", result);
@@ -73,6 +76,16 @@ exports.listImages = catchAsync(async (req, res) => {
   const { type } = req.query;
   let filter = {};
   if (type && type !== "all") filter.type = type;
-  const docs = await GalleryImage.find(filter);
+  const docs = await new APIFeatures(
+    GalleryImage.find(filter),
+    req.query
+  ).pagination().query;
   res.json(docs);
+});
+
+exports.editImageType = catchAsync(async (req, res) => {
+  const { imageDocument } = req;
+  imageDocument.type = req.body.type;
+  await imageDocument.save();
+  res.status(200).sendStatus(200);
 });

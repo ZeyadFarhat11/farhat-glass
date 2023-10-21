@@ -3,7 +3,7 @@ import GalleryImagesList from "../../../../components/Admin/Gallery/GalleryImage
 import "./gallery.scss";
 import { adminApi } from "../../../../utils/api";
 
-export default function Gallery() {
+export default function AdminGallery() {
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
 

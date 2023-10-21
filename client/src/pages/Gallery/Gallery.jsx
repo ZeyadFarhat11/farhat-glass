@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Gallery as GalleryGrid } from "react-grid-gallery";
 import { useSearchParams } from "react-router-dom";
 import api from "../../utils/api";
 import "./gallery.scss";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import Image from "rc-image";
+import "rc-image/assets/index.css";
+import { ScaleLoader } from "react-spinners";
 
 const typesLinks = [
   { text: "الكل", type: "all" },
@@ -14,34 +16,7 @@ const typesLinks = [
 ];
 
 export default function Gallery() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [photos, setPhotos] = useState([]);
-  const [photosType, setPhotosType] = useState(
-    searchParams.get("type") || "all"
-  );
-
-  console.log(searchParams);
-
-  const loadPhotos = async () => {
-    try {
-      const res = await api.get(`/gallery?type=${photosType}`);
-      console.log(res);
-      setPhotos(res.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    loadPhotos();
-  }, [photosType]);
-
-  const changePhotosType = (newType) => {
-    if (newType === photosType) return;
-    setPhotosType(newType);
-    searchParams.set("type", newType);
-    setSearchParams(searchParams, {});
-  };
+  const { photos, loading, changePhotosType, photosType } = usePhotos();
 
   return (
     <main id="gallery">
@@ -61,16 +36,75 @@ export default function Gallery() {
         <ResponsiveMasonry columnsCountBreakPoints={{ 0: 2, 900: 3, 1200: 4 }}>
           <Masonry gutter="15px">
             {photos.map(({ url, _id, type }) => (
-              <img
+              <Image
                 key={_id}
                 src={url}
-                style={{ width: "100%", display: "block", borderRadius: "5px" }}
                 alt={type}
+                style={{
+                  width: "100%",
+                  display: "block",
+                  borderRadius: "10px",
+                  cursor: "pointer",
+                }}
+                preview={{
+                  toolbarRender: () => null,
+                }}
               />
             ))}
           </Masonry>
         </ResponsiveMasonry>
+
+        <ScaleLoader
+          style={{
+            display: "block",
+            width: "fit-content",
+            margin: "50px auto 0px",
+          }}
+          loading={loading}
+          aria-label="Loading Spinner"
+        />
       </div>
     </main>
   );
+}
+
+function usePhotos() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [photosType, setPhotosType] = useState(
+    searchParams.get("type") || "all"
+  );
+  const [photos, setPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const loadPhotos = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get(`/gallery?type=${photosType}&limit=12`);
+      setPhotos(res.data);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const changePhotosType = (newType) => {
+    if (newType === photosType) return;
+    setPhotosType(newType);
+    searchParams.set("type", newType);
+    setSearchParams(searchParams, {});
+  };
+
+  useEffect(() => {
+    loadPhotos();
+  }, [photosType]);
+
+  return {
+    photos,
+    setPhotos,
+    loading,
+    setLoading,
+    loadPhotos,
+    changePhotosType,
+    photosType,
+    setPhotosType,
+  };
 }

@@ -9,11 +9,17 @@ const checkImageId = async (id, { req }) => {
 };
 
 exports.validateDeleteImage = [
-  param("id", "Unvalid image id").custom(checkImageId),
+  param("id", "Invalid image id").custom(checkImageId),
   checkValidationErrors,
 ];
 
 exports.validateAddImage = [
   query("type").isIn(GalleryImage.imageTypes),
+  checkValidationErrors,
+];
+
+exports.validateEditImageType = [
+  param("id", "Invalid image id").custom(checkImageId),
+  body("type").isIn(GalleryImage.imageTypes),
   checkValidationErrors,
 ];

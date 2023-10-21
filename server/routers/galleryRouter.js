@@ -13,6 +13,7 @@ router
 
 router
   .route("/gallery/:id")
-  .delete(checkAdmin, v.validateDeleteImage, c.deleteImage);
+  .delete(checkAdmin, v.validateDeleteImage, c.deleteImage)
+  .patch(v.validateEditImageType, c.editImageType);
 
 module.exports = router;
