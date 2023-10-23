@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import api from "../../utils/api";
 import "./gallery.scss";
@@ -16,7 +16,16 @@ const typesLinks = [
 ];
 
 export default function Gallery() {
-  const { photos, loading, changePhotosType, photosType } = usePhotos();
+  const {
+    photos,
+    setPhotos,
+    loading,
+    setLoading,
+    changePhotosType,
+    photosType,
+  } = usePhotos();
+
+  useLoadPhotosOnScroll({ loading, photos, setLoading, setPhotos, photosType });
 
   return (
     <main id="gallery">
@@ -35,7 +44,7 @@ export default function Gallery() {
       <div className="container my-5">
         <ResponsiveMasonry columnsCountBreakPoints={{ 0: 2, 900: 3, 1200: 4 }}>
           <Masonry gutter="15px">
-            {photos.map(({ url, _id, type }) => (
+            {photos.map(({ url, _id, type }, i) => (
               <Image
                 key={_id}
                 src={url}
@@ -75,6 +84,9 @@ function usePhotos() {
   );
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  console.log(photos);
+
   const loadPhotos = async () => {
     try {
       setLoading(true);
@@ -107,4 +119,61 @@ function usePhotos() {
     photosType,
     setPhotosType,
   };
+}
+
+function useLoadPhotosOnScroll({
+  loading,
+  photos,
+  setPhotos,
+  setLoading,
+  photosType,
+}) {
+  let loadingRef = useRef(loading);
+  if (loading !== loadingRef.current) {
+    loadingRef.current = loading;
+  }
+
+  let photosRef = useRef(photos);
+  if (photos !== photosRef.current) {
+    photosRef.current = photos;
+  }
+
+  let photosFinishedRef = useRef(false);
+
+  const loadMorePhotos = async () => {
+    if (loadingRef.current || photosFinishedRef.current) return;
+    console.log("Loading More Photos.");
+    try {
+      let photos = photosRef.current;
+      setLoading(true);
+      const res = await api.get(
+        `/gallery?type=${photosType}&limit=6&skip=${photos.length}`
+      );
+      if (res.data.length === 0) {
+        photosFinishedRef.current = true;
+      } else {
+        setPhotos([...photos, ...res.data]);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    const listener = () => {
+      let lastImage = document.querySelector(".rc-image:last-child");
+      let loading = loadingRef.current;
+      if (
+        lastImage &&
+        !loading &&
+        scrollY + innerHeight >= lastImage.offsetTop + lastImage.clientHeight
+      ) {
+        loadMorePhotos();
+      }
+    };
+    window.addEventListener("scroll", listener);
+
+    return () => window.removeEventListener("scroll", listener);
+  }, []);
 }

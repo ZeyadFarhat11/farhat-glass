@@ -2,8 +2,6 @@ const catchAsync = require("../utils/catchAsync");
 const multer = require("multer");
 const cloudinary = require("cloudinary");
 const GalleryImage = require("../models/galleryImageModel");
-const APIFeatures = require("../utils/APIFeatures");
-// const {list} = require('./factory')
 const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, Date.now() + " - " + file.originalname);
@@ -73,13 +71,11 @@ exports.deleteAllImages = catchAsync(async (req, res) => {
 });
 
 exports.listImages = catchAsync(async (req, res) => {
-  const { type } = req.query;
+  const { type, limit = 12, skip = 0 } = req.query;
   let filter = {};
   if (type && type !== "all") filter.type = type;
-  const docs = await new APIFeatures(
-    GalleryImage.find(filter),
-    req.query
-  ).pagination().query;
+  const docs = await GalleryImage.find(filter).limit(limit).skip(skip);
+
   res.json(docs);
 });
 
