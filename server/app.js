@@ -10,12 +10,11 @@ const mongoSanitize = require("express-mongo-sanitize");
 const app = express();
 
 app.use(express.json());
+app.use(cors({ credentials: true }));
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
-  app.use(cors({ credentials: true }));
 }
-app.options("*", cors());
 
 if (process.env.NODE_ENV === "development") {
   const limiter = rateLimit({
@@ -43,10 +42,10 @@ app.use(
   }
 );
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "client")));
-  app.use((_, res) => {
-    res.sendFile(path.join(__dirname, "client", "index.html"));
-  });
-}
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "client")));
+//   app.use((_, res) => {
+//     res.sendFile(path.join(__dirname, "client", "index.html"));
+//   });
+// }
 module.exports = app;
