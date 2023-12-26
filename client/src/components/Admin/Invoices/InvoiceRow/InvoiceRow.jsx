@@ -1,8 +1,4 @@
-import {
-  faAngleDown,
-  faAngleUp,
-  faMinusCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faGripLines, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Input, InputNumber } from "antd";
 import "./invoice-row.scss";
@@ -52,16 +48,16 @@ function InvoiceRow({
     }
   };
 
-  const changeRowOrder = (direction, id) => {
-    const index = rows.findIndex((e) => e.id === id);
-    if (direction === "up" && index !== 0) {
-      [rows[index], rows[index - 1]] = [rows[index - 1], rows[index]];
-      setRows([...rows]);
-    } else if (direction === "down" && index !== rows.length - 1) {
-      [rows[index], rows[index + 1]] = [rows[index + 1], rows[index]];
-      setRows([...rows]);
-    }
-  };
+  // const changeRowOrder = (direction, id) => {
+  //   const index = rows.findIndex((e) => e.id === id);
+  //   if (direction === "up" && index !== 0) {
+  //     [rows[index], rows[index - 1]] = [rows[index - 1], rows[index]];
+  //     setRows([...rows]);
+  //   } else if (direction === "down" && index !== rows.length - 1) {
+  //     [rows[index], rows[index + 1]] = [rows[index + 1], rows[index]];
+  //     setRows([...rows]);
+  //   }
+  // };
 
   return (
     <div className="row-control">
@@ -116,11 +112,14 @@ function InvoiceRow({
         <button className="delete" onClick={deleteRow} type="button">
           <FontAwesomeIcon icon={faMinusCircle} />
         </button>
-        <button onClick={() => changeRowOrder("up", id)} type="button">
+        {/* <button onClick={() => changeRowOrder("up", id)} type="button">
           <FontAwesomeIcon icon={faAngleUp} />
         </button>
         <button onClick={() => changeRowOrder("down", id)} type="button">
           <FontAwesomeIcon icon={faAngleDown} />
+        </button> */}
+        <button className="handle">
+          <FontAwesomeIcon icon={faGripLines} />
         </button>
       </div>
     </div>

@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import CalcInvoicesTotal from "../../../components/Admin/Invoices/CalcInvoicesTotal.jsx";
 import CreateInvoice from "../../../components/Admin/Invoices/CreateInvoice/CreateInvoice";
 import useGlobalContext from "../../../context/globalContext";
-import api, { adminApi } from "../../../utils/api";
+import { adminApi } from "../../../utils/api";
 import "./invoices.scss";
 
 window.dayjs = dayjs;
@@ -19,32 +19,42 @@ const columns = [
     title: "العميل",
     render: (_, record) => record.client?.name,
     key: "client",
+    sorter: (a, b) =>
+      [a.client?.name || "", b.client?.name || ""].sort()[0] === a.client?.name
+        ? 1
+        : -1,
   },
   {
     title: "العنوان",
     render: (_, record) =>
       record.title + (record.priceOffer ? "(عرض سعر)" : ""),
     key: "title",
+    sorter: (a, b) => ([a.title, b.title].sort()[0] === a.title ? 1 : -1),
   },
   {
     title: "تاريخ الفاتورة",
     key: "invoiceDate",
     render: (_, record) => dayjs(record.date).format("YYYY-MM-DD"),
+    sorter: (a, b) => new Date(a.date) - new Date(b.date),
+    showSorterTooltip: false,
   },
   {
     title: "تاريخ الانشاء",
-    key: "invoiceDate",
+    key: "createdAt",
     render: (_, record) => dayjs(record.createdAt).format("YYYY-MM-DD"),
+    sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
   },
   {
     title: "عدد الاصناف",
     render: (record) => record.rows.length,
     key: "rowsCount",
+    sorter: (a, b) => a.rows.length - b.rows.length,
   },
   {
     title: "الاجمالي",
     dataIndex: "total",
     key: "total",
+    sorter: (a, b) => a.total - b.total,
   },
   {
     title: "ادوات",
@@ -87,9 +97,11 @@ export default function Invoices() {
   const deleteInvoice = async (invoice) => {
     if (
       !window.confirm(
-        `هل انت متأكد من حذف الفاتورة الخاصة بالعميل ${
-          invoice.client?.name || ""
-        }`
+        invoice.client
+          ? `هل انت متأكد من حذف الفاتورة الخاصة بالعميل ${
+              invoice.client?.name || ""
+            }`
+          : `هل انت متأكد من حذف الفاتورة`
       )
     )
       return;
@@ -121,6 +133,12 @@ export default function Invoices() {
       editInvoice,
     }))
     .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // const onChange = (pagination, filters, sorter, extra) => {
+  //   if (sorter.column) {
+  //     // setInvoices(invoices.sort(sorter.column.sorter));
+  //   }
+  // };
 
   return (
     <main id="invoices">
@@ -155,9 +173,11 @@ export default function Invoices() {
         <Table
           columns={columns}
           dataSource={dataSource}
+          // onChange={onChange}
           rowKey={(i) => i._id}
           bordered={true}
           pagination={false}
+          scroll={{ x: 1000 }}
         />
       </div>
     </main>

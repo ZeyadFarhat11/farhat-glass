@@ -40,6 +40,7 @@ exports.createInvoice = catchAsync(async (req, res) => {
 
 exports.updateInvoice = async (req, res) => {
   let { invoiceDocument, clientDocument } = req;
+  console.log({ requestBody: req.body });
   let total = calcInvoiceTotal(req.body.rows);
 
   // if updated the client

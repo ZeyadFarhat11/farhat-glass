@@ -13,16 +13,20 @@ const columns = [
     title: "الاسم",
     key: "name",
     render: (record) => record.name + (record.vendor ? " (بائع)" : ""),
+    sorter: (a, b) =>
+      [a.name || "", b.name || ""].sort()[0] === a.name ? 1 : -1,
   },
   {
     title: "الدين",
     dataIndex: "debt",
     key: "debt",
+    sorter: (a, b) => a.debt - b.debt,
   },
   {
     title: "عدد المعاملات",
     dataIndex: "transactionCount",
     key: "transactionCount",
+    sorter: (a, b) => a.transactionCount - b.transactionCount,
   },
   {
     title: "ادوات",

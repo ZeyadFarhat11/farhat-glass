@@ -9,6 +9,7 @@ import { generateRandomNumber } from "../../../../utils";
 import api, { adminApi } from "../../../../utils/api";
 import InvoiceRow from "../InvoiceRow/InvoiceRow.jsx";
 import "./create-invoice.scss";
+import { ReactSortable } from "react-sortablejs";
 const initialRows = [
   {
     title: "زجاج سيكوريت 10مل شفاف",
@@ -269,15 +270,17 @@ export default function CreateInvoice({
         />
       </div>
       <h4 className="mb-3">محتوي الفاتورة</h4>
-      {rows.map((row) => (
-        <InvoiceRow
-          key={row.id}
-          rows={rows}
-          setRows={setRows}
-          qtyUnits={suggestions?.qtyUnits}
-          {...row}
-        />
-      ))}
+      <ReactSortable list={rows} setList={setRows} handle=".handle">
+        {rows.map((row) => (
+          <InvoiceRow
+            key={row.id}
+            rows={rows}
+            setRows={setRows}
+            qtyUnits={suggestions?.qtyUnits}
+            {...row}
+          />
+        ))}
+      </ReactSortable>
 
       <div className="create-invoice-btns">
         {editingInvoice ? (

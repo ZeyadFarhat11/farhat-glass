@@ -14,6 +14,7 @@ export default function Header() {
           <NavLink to="/about">من نحن</NavLink>
           <NavLink to="/gallery">اعمالنا</NavLink>
           <NavLink to="/contact">تواصل معنا</NavLink>
+          {!!localStorage.token && <Link to="/admin">ادمن</Link>}
         </nav>
       </div>
     </div>

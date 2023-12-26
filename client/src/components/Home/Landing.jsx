@@ -12,10 +12,7 @@ function Landing() {
   return (
     <div className="landing">
       <div className="container">
-        <LandingDecoration
-          className="decoration"
-          onDoubleClick={() => navigate("/admin")}
-        />
+        <LandingDecoration className="decoration" />
         <h1>فرحات للزجاج والسيكوريت</h1>
         <p>
           <FontAwesomeIcon icon={faQuoteRight} className="right-quote" />

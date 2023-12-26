@@ -7,7 +7,9 @@ export default function UploadImagePreview({ file, setFiles, types, type }) {
   const [imageUrl, setImageUrl] = useState();
 
   const deleteFile = () => {
-    setFiles((files) => files.filter((e) => e !== file));
+    setFiles((files) =>
+      files.filter((e) => e[0].name + e[0].size !== file.name + file.size)
+    );
   };
 
   const changeFileType = (newType) => {
