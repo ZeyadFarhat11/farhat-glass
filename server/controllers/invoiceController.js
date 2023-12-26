@@ -3,7 +3,7 @@ const Client = require("../models/clientModel");
 const Invoice = require("../models/invoiceModel");
 const APIFeatures = require("../utils/APIFeatures");
 const calcInvoiceTotal = (rows) =>
-  rows.map((row) => +row.at(-1)).reduce((a, b) => a + b, 0);
+  rows.map((row) => +row[row.length - 1]).reduce((a, b) => a + b, 0);
 
 exports.createInvoice = catchAsync(async (req, res) => {
   let { rows, date, client, title, priceOffer } = req.body;
