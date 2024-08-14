@@ -10,10 +10,10 @@ import About from "./pages/About/About";
 import Contact from "./pages/Contact/Contact";
 import Home from "./pages/Home/Home";
 import FallBackLoading from "./components/FallBackLoading/FallBackLoading";
-import Login from "./pages/admin/Login/Login";
+import Login from "./pages/Admin/Login/Login";
 import Gallery from "./pages/Gallery/Gallery";
 
-const Admin = lazy(() => import("./pages/admin"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 function App() {
   return (
