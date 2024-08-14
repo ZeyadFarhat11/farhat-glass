@@ -9,7 +9,7 @@ export default function AdminGallery() {
 
   const loadImages = async () => {
     try {
-      const res = await adminApi.get("/gallery");
+      const res = await adminApi.get("/gallery?limit=1000");
       if (res.status === 200) {
         setLoading(false);
         setImages(res.data);

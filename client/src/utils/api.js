@@ -4,7 +4,7 @@ import axios from "axios";
 const productionUrl = `https://farhat-glass-dev.onrender.com/api/v1`;
 const developmentUrl = window.location.hostname.startsWith("192.168")
   ? `http://${window.location.hostname}:8000/api/v1`
-  : "http://192.168.1.6:8000/api/v1";
+  : "http://localhost:8000/api/v1";
 
 const api = axios.create({
   baseURL: import.meta.env.DEV ? developmentUrl : productionUrl,

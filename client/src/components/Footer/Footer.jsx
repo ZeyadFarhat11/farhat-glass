@@ -48,10 +48,7 @@ export default function Footer() {
       <div className="container">
         <p>جميع الحقوق محفوظة - فرحات للزجاج والسيكوريت - &copy; 2023</p>
         <p>
-          تصميم وبرمجة{" "}
-          <a href="https://zeyad-farhat.onrender.com" target="_blank">
-            زياد فرحات
-          </a>
+          تصميم وبرمجة <a href="#">زياد فرحات</a>
         </p>
       </div>
     </footer>

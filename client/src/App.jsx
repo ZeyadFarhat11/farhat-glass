@@ -18,7 +18,7 @@ const Admin = lazy(() => import("./pages/admin"));
 function App() {
   return (
     <>
-      <ToastContainer autoClose={3000} position="top-left" />
+      <ToastContainer autoClose={3000} position="top-right" />
       <Suspense fallback={<FallBackLoading />}>
         <Routes>
           <Route path="/admin/*" element={<Admin />} />

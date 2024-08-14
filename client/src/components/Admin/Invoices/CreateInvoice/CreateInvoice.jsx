@@ -21,15 +21,6 @@ const initialRows = [
   },
 ];
 
-const openInvoiceWindow = (url) => {
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.target = "_blank";
-  document.body.append(anchor);
-  anchor.click();
-  anchor.remove();
-};
-
 const serializeRows = (rows) =>
   rows.map((row) => [row.title, row.qty, row.qtyUnit, row.price, row.total]);
 const deserializeRows = (rows) =>
@@ -56,6 +47,7 @@ export default function CreateInvoice({
   const [suggestions, setSuggestions] = useState([]);
   const [invoiceTitle, setInvoiceTitle] = useState("");
   const [priceOffer, setPriceOffer] = useState(false);
+  const navigate = useNavigate();
   let firstRender = useRef(true);
 
   const handleSubmit = async (e) => {
@@ -77,7 +69,8 @@ export default function CreateInvoice({
       const response = await adminApi.post("/invoices", data);
       loadInvoices();
       toast.success("تم انشاء الفاتورة بنجاح");
-      openInvoiceWindow(`/admin/invoice/${response.data._id}`);
+      // openInvoiceWindow();
+      navigate(`/admin/invoice/${response.data._id}`);
       resetForm();
     } catch (err) {
       console.log(err);

@@ -92,6 +92,7 @@ export default function InvoiceDetails() {
             <span className="value">
               {invoice.total.toLocaleString("en-US")}
             </span>
+            <span>جنيه مصري</span>
           </div>
         </div>
 

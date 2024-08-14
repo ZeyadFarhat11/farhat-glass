@@ -74,13 +74,18 @@
     }
     .invoice-total {
       display: flex;
-      gap: 60px;
+
       justify-content: center;
+      align-items: center;
       border-top: $border;
       span {
         border: none;
         font-weight: bold;
         font-size: 20px;
+      }
+      .value {
+        margin-right: 60px;
+        margin-left: 10px;
       }
     }
   }

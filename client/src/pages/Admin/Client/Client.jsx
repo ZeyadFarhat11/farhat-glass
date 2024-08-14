@@ -88,7 +88,10 @@ function ClientForm({ client, setClient }) {
     if (loading) return;
     setLoading(true);
     try {
-      const res = awaitpatch(`/clients/${client._id}`, { name, vendor });
+      const res = await adminApi.patch(`/clients/${client._id}`, {
+        name,
+        vendor,
+      });
       toast.success("تم تعديل العميل بنجاح");
       setClient(res.data);
     } catch (err) {

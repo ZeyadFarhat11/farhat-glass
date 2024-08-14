@@ -3,6 +3,9 @@ import "./upload-gallery-images.scss";
 import UploadImagePreview from "../../../../components/Admin/Gallery/UploadImagePreview";
 import { adminApi } from "../../../../utils/api";
 import { Button } from "antd";
+import { faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "react-toastify";
 
 export const types = [
   { label: "واجهات سيكوريت", value: "frontage" },
@@ -25,18 +28,28 @@ const getFormData = (files) => {
 
 export default function UploadGalleryImages() {
   const [files, setFiles] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
+      var toastId = toast("جار حفظ الصور...", { isLoading: true });
       const res = await adminApi.post("/gallery", getFormData(files));
       resetImages();
-      console.log(res);
+      toast.update(toastId, {
+        type: "success",
+        autoClose: 5000,
+        render: "تم حفظ الصور بنجاح",
+        isLoading: false,
+      });
     } catch (err) {
       console.log(err);
-    } finally {
-      setLoading(false);
+      toast.update(toastId, {
+        type: "success",
+        autoClose: 5000,
+        render: "حدث خطأ اثناء حفظ الصور",
+        isLoading: false,
+      });
     }
   };
 
@@ -50,8 +63,22 @@ export default function UploadGalleryImages() {
   return (
     <main id="gallery-upload">
       <div className="container mt-3">
-        <label htmlFor="upload-files">
-          <div className="btn btn-primary">ارفع صور</div>
+        <label htmlFor="upload-files" className="d-block">
+          <div
+            className="btn btn-primary"
+            style={{
+              display: "flex",
+              fontWeight: "bold",
+              fontSize: "22px",
+              gap: "10px",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "10px 20px",
+            }}
+          >
+            ارفع صور
+            <FontAwesomeIcon icon={faUpload} />
+          </div>
         </label>
         <input
           type="file"
@@ -75,9 +102,22 @@ export default function UploadGalleryImages() {
       </div>
       {!!files.length && (
         <div className="container mt-3">
-          <Button onClick={handleSubmit} loading={loading}>
+          <div
+            className="btn btn-success"
+            onClick={handleSubmit}
+            style={{
+              display: "flex",
+              fontWeight: "bold",
+              fontSize: "22px",
+              gap: "10px",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "10px 20px",
+            }}
+          >
             حفظ الصور
-          </Button>
+            <FontAwesomeIcon icon={faSave} />
+          </div>
         </div>
       )}
     </main>
